@@ -1,4 +1,4 @@
-package com.example.MMP.pass;
+package com.example.MMP.ptpass;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class Pass {
+public class PtPass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long passId;
