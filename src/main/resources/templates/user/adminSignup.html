@@ -1,0 +1,33 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+<div class="h-screen flex items-center justify-center bg-black">
+<div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+    <div class="text-center text-2xl mb-4">관리자 회원가입</div>
+<!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
+    <form th:action="@{|/user/adminSignup|}" th:object="${adminDto}" class="space-y-4" method="post">
+        <input type="text" th:field="*{name}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Name">
+        <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
+        <input type="text" th:field="*{number}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Phone..">
+        <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="text-red-500 text-sm"></p>
+        <div class="form-control">
+            <label class="cursor-pointer label">
+                <span class="label-text">남성</span>
+                <input type="checkbox" th:field="*{gender}" value="man" checked="checked" class="checkbox checkbox-success" />
+            </label>
+        </div>
+        <div class="form-control">
+            <label class="cursor-pointer label">
+                <span class="label-text">여성</span>
+                <input type="checkbox" th:field="*{gender}" value="women" checked="checked" class="checkbox checkbox-success" />
+            </label>
+        </div>
+        <input type="text" th:field="*{birthDate}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="BirthDay">
+        <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-red-500 text-sm"></p>
+        <input type="text" th:field="*{email}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Email">
+        <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></p>
+        <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
+    </form>
+</div>
+</div>
+</div>
+</html>
