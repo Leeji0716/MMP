@@ -1,0 +1,49 @@
+<nav th:fragment="navbarFragment" class="bg-black text-white border-b border-gray-800">
+    <div class="container mx-auto flex flex-wrap items-center justify-between">
+        <a href="/" class="text-white text-xl">
+            <img src="dulgi.png" alt="로고" class="h-8 w-auto inline">
+        </a>
+        <div>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">공지사항</a>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn bg-black text-white text-lg">소개</button>
+            <div class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
+                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500"
+                   th:href="@{#}">트레이너 프로필</a>
+                <a class="nav-link inline-block py-2 px-4 text-white no-underline" th:href="@{/#}">관련 업체 지도</a>
+            </div>
+        </div>
+        <div>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{/totalPass/list}">이용권 구매</a>
+        </div>
+        <div>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">챌린지</a>
+        </div>
+        <div>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">오운완</a>
+        </div>
+        <div class="flex-none gap-2">
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                    <div class="w-10 rounded-full">
+                        <img alt="Tailwind CSS Navbar component"
+                             src="/1715046707.gif" loop=infinite/>
+                    </div>
+                </div>
+                <ul tabindex="0"
+                    class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                    <li class="nav-item">
+                        <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/info}">프로필</a>
+                    </li>
+                    <li sec:authorize="isAnonymous()">
+                        <a th:href="@{/user/login}">Login</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/user/logout}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>

@@ -1,6 +1,5 @@
 package com.example.MMP.siteuser;
 
-
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.trainer.Trainer;
@@ -36,6 +35,7 @@ public class SiteUser {
     private String email;
 
     private String userRole;
+
 
     @ManyToMany
     List<Trainer> trainerList = new ArrayList<>();
