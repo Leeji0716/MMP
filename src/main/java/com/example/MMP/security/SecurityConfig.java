@@ -31,7 +31,8 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/pt/**"),
                             new AntPathRequestMatcher("/totalPass/**"),
                             new AntPathRequestMatcher("/day/**"),
-                            new AntPathRequestMatcher("/pt/**")
+                            new AntPathRequestMatcher("/pt/**"),
+                    new AntPathRequestMatcher("/notice/**") // CSRF 보호에서 제외
                     ))
             ;
 

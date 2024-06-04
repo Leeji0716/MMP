@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-black">
+<head class="bg-black">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <title>공지사항 작성</title>
+</head>
+<body class="bg-black">
+<div class="container mx-auto my-10 p-8 bg-white shadow-lg rounded-lg">
+    <h1 class="text-2xl font-bold mb-6 text-center">공지사항 작성</h1>
+    <form action="/notice/create" method="post" onsubmit="syncContent()">
+        <div class="mb-4">
+            <input type="text" id="title" name="title" required class="input input-bordered w-full" placeholder="제목을 입력하세요">
+            <span class="text-red-500 text-sm mt-1"></span>
+        </div>
+
+        <div class="mb-4">
+            <div id="editor" style="height: 500px;"></div>
+            <input type="hidden" id="content" name="content">
+            <span class="text-red-500 text-sm mt-1"></span>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">저장</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        window.editor = new toastui.Editor({
+            el: document.querySelector('#editor'),
+            initialEditType: 'markdown', // 초기 모드를 Markdown으로 설정
+            previewStyle: 'vertical',
+            height: '500px', // 에디터의 높이를 500px로 설정
+            minHeight: '500px' // 에디터의 최소 높이도 500px로 설정
+        });
+    });
+
+    function syncContent() {
+        const contentInput = document.querySelector('#content');
+        contentInput.value = window.editor.getMarkdown(); // Markdown 모드에서는 Markdown을 가져옵니다.
+    }
+</script>
+</body>
+</html>

@@ -5,11 +5,6 @@ import com.example.MMP.daypass.DayPass;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.trainer.Trainer;
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-
 import lombok.Getter;
 import lombok.Setter;
 
