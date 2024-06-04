@@ -30,6 +30,9 @@ public class Trainer {
 
     private String birthDay;
 
+
+    private String userRole;
+
     @ManyToMany
     List<SiteUser> memberList = new ArrayList<>();
 }

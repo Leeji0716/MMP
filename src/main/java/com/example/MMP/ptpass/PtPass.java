@@ -21,7 +21,7 @@ public class PtPass {
 
     private String passTitle;
 
-    private Long passCount;
+    private int passCount;
 
     private LocalDateTime passStart;
 
@@ -29,5 +29,4 @@ public class PtPass {
 
     private int passPrice;
 
-    private LocalDateTime createDate;
 }
