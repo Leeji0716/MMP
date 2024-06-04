@@ -44,8 +44,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath userRole = createString("userRole");
 
-    public final ListPath<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod> wodList = this.<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod>createList("wodList", com.example.MMP.wod.Wod.class, com.example.MMP.wod.QWod.class, PathInits.DIRECT2);
-
     public QSiteUser(String variable) {
         super(SiteUser.class, forVariable(variable));
     }

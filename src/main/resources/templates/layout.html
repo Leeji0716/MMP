@@ -6,17 +6,15 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="h-screen bg-black text-white">
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
-
-<div class="container mt-3" style="height: auto !important;">
-    <div class="row" style="height: auto !important;">
-        <!-- Main Content -->
-        <div class="col-sm-12 col-md-9 col-lg-10 p-2">
-            <!-- Content Block -->
-            <th:block layout:fragment="content"></th:block>
-        </div>
-    </div>
+<div class="container-fluid px-4">
+    <!-- Content Block -->
+    <th:block layout:fragment="content"></th:block>
+    <!-- Main Content
+    <div class="max-w-screen-md mx-auto">
+        
+    </div> -->
 </div>
 <th:block layout:fragment="script"></th:block>
 </body>

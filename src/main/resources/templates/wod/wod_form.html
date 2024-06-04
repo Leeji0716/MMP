@@ -1,14 +1,18 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="UTF-8">
-    <title>오운완</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-<div>
-    <a class="btn" style="background-color:#FF0000" th:href="@{/wod/create}">+</a>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+    <div class="flex flex-start">
+        <a class="btn btn-error text-white justify-start" th:href="@{/wod/create}">추가</a>
+    </div>
+    <div class="flex w-full">
+        <!-- ptPassList 요소들 -->
+        <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
+            <div>
+                <a href="#" class="btn w-full text-black" th:text="${wod.content}"></a>
+            </div>
+            <figure>
+                <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
+            </figure>
+        </div>
+    </div>
 </div>
-</body>
 </html>

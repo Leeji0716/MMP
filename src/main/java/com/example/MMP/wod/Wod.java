@@ -16,18 +16,18 @@ public class Wod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private SiteUser writer;
+//    @ManyToOne
+//    private SiteUser writer;
 
     private String imagePath;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @ManyToMany
-    private List<SiteUser> likeList;
+//    @ManyToMany
+//    private List<SiteUser> likeList;
 
-    private Long like;
+//    private Long like;
 
     private LocalDateTime createDate;
 }

@@ -51,8 +51,8 @@ public class SiteUser {
 
     @OneToMany
     List<DayPass> dayPassList = new ArrayList<>();
-
-    @OneToMany
-    private List<Wod> wodList;
+//
+//    @OneToMany
+//    private List<Wod> wodList;
 
 }
