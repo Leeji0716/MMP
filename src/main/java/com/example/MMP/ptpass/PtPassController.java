@@ -27,14 +27,12 @@ private final PtPassService ptPassService;
         if(bindingResult.hasErrors()){
             return "pass/ptpassmake";
         }
+
         ptPassService.createPt(ptPassDto.getPassName(),ptPassDto.getPassTitle(),ptPassDto.getPassCount(),ptPassDto.getPassPrice());
         return "redirect:/";
     }
 
-    @GetMapping("/list")
-    public String PtPassList(Model model){
-        List<PtPass> ptPassList = ptPassService.findAll();
-        model.addAttribute("ptPassList",ptPassList);
-        return "pass/passList";
-    }
+
+
+
 }

@@ -10,6 +10,7 @@
 <body class="h-screen flex items-center justify-center bg-black">
 <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
     <div class="text-center text-2xl mb-4">PT회원권 만들기</div>
+    <a href="/day/add" class="btn">요일권 만들기</a>
     <form th:action="@{|/pt/add|}" th:object="${ptPassDto}" class="space-y-4" method="post">
         <input type="text" th:field="*{passName}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
         <p th:if="${#fields.hasErrors('passName')}" th:errors="*{passName}" class="text-red-500 text-sm"></p>
