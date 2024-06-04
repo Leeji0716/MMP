@@ -12,8 +12,7 @@ public class SiteUserCustomImpl implements SiteUserCustom{
 
     QSiteUser qSiteUser = QSiteUser.siteUser;
 
-    public List<SiteUser> findByqqwe(){
-
+    public List<SiteUser> findByqwe(){
         return jpaQueryFactory.select(qSiteUser).from(qSiteUser).where(qSiteUser.userId.eq("admin")).fetch();
     }
 }
