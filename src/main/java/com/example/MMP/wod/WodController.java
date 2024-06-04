@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 
@@ -39,7 +36,6 @@ public class WodController {
 
     @PostMapping("/create")
     private String createWod(@Valid WodForm wodForm, BindingResult bindingResult, @RequestParam("image") MultipartFile image, Model model){
-
         if (bindingResult.hasErrors()) {
             return "wod/wod_create";
         }
@@ -66,5 +62,12 @@ public class WodController {
         model.addAttribute("wodList", wodList);
 
         return "redirect:/wod/form";
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(@PathVariable("id") Long id, Model model){
+        Wod wod = wodService.getWod(id);
+        model.addAttribute("wod", wod);
+        return "wod/wod_detail";
     }
 }

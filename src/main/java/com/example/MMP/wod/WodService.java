@@ -24,4 +24,9 @@ public class WodService {
         List<Wod> wodList = wodRepository.findAll();
         return wodList;
     }
+
+    public Wod getWod(Long id) {
+        Wod wod = wodRepository.findById(id).get();
+        return wod;
+    }
 }
