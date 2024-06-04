@@ -1,5 +1,6 @@
 package com.example.MMP.siteuser;
 
+import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.wod.Wod;
@@ -44,5 +45,8 @@ public class SiteUser {
 //
 //    @OneToMany
 //    private List<Wod> wodList;
+
+    @OneToMany
+    private List<Challenge> challenges = new ArrayList<> ();
 
 }

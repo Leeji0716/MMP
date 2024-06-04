@@ -22,6 +22,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath birthDate = createString("birthDate");
 
+    public final ListPath<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge> challenges = this.<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge>createList("challenges", com.example.MMP.challenge.challenge.Challenge.class, com.example.MMP.challenge.challenge.QChallenge.class, PathInits.DIRECT2);
+
     public final ListPath<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass> dayPassList = this.<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass>createList("dayPassList", com.example.MMP.daypass.DayPass.class, com.example.MMP.daypass.QDayPass.class, PathInits.DIRECT2);
 
     public final StringPath email = createString("email");
