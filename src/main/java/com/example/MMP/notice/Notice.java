@@ -28,7 +28,5 @@ public class Notice {
         this.hit++;
     }
 
-    private LocalDateTime createDate;
-
     private LocalDateTime modifyDate;
 }

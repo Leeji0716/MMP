@@ -36,7 +36,9 @@ public class NoticeController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid NoticeForm noticeForm, BindingResult bindingResult){
+    public String create(@Valid NoticeForm noticeForm,
+                         BindingResult bindingResult){
+
         noticeService.create (noticeForm.title,noticeForm.content);
         return "redirect:/";
     }
@@ -59,7 +61,7 @@ public class NoticeController {
 
         Notice notice = this.noticeService.getNotice(id);
 
-        Page<Notice> paging = this.noticeService.getList(page, notice, so);
+        Page<Notice> paging = this.noticeService.getList(page);
 
         // Model 객체에 조회된 질문, 답변 목록, 정렬 옵션을 담아서 뷰로 전달합니다.
         model.addAttribute("paging", paging);
@@ -67,6 +69,6 @@ public class NoticeController {
         model.addAttribute("so", so);
 
         // 뷰 이름인 "question_detail"을 반환합니다.
-        return "notice_detail";
+        return "notice/notice_detail";
     }
 }
