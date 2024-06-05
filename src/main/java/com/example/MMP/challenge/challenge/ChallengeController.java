@@ -102,7 +102,9 @@ public class ChallengeController {
     @PostMapping("/participate")
     public String participate(@RequestParam("challengeId") Long challengeId, Principal principal, Model model) {
         if (principal == null) {
-            return "redirect:/login";
+
+            return "redirect:/user/login";
+
         }
 
         String userId = principal.getName(); // 현재 로그인한 사용자의 userId 가져오기
