@@ -6,13 +6,30 @@
     <div class="flex w-full">
         <!-- ptPassList 요소들 -->
         <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
-            <div>
-                <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-full text-black" th:text="${wod.content}"></a>
-            </div>
             <figure>
                 <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
             </figure>
+            <div class="flex">
+                <a href="#" class="recommend btn btn-sm btn-outline-secondary w-[20%]" onclick="toggleIcon(event)">
+                    <i class="fa-regular fa-heart"></i>
+                </a>
+                <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
+            </div>
         </div>
     </div>
+    <script>
+        function toggleIcon(event) {
+          event.preventDefault(); // 링크의 기본 동작을 방지
+          const icon = event.currentTarget.querySelector('i');
+    
+          if (icon.classList.contains('fa-regular')) {
+            icon.classList.remove('fa-regular', 'fa-heart');
+            icon.classList.add('fa-solid', 'fa-heart');
+          } else {
+            icon.classList.remove('fa-solid', 'fa-heart');
+            icon.classList.add('fa-regular', 'fa-heart');
+          }
+        }
+    </script>
 </div>
 </html>
