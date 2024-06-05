@@ -37,4 +37,27 @@ public class SiteUserController {
         }
         return "redirect:/";
     }
+
+    @GetMapping("/signup")
+    public String userSignup(UserDto userDto ){
+
+        return "user/userSignup";
+    }
+
+    @PostMapping("/signup")
+    public String userSignup(@Valid UserDto userDto,BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "user/userSignup";
+        } try {
+            siteUserService.userSignup(userDto.getName(),userDto.getNumber(),userDto.getGender(),userDto.getBirthDate(),userDto.getEmail(),userDto.getUserRole());
+        } catch (DataIntegrityViolationException e) {
+            bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
+            return "user/userSignup";
+        } catch (Exception e) {
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "user/userSignup";
+        }
+
+        return "redirect:/";
+    }
 }

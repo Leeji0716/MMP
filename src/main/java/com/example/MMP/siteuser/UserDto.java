@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AdminDto {
+public class UserDto {
     @NotEmpty(message = "이름은 필수입니다.")
     private String name;
 
@@ -26,4 +26,7 @@ public class AdminDto {
     @NotEmpty(message = "이메일은 필수입니다.")
     @Email(message = "이메일형식이 아닙니다.")
     private String email;
+
+    @NotEmpty(message = "권한은 필수입니다.")
+    private String userRole;
 }

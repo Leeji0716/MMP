@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container my-3">
 <div class="h-screen flex items-center justify-center bg-black">
 <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-    <div class="text-center text-2xl mb-4">관리자 회원가입</div>
+    <div class="text-center text-2xl mb-4 text-black">관리자 회원가입</div>
 <!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
     <form th:action="@{|/user/adminSignup|}" th:object="${adminDto}" class="space-y-4" method="post">
         <input type="text" th:field="*{name}" class="input input-bordered w-full p-2 border border-gray-300 rounded text-black" placeholder="Name">
