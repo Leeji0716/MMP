@@ -9,9 +9,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import jakarta.validation.Valid;
 
-import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -30,7 +29,7 @@ public class WodController {
     }
 
     @GetMapping("/create")
-    private String createWod(){
+    private String createWod(WodForm wodForm){
         return "wod/wod_create";
     }
 
@@ -70,5 +69,29 @@ public class WodController {
         model.addAttribute("wod", wod);
         model.addAttribute("commentList", wod.getCommentList());
         return "wod/wod_detail";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id){
+        wodService.delete(id);
+        return "redirect:/wod/form";
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, WodForm wodForm,Model model){
+        Wod wod = wodService.getWod(id);
+        model.addAttribute("wod",wod);
+        wodForm.setContent(wod.getContent());
+        wodForm.setImagePath(wod.getImagePath());
+        return "wod/wod_create";
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@Valid WodForm wodForm, BindingResult bindingResult, @PathVariable("id") Long id){
+        if (bindingResult.hasErrors()) {
+            return "wod/wod_create";
+        }
+        wodService.update(id, wodForm.getContent());
+        return "redirect:/wod/detail/" + id;
     }
 }

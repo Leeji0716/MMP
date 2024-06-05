@@ -1,26 +1,28 @@
-<html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<div layout:fragment="content" class="container-fluid my-3">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-            <form action="/wod/create" method="post" enctype="multipart/form-data">
+            <form th:object="${wodForm}" method="post" enctype="multipart/form-data">
                 <!-- CSRF 토큰 입력 -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 
-                <!-- 프로필 이미지 출력 -->
-                <img th:src="@{'/uploads/'+ ${profileImagePath}}" alt="프로필 사진">
+                <!-- 프로필 이미지 출력 (조건부) -->
+                <img th:if="${wod != null}" th:src="@{'/uploads/'+ ${wodForm.imagePath}}" alt="프로필 사진">
                 
                 <!-- 프로필 이미지 업로드 입력 -->
                 <div class="mb-3 w-full">
-                    <input type="file" class="file-input file-input-bordered w-full max-w-xl text-black" id="image" name="image"/>
+                    <input input th:if="${wod == null}" type="file" class="file-input file-input-bordered w-full max-w-xl text-black" id="image" name="image"/>
                 </div>
                 
                 <!-- 글 작성 입력 -->
                 <div class="mb-3 w-full">
-                    <input type="text" class="input w-full input-bordered text-black" id="content" name="content" placeholder="글 작성">
+                    <input th:if="${wod == null}" type="text" class="input w-full input-bordered text-black" th:field="*{content}" placeholder="글 작성">
+                    <input th:if="${wod != null}" type="text" class="input w-full input-bordered text-black" th:field="*{content}" th:value="${wod.content}" placeholder="글 작성">
                 </div>
                 
                 <!-- 수정 완료 버튼 -->
-                <button type="submit" class="btn btn-error">업로드</button>
+                <button th:if="${wod == null}" type="submit" class="btn btn-error">업로드</button>
+                <button th:if="${wod != null}" type="submit" class="btn btn-primary">수정</button>
             </form>
         </div>
     </div>

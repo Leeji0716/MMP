@@ -1,77 +1,122 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3 justify-center translate-x-1/4">
-    <div class="flex justify-center items-center">
-        <figure>
-            <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
-        </figure>
-    </div>
-    <div class="flex justify-center items-center h-[50px]">
-        <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
-            <i class="fa-regular fa-heart"></i>
-        </a>
-        <p class="btn text-black w-[90%]" th:text="${wod.content}"></p>
-    </div>
-    <!-- 댓글 작성 -->
-    <form th:action="@{|/comment/create/${wod.id}|}" th:object="${commentForm}" method="post" class="my-3 text-black">
+<div layout:fragment="content" class="container-fluid my-3 flex justify-center">
+    <div class="w-full">
         <div class="flex justify-center items-center">
-            <input type="text" id="content" name="content" class="input w-full h-[200px]" rows="10"></textarea>
+            <figure>
+                <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
+            </figure>
         </div>
-        <input type="submit" value="답변등록" class="btn btn-primary my-2">
-    </form>
-    <!-- 댓글 출력 -->
-    <div class="card my-3 flex justify-center items-center" th:each="comment : ${commentList}">
-        <a th:id="|comment_${comment.id}|"></a>
-        <div class="card-body w-full bg-white text-black rounded-lg border border-gray-300">
-            <div class="card-text w-full" th:utext="${comment.content}"></div>
-            <div class="d-flex justify-content-end">
-                <div th:if="${comment.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
-                    <div class="mb-2">modified at</div>
-                    <div th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
-                </div>
-                <div class="badge bg-light text-dark p-2 text-start">
-                    <!-- <div class="mb-2">
-                        <span th:if="${answer.author != null}" th:text="${answer.author.name}"></span>
-                    </div> -->
-                    <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
-                </div>
+        <div class="flex justify-center items-center h-[50px]">
+            <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
+                <i class="fa-regular fa-heart"></i>
+            </a>
+            <!-- <p class="btn text-black w-[90%]" th:text="${wod.content}"></p> -->
+            <div class="w-full h-full bg-white text-black rounded-lg border border-gray-300" th:utext="${wod.content}">
             </div>
+            <div class="h-full bg-white text-black rounded-lg border border-gray-300"
+                th:text="${#temporals.format(wod.createDate, 'yyyy-MM-dd HH:mm')}"></div>
         </div>
         <div>
-            <!-- <div class="my-3">
-                <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
-                   th:data-uri="@{|/answer/vote/${answer.id}|}">
-                    추천
-                    <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
-                </a>
-                <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-                   sec:authorize="isAuthenticated()"
-                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                   th:text="수정"></a>
-                <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
-                   class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                   th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                   th:text="삭제"></a>
-                <a th:href="@{|/answer/comment/${answer.id}|}" class="btn btn-sm btn-outline-secondary">
-                    댓글
-                    <span class="text-danger small ms-2"
-                          th:if="${#lists.size(answer.commentList) > 0}"
-                          th:text="${#lists.size(answer.commentList)}">
-                    </span>
-                </a>
-            </div> -->
+            <form th:action="@{|/wod/delete/${wod.id}|}" method="post"  id="deleteForm">
+            <input type="button" value="삭제" class="delete btn btn-error my-2" onclick="deleteForm();">
+            </form>
+            <a th:href="@{|/wod/update/${wod.id}|}" class="btn btn-primary my-2">수정</a>
         </div>
+        <!-- 댓글 작성 -->
+        <form th:action="@{|/comment/create/${wod.id}|}" th:object="${commentForm}" method="post"
+            class="my-3 text-black">
+            <div class="flex justify-center items-center">
+                <input type="text" id="content" name="content" class="input w-full h-[200px]" rows="10"></textarea>
+            </div>
+            <input type="submit" value="답변등록" class="btn btn-error my-2">
+        </form>
+        <!-- 댓글 출력 -->
+        <div class="card my-3 flex justify-center items-center" th:each="comment : ${commentList}">
+            <a th:id="|comment_${comment.id}|"></a>
+            <div class="card-body w-full bg-white text-black rounded-lg border border-gray-300">
+                <div class="card-text w-full" th:utext="${comment.content}"></div>
+                <div class="d-flex justify-content-end">
+                    <div th:if="${comment.modifyDate != null}" class="badge bg-light text-dark p-2 text-start mx-3">
+                        <div class="mb-2">modified at</div>
+                        <div th:text="${#temporals.format(comment.modifyDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <!-- <div class="mb-2">
+                            <span th:if="${answer.author != null}" th:text="${answer.author.name}"></span>
+                        </div> -->
+                        <div th:text="${#temporals.format(comment.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- <div class="my-3">
+                    <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+                       th:data-uri="@{|/answer/vote/${answer.id}|}">
+                        추천
+                        <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
+                    </a>
+                    <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
+                       sec:authorize="isAuthenticated()"
+                       th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                       th:text="수정"></a>
+                    <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
+                       class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
+                       th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
+                       th:text="삭제"></a>
+                    <a th:href="@{|/answer/comment/${answer.id}|}" class="btn btn-sm btn-outline-secondary">
+                        댓글
+                        <span class="text-danger small ms-2"
+                              th:if="${#lists.size(answer.commentList) > 0}"
+                              th:text="${#lists.size(answer.commentList)}">
+                        </span>
+                    </a>
+                </div> -->
+            </div>
+        </div>
+    </div>
     <script>
         function toggleIcon(event) {
-          event.preventDefault(); // 링크의 기본 동작을 방지
-          const icon = event.currentTarget.querySelector('i');
-    
-          if (icon.classList.contains('fa-regular')) {
-            icon.classList.remove('fa-regular', 'fa-heart');
-            icon.classList.add('fa-solid', 'fa-heart');
-          } else {
-            icon.classList.remove('fa-solid', 'fa-heart');
-            icon.classList.add('fa-regular', 'fa-heart');
-          }
+            event.preventDefault(); // 링크의 기본 동작을 방지
+            const icon = event.currentTarget.querySelector('i');
+
+            if (icon.classList.contains('fa-regular')) {
+                icon.classList.remove('fa-regular', 'fa-heart');
+                icon.classList.add('fa-solid', 'fa-heart');
+            } else {
+                icon.classList.remove('fa-solid', 'fa-heart');
+                icon.classList.add('fa-regular', 'fa-heart');
+            }
         }
+
+<!--           const delete_elements = document.getElementsByClassName("delete");-->
+<!--        Array.from(delete_elements).forEach(function (element) {-->
+<!--            element.addEventListener('click', function () {-->
+<!--                if (confirm("정말로 삭제하시겠습니까?")) {-->
+<!--                    location.href = this.dataset-url;-->
+<!--                };-->
+<!--            });-->
+<!--        });-->
+
+       function deleteForm() {
+            const form = document.getElementById("deleteForm");
+            if (confirm("삭제하시겠습니까?")) {
+                form.submit();
+            }
+        }
+        
+
+        // const delete_elements = document.getElementsByClassName("delete");
+        // Array.from(delete_elements).forEach(function(element) {
+        //     element.addEventListener('click', function(event) {
+        //         console.log('Delete button clicked');
+        //         if (confirm("정말로 삭제하시겠습니까?")) {
+        //             console.log('Confirmed');
+        //             location.href = this.dataset.uri;
+        //         } else {
+        //             console.log('Cancelled');
+        //         }
+        //         event.preventDefault(); // 기본 동작 방지 (필요한 경우)
+        //     });
+        // });
     </script>
 </div>

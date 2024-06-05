@@ -29,4 +29,15 @@ public class WodService {
         Wod wod = wodRepository.findById(id).get();
         return wod;
     }
+
+    public void delete(Long id) {
+        Wod wod = wodRepository.findById(id).get();
+        wodRepository.delete(wod);
+    }
+
+    public void update(Long id, String content) {
+        Wod wod = wodRepository.findById(id).get();
+        wod.setContent(content);
+        wodRepository.save(wod);
+    }
 }

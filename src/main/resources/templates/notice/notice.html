@@ -1,24 +1,26 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="container-fluid my-3">
     <div class="overflow-x-auto">
-        <table class="table min-w-full">
-            <thead class="bg-gray-500 text-white">
-            <tr>
-                <th class="px-4 py-2 text-left">번호</th>
-                <th class="px-4 py-2 text-left">제목</th>
-                <th class="px-4 py-2 text-left">글쓴이</th>
-                <th class="px-4 py-2 text-left">조회수</th>
-                <th class="px-4 py-2 text-left">작성일시</th>
+        <table class="table">
+            <thead class="table-dark text-white">
+            <tr class="text-center">
+                <th>번호</th>
+                <th>제목</th>
+<!--                <th>글쓴이</th>-->
+                <th>작성일시</th>
+                <th>조회수</th>
+                <th>추천수</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="notice, loop : ${paging}">
-                <td th:text="${loop.count}" class="px-4 py-2"></td>
-                <td class="px-4 py-2">
-                    <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.content}"
-                       class="text-blue-500 hover:underline"></a>
+            <tr class="text-center" th:each="notice, loop : ${paging}">
+                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+                <td class="text-start">
+                    <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.content}"></a>
                 </td>
-                <td th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm')}" class="px-4 py-2"></td>
+<!--                <td><span th:if="${notice.author != null}" th:text="${notice.author.name}"></span></td>-->
+                <td th:text="${#temporals.format(notice.createDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${notice.hit}"></td>
             </tr>
             </tbody>
         </table>
