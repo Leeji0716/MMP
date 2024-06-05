@@ -1,6 +1,6 @@
 package com.example.MMP.wod;
 
-import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.Comment.Comment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,6 @@ public class Wod {
 
 //    @ManyToOne
 //    private SiteUser writer;
-
     private String imagePath;
 
     @Column(columnDefinition = "TEXT")
@@ -27,7 +26,10 @@ public class Wod {
 //    @ManyToMany
 //    private List<SiteUser> likeList;
 
-//    private Long like;
+//    private Long likeCount;
 
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "wod", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList;
 }

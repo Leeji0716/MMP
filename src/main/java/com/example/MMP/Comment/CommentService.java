@@ -1,5 +1,6 @@
-package com.example.MMP.answer;
+package com.example.MMP.Comment;
 
+import com.example.MMP.Comment.CommentRepository;
 import com.example.MMP.DataNotFoundException;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.wod.Wod;
@@ -11,41 +12,40 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class AnswerService {
-    private final AnswerRepository answerRepository;
-    public Answer create(Wod wod, String content, SiteUser author){
-        Answer answer = new Answer();
-        answer.setContent(content);
-        answer.setCreateDate(LocalDateTime.now());
-        answer.setWod(wod);
-        answer.setAuthor(author);
-        this.answerRepository.save(answer);
-        return answer;
+public class CommentService {
+    private final CommentRepository commentRepository;
+    public Comment create(Wod wod, String content){
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setCreateDate(LocalDateTime.now());
+        comment.setWod(wod);
+        this.commentRepository.save(comment);
+        return comment;
     }
 
-    public Answer getAnswer(Integer id) {
-        Optional<Answer> answer = this.answerRepository.findById(id);
-        if (answer.isPresent()) {
-            return answer.get();
+    public Comment getComment(Long id) {
+        Optional<Comment> comment = this.commentRepository.findById(id);
+        if (comment.isPresent()) {
+            return comment.get();
         } else {
             throw new DataNotFoundException("answer not found");
         }
     }
 
-    public void modify(Answer answer, String content) {
-        answer.setContent(content);
-        answer.setModifyDate(LocalDateTime.now());
-        this.answerRepository.save(answer);
+    public void modify(Comment comment, String content) {
+        comment.setContent(content);
+        comment.setModifyDate(LocalDateTime.now());
+        this.commentRepository.save(comment);
     }
 
-    public void delete(Answer answer) {
-        this.answerRepository.delete(answer);
+    public void delete(Comment comment) {
+        this.commentRepository.delete(comment);
     }
 
-    public void vote(Answer answer, SiteUser siteUser){
-        answer.getLikeList().add(siteUser);
-        int vote = answer.getLikeList().size();
-        answer.setLike(vote);
-        this.answerRepository.save(answer);
-    }
+//    public void vote(Comment comment, SiteUser siteUser){
+//        comment.getLikeList().add(siteUser);
+//        int vote = comment.getLikeList().size();
+//        comment.setLike(vote);
+//        this.commentRepository.save(comment);
+//    }
 }

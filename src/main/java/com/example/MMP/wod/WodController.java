@@ -68,6 +68,7 @@ public class WodController {
     public String detail(@PathVariable("id") Long id, Model model){
         Wod wod = wodService.getWod(id);
         model.addAttribute("wod", wod);
+        model.addAttribute("commentList", wod.getCommentList());
         return "wod/wod_detail";
     }
 }
