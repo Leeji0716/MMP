@@ -9,5 +9,6 @@ public interface SiteUserRepository extends JpaRepository<SiteUser,Long> ,SiteUs
 
     Optional<SiteUser> findByUserId(String userId);
 
+    Optional<SiteUser> findByName(String name);
 
 }

@@ -29,4 +29,6 @@ public class challengeUser {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
+    private double achievementRate; // 달성률 추가
 }

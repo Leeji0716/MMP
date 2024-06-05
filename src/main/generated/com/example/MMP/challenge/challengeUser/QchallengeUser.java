@@ -22,6 +22,8 @@ public class QchallengeUser extends EntityPathBase<challengeUser> {
 
     public static final QchallengeUser challengeUser = new QchallengeUser("challengeUser");
 
+    public final NumberPath<Double> achievementRate = createNumber("achievementRate", Double.class);
+
     public final com.example.MMP.challenge.challenge.QChallenge challenge;
 
     public final DateTimePath<java.time.LocalDateTime> endDate = createDateTime("endDate", java.time.LocalDateTime.class);

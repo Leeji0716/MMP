@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,4 +30,9 @@ public class ChallengeGroupService {
 
         return challengeGroupRepository.save(group);
     }
+
+    public List<ChallengeGroup> getAllGroups() {
+        return challengeGroupRepository.findAll();
+    }
+
 }

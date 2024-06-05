@@ -1,44 +1,58 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Create Challenge</title>
+    <title>챌린지 생성</title>
 </head>
-<body>
-<h1>Create New Challenge</h1>
-<form th:action="@{/challenge/create}" th:object="${challengeForm}" method="post">
-    <div>
-        <label for="name">Name:</label>
+<body style="background-color: black; color: white; font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+<h1 style="color: white;">챌린지 생성</h1>
+<form th:action="@{/challenge/create}" th:object="${challengeForm}" method="post" style="max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 10px; background-color: #333333; ">
+    <div style="margin-bottom: 15px;">
+        <label for="name">챌린지 이름</label>
+        <br/>
         <input type="text" id="name" th:field="*{name}" />
         <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
     </div>
-    <div>
-        <label for="description">Description:</label>
+    <div style="margin-bottom: 15px;">
+        <label for="description">챌린지 설명</label>
+        <br/>
         <input type="text" id="description" th:field="*{description}" />
         <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
     </div>
-    <div>
-        <label for="openDate">Open Date:</label>
+    <div style="margin-bottom: 15px;">
+        <label for="openDate">챌린지 시작 날짜</label>
+        <br/>
         <input type="datetime-local" id="openDate" th:field="*{openDate}" />
         <div th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}"></div>
     </div>
-    <div>
-        <label for="closeDate">Close Date:</label>
+    <div style="margin-bottom: 15px;">
+        <label for="closeDate">챌린지 종료 날짜</label>
+        <br/>
         <input type="datetime-local" id="closeDate" th:field="*{closeDate}" />
         <div th:if="${#fields.hasErrors('closeDate')}" th:errors="*{closeDate}"></div>
     </div>
-    <div>
-        <label for="requiredPoint">Required Point:</label>
+    <div style="margin-bottom: 15px;">
+        <label for="requiredPoint">챌린지 보상 포인트</label>
+        <br/>
         <input type="number" id="requiredPoint" th:field="*{requiredPoint}" />
         <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}"></div>
     </div>
-    <div>
-        <label for="type">Type:</label>
-        <input type="text" id="type" th:field="*{type}" />
+    <div style="margin-bottom: 15px;">
+        <label>분류</label>
+        <div style="margin-bottom: 5px;">
+            <input type="radio" id="weight" name="type" value="weight" th:field="*{type}" />
+            <label for="weight">몸무게 챌린지</label>
+        </div>
+        <div style="margin-bottom: 5px;">
+            <input type="radio" id="exerciseTime" name="type" value="exerciseTime" th:field="*{type}" />
+            <label for="exerciseTime">운동시간 챌린지</label>
+        </div>
+        <div style="margin-bottom: 5px;">
+            <input type="radio" id="attendance" name="type" value="attendance" th:field="*{type}" />
+            <label for="attendance">출석체크 챌린지</label>
+        </div>
         <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
     </div>
     <div>
-        <button type="submit">Create Challenge</button>
+        <button type="submit">챌린지 생성하기</button>
     </div>
+    <a href="/challenge/challenges">챌린지 리스트로 가기(내가 편하려고 임시로 만들어둠)</a>
 </form>
 </body>
-</html>
