@@ -18,9 +18,10 @@
         </div>
         <div>
             <form th:action="@{|/wod/delete/${wod.id}|}" method="post"  id="deleteForm">
-            <input type="button" value="삭제" class="delete btn btn-error my-2" onclick="deleteForm();">
+                <input type="button" value="삭제" class="delete btn btn-error my-2" onclick="deleteForm();">
+                <a th:href="@{|/wod/update/${wod.id}|}" class="btn btn-primary my-2">수정</a>
             </form>
-            <a th:href="@{|/wod/update/${wod.id}|}" class="btn btn-primary my-2">수정</a>
+            
         </div>
         <!-- 댓글 작성 -->
         <form th:action="@{|/comment/create/${wod.id}|}" th:object="${commentForm}" method="post"
@@ -88,35 +89,11 @@
             }
         }
 
-<!--           const delete_elements = document.getElementsByClassName("delete");-->
-<!--        Array.from(delete_elements).forEach(function (element) {-->
-<!--            element.addEventListener('click', function () {-->
-<!--                if (confirm("정말로 삭제하시겠습니까?")) {-->
-<!--                    location.href = this.dataset-url;-->
-<!--                };-->
-<!--            });-->
-<!--        });-->
-
        function deleteForm() {
             const form = document.getElementById("deleteForm");
             if (confirm("삭제하시겠습니까?")) {
                 form.submit();
             }
         }
-        
-
-        // const delete_elements = document.getElementsByClassName("delete");
-        // Array.from(delete_elements).forEach(function(element) {
-        //     element.addEventListener('click', function(event) {
-        //         console.log('Delete button clicked');
-        //         if (confirm("정말로 삭제하시겠습니까?")) {
-        //             console.log('Confirmed');
-        //             location.href = this.dataset.uri;
-        //         } else {
-        //             console.log('Cancelled');
-        //         }
-        //         event.preventDefault(); // 기본 동작 방지 (필요한 경우)
-        //     });
-        // });
     </script>
 </div>

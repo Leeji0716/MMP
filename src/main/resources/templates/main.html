@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
+<div layout:fragment="content" class="container-fluid my-3">
     <div>
         <a href="/pt/add">회원권만들기</a>
         <br>
@@ -11,7 +11,7 @@
         <br>
         <a href="/user/signup">회원만들기</a>
         <br>
-
+        <a href="/homeTraining/home">홈트레이닝</a>
 
         <!--        &lt;!&ndash; 관리자 권한이 있는 경우 &ndash;&gt;-->
         <!--        <div th:if="${#authorization.expression('hasRole('ADMIN')')}">-->
@@ -24,6 +24,8 @@
         <br>
         <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+
+
     </div>
     <script th:inline="javascript">
 
