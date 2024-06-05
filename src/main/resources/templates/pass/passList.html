@@ -24,7 +24,7 @@
                     <p th:text="'횟수 : '+${pt.passCount}"></p>
                     <p th:text="'가격 : '+${pt.passPrice}"></p>
                     <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Buy Now</button>
+                        <a href="/checkout" class="btn btn-primary">Buy Now</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- 추가 스크립트가 있을 경우 여기에 추가 -->
 <div layout:fragment="script"></div>
