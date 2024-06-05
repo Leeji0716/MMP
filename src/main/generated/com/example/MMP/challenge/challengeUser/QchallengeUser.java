@@ -32,7 +32,7 @@ public class QchallengeUser extends EntityPathBase<challengeUser> {
 
     public final DateTimePath<java.time.LocalDateTime> startDate = createDateTime("startDate", java.time.LocalDateTime.class);
 
-    public final BooleanPath successOrNot = createBoolean("successOrNot");
+    public final BooleanPath success = createBoolean("success");
 
     public QchallengeUser(String variable) {
         this(challengeUser.class, forVariable(variable), INITS);

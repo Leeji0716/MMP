@@ -1,10 +1,12 @@
 package com.example.MMP.siteuser;
 
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,8 +40,14 @@ public class SiteUserController {
         return "redirect:/";
     }
 
+
+    @GetMapping("/login")
+    public String login() {
+        return "user/login_form";
+    }
+
     @GetMapping("/signup")
-    public String userSignup(UserDto userDto ){
+    public String userSignup(UserDto userDto){
 
         return "user/userSignup";
     }
@@ -59,5 +67,6 @@ public class SiteUserController {
         }
 
         return "redirect:/";
+
     }
 }

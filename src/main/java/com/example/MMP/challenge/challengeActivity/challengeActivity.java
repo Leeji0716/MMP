@@ -27,6 +27,7 @@ public class challengeActivity {
     private int exerciseTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
 }

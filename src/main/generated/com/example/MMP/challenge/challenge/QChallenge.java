@@ -36,6 +36,8 @@ public class QChallenge extends EntityPathBase<Challenge> {
 
     public final NumberPath<Integer> requiredPoint = createNumber("requiredPoint", Integer.class);
 
+    public final StringPath type = createString("type");
+
     public QChallenge(String variable) {
         super(Challenge.class, forVariable(variable));
     }

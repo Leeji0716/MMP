@@ -16,15 +16,17 @@ public class challengeUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean successOrNot;
+    private boolean success;
 
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "site_user_id")
     private SiteUser siteUser;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 }

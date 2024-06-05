@@ -28,10 +28,12 @@ public class Challenge {
 
     private int requiredPoint;
 
-    @OneToMany(mappedBy = "challenge")
+    private String type;
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<challengeActivity> challengeActivities = new ArrayList<> ();
 
-    @OneToMany(mappedBy = "challenge")
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<challengeUser> challengeUsers = new ArrayList<> ();
 
 

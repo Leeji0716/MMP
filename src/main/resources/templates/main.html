@@ -11,9 +11,46 @@
         <br>
         <a href="/user/adminSignup">관리자회원가입</a>
         <br>
+
+<!--        &lt;!&ndash; 관리자 권한이 있는 경우 &ndash;&gt;-->
+<!--        <div th:if="${#authorization.expression('hasRole('ADMIN')')}">-->
+<!--            관리자회원가입</h2>-->
+<!--            <ul>-->
+<!--                <a href="/user/adminSignup">관리자회원가입</a>-->
+<!--            </ul>-->
+<!--        </div>-->
+
         <a href="/wod/form">오운완</a>
+        <br>
+        <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+        <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+        <br>
+        <a href="/challenge/create">챌린지 생성</a>
+        <br>
+        <a href="/challenge/challenges">챌린지 리스트</a>
         <br>
         <a href="/user/signup">회원만들기</a>
     </div>
+    <script th:inline="javascript">
+
+        function getLoggedInUser() {
+
+        const aa = /*[[${#authentication}]]*/ null;
+
+        if(aa.name === "anonymousUser") {
+            return null;
+        }
+        console.log(aa.name);
+        return aa.name;
+
+        }
+
+         document.addEventListener('DOMContentLoaded', function() {
+     // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
+       var name =  getLoggedInUser();
+       console.log(name);
+     });
+
+    </script>
 </div>
 </html>

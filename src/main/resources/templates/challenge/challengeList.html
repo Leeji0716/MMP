@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Challenges</title>
+</head>
+<body>
+<h1>Challenges</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Open Date</th>
+        <th>Close Date</th>
+        <th>Required Point</th>
+        <th>Type</th>
+        <th>참여</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="challenge : ${challenges}">
+        <td th:text="${challenge.name}"></td>
+        <td th:text="${challenge.description}"></td>
+        <td th:text="${challenge.openDate}"></td>
+        <td th:text="${challenge.closeDate}"></td>
+        <td th:text="${challenge.requiredPoint}"></td>
+        <td th:text="${challenge.type}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
