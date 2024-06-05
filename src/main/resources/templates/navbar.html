@@ -18,10 +18,10 @@
             <a class="dropbtn bg-black text-white text-lg" th:href="@{/totalPass/list}">이용권 구매</a>
         </div>
         <div>
-            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">챌린지</a>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{/challenge/challenges}">챌린지</a>
         </div>
         <div>
-            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">오운완</a>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{/wod/form}">오운완</a>
         </div>
         <div class="flex-none gap-2">
             <div class="dropdown dropdown-end">
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <ul tabindex="0"
-                    class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
+                    class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 text-black">
                     <li class="nav-item">
                         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/info}">프로필</a>
                     </li>
