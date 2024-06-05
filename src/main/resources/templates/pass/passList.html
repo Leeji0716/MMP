@@ -1,15 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>회원권 리스트</title>
 </head>
 
+
+<!--<body >-->
+<!--<div layout:fragment="content" class="container my-3">-->
+<!--    <div class="flex flex-wrap justify-center">-->
+
 <body class="flex flex-wrap justify-center bg-black">
 
-<div class="flex">
+
+        <!-- ptPassList 요소들 -->
+        <div class="card w-96 bg-base-100 shadow-xl m-4 pt-2.5 text-black" th:each="pt:${ptPassList}">
+            <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
+            <div class="card-body">
+                <h2 class="card-title" th:text="${pt.passName}"></h2>
+                <p th:text="${pt.passTitle}"></p>
+                <p th:text="'횟수 : '+${pt.passCount}"></p>
+                <p th:text="'가격 : '+${pt.passPrice}"></p>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary">Buy Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--    <div class="flex">-->
+<!--        &lt;!&ndash; dayPassList 요소들 &ndash;&gt;-->
+<!--        <div class="card w-96 bg-base-100 shadow-xl m-4" th:each="day:${dayPassList}">-->
+<!--            <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>-->
+<!--            <div class="card-body">-->
+<!--                <h2 class="card-title" th:text="${day.dayPassName}"></h2>-->
+<!--                <p th:text="${day.dayPassTitle}"></p>-->
+<!--                <p th:text="${day.dayPassDays}+'일'"></p>-->
+<!--                <p th:text="'가격 : '+${day.dayPassPrice}"></p>-->
+<!--                <div class="card-actions justify-end">-->
+<!--                    <button class="btn btn-primary">Buy Now</button>-->
+<!--                </div>-->
 
     <!-- ptPassList 요소들 -->
     <div class="card w-96 bg-base-100 shadow-xl m-4 pt-2.5" th:each="pt:${ptPassList}">
@@ -42,6 +73,8 @@
     </div>
 </div>
 
+<!-- 추가 스크립트가 있을 경우 여기에 추가 -->
+<div layout:fragment="script"></div>
 
 </body>
 </html>

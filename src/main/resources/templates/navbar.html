@@ -4,7 +4,7 @@
             <img src="dulgi.png" alt="로고" class="h-8 w-auto inline">
         </a>
         <div>
-            <a class="dropbtn bg-black text-white text-lg" th:href="@{#}">공지사항</a>
+            <a class="dropbtn bg-black text-white text-lg" th:href="@{/notice/list}">공지사항</a>
         </div>
         <div class="dropdown">
             <button class="dropbtn bg-black text-white text-lg">소개</button>
@@ -35,9 +35,6 @@
                     class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
                     <li class="nav-item">
                         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/info}">프로필</a>
-                    </li>
-                    <li sec:authorize="isAnonymous()">
-                        <a th:href="@{/user/login}">Login</a>
                     </li>
                     <li sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/logout}">Logout</a>

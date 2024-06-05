@@ -1,9 +1,6 @@
 package com.example.MMP.notice;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +23,12 @@ public class Notice {
 
     private LocalDateTime notificationDate;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
     public void increaseHit(){
         this.hit++;
     }
 
+    private LocalDateTime createDate;
+
+    private LocalDateTime modifyDate;
 }
