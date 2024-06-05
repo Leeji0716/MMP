@@ -28,7 +28,7 @@ public class SiteUserService {
     public void userSignup(String name,String number,String gender, String birthDay, String email, String userRole){
         SiteUser siteUser = new SiteUser();
         siteUser.setUserId(number);
-        siteUser.setPassword(passwordEncoder.encode(number));
+        siteUser.setPassword(passwordEncoder.encode(birthDay));
         siteUser.setName(name);
         siteUser.setNumber(number);
         siteUser.setBirthDate(birthDay);
