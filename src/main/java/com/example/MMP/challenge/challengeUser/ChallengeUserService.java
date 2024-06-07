@@ -1,19 +1,53 @@
 package com.example.MMP.challenge.challengeUser;
 
+import com.example.MMP.attendance.AttendanceService;
+import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
+import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class ChallengeUserService {
 
     private final ChallengeUserRepository challengeUserRepository;
+    private final AttendanceService attendanceService;
+    private final ChallengeActivityRepository challengeActivityRepository;
 
-    public void achievementRate(Long challengeUserId, double rate) {
-        challengeUser challengeUser = challengeUserRepository.findById(challengeUserId).orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
-        // 나중에 100을 rate로 변경해야 함(지금은 그냥 테스트로 강제로 넣어둠)
-        challengeUser.setAchievementRate(100);
+
+    public void updateAchievementRate(Long challengeUserId) {
+        ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
+                .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
+
+        Long challengeId = challengeUser.getChallenge().getId();
+        Long siteUserId = challengeUser.getSiteUser().getId();
+        LocalDate startDate = challengeUser.getStartDate().toLocalDate();
+        LocalDate endDate = challengeUser.getEndDate().toLocalDate();
+
+        double attendanceRate = attendanceService.calculateAttendanceRate(siteUserId, startDate, endDate);
+        List<ChallengeActivity> activities = challengeActivityRepository.findByChallengeId(challengeId);
+
+        double activityRate = calculateActivityRate(activities);
+        double achievementRate = (attendanceRate + activityRate) / 2;
+
+        challengeUser.setAchievementRate(achievementRate);
+
         challengeUserRepository.save(challengeUser);
+    }
+
+
+    private double calculateActivityRate(List<ChallengeActivity> activities) {
+        // 활동 데이터를 기반으로 달성률 계산 로직 구현
+        int totalActivities = activities.size();
+        if (totalActivities == 0) {
+            return 0;
+        }
+
+        int successfulActivities = (int) activities.stream().filter(a -> a.getDuration() > 0 && a.getWeight() > 0).count();
+        return ((double) successfulActivities / totalActivities) * 100;
     }
 
 //    public double calculateAchievementRate(challengeUser challengeUser) {

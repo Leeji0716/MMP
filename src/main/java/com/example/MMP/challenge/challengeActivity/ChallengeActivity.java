@@ -1,5 +1,6 @@
 package com.example.MMP.challenge.challengeActivity;
 
+import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-public class challengeActivity {
+public class ChallengeActivity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,9 @@ public class challengeActivity {
 
     private int weight;
 
-    private int attendance;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attendance_id", nullable = true)
+    private Attendance attendance;
 
     private int exerciseTime;
 

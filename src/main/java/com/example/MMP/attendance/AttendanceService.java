@@ -51,4 +51,10 @@ public class AttendanceService {
     public List<Attendance> getUserAttendance(Long siteUserId) {
         return attendanceRepository.findBySiteUserId(siteUserId);
     }
+
+    public double calculateAttendanceRate(Long siteUserId, LocalDate startDate, LocalDate endDate) {
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween(siteUserId, startDate, endDate);
+        long totalDays = startDate.until(endDate).getDays() + 1; // 포함된 총 일수 계산
+        return ((double) attendanceList.size() / totalDays) * 100;
+    }
 }

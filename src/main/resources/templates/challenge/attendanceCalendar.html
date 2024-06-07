@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
+<html layout:decorate="~{layout}">
+<div layout:fragment="content">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>출석 이벤트</title>
     <style>
@@ -15,6 +14,12 @@
             padding: 10px;
             text-align: center;
             position: relative;
+            border-radius: 50%; /* 동그라미로 변경 */
+            width: 90px; /* 고정된 너비 */
+            height: 90px; /* 고정된 높이 */
+            display: flex; /* 내용물 가운데 정렬 */
+            align-items: center; /* 내용물 가운데 정렬 */
+            justify-content: center; /* 내용물 가운데 정렬 */
         }
         .stamp {
             position: absolute;
@@ -36,99 +41,130 @@
             font-size: 16px;
         }
     </style>
-</head>
-<body>
-<div class="container" style="border: 2px solid white; padding: 40px; width: 500px; margin: 20px auto;">
-    <h1>출석 이벤트</h1>
-    <div id="calendar" class="calendar"></div>
-    <button id="attendanceButton" class="attendance-button">출석하기</button>
-</div>
 
-<script>
-    // 현재 날짜 가져오기
-    const today = new Date();
-    const currentMonth = today.getMonth();
-    const currentYear = today.getFullYear();
+    <body>
+    <div style="border: 2px solid white; padding: 40px; width: 1000px; height: 800px; margin: 20px auto 0;">
+        <h1 id="monthTitle" style="text-align: center; font-weight: bold; font-size: 30px;">출석 이벤트</h1>
+        <br>
+        <br>
+        <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
+        <br>
+        <div id="calendar" class="calendar"></div>
+        <button id="attendanceButton" class="attendance-button">출석하기</button>
+    </div>
 
-    // 달력 생성 함수
-    function generateCalendar(month, year) {
-        const calendar = document.getElementById('calendar');
-        calendar.innerHTML = '';
+    <script>
+        // 현재 날짜 가져오기
+        const today = new Date();
+        const currentMonth = today.getMonth();
+        const currentYear = today.getFullYear();
 
-        // 달의 첫 날과 마지막 날 가져오기
-        const firstDay = new Date(year, month).getDay();
-        const lastDate = new Date(year, month + 1, 0).getDate();
+        // 월 이름 가져오기
+        const monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
+        document.getElementById('monthTitle').textContent = `MMP ${monthNames[currentMonth]} 출석 이벤트`;
 
-        // 빈 칸 채우기
-        for (let i = 0; i < firstDay; i++) {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day';
-            calendar.appendChild(dayElement);
-        }
-
-        // 날짜 채우기
-        for (let date = 1; date <= lastDate; date++) {
-            const dayElement = document.createElement('div');
-            dayElement.className = 'day';
-            dayElement.textContent = date;
-
-            // 클릭 이벤트 추가
-            dayElement.addEventListener('click', () => markAttendance(dayElement, year, month, date));
-
-            calendar.appendChild(dayElement);
-        }
-    }
-
-    // 출석 표시 함수
-    function markAttendance(dayElement, year, month, date) {
-        const attendanceDate = new Date(year, month, date);
-        const existingStamp = dayElement.querySelector('.stamp');
-
-        if (existingStamp) {
-            dayElement.removeChild(existingStamp);
-        } else {
-            const stamp = document.createElement('div');
-            stamp.className = 'stamp';
-
-            const img = document.createElement('img');
-            img.src = 'https://i.imgur.com/AEGEIjA.png'; // 이미지 경로를 여기에 입력하세요
-            img.alt = 'Attendance Stamp';
-            img.style.width = '50px'; // 이미지 크기를 적절히 조정하세요
-            img.style.height = '50px'; // 이미지 크기를 적절히 조정하세요
-
-            stamp.appendChild(img);
-            dayElement.appendChild(stamp);
-
-            // 출석 데이터를 서버에 저장하는 코드 추가
-            fetch(`/attendance/checkin`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' }
-            }).then(response => {
+        // 출석 데이터 가져오기
+        async function fetchAttendanceData() {
+            try {
+                const response = await fetch('/attendance/user/1'); // 사용자의 출석 데이터를 가져오는 엔드포인트로 변경
                 if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text) });
+                    throw new Error('출석 데이터를 불러오는 데 실패했습니다.');
                 }
-                return response.text();
-            }).then(data => {
-                console.log('출석 체크 성공:', data);
-            }).catch(error => {
-                console.error('출석 체크 실패:', error);
-            });
+                const text = await response.text(); // 우선 텍스트로 읽기
+                console.log('서버 응답:', text); // 서버 응답을 콘솔에 출력
+                return JSON.parse(text); // JSON 파싱
+            } catch (error) {
+                console.error('출석 데이터 가져오기 오류:', error);
+                return [];
+            }
         }
-    }
 
-    // "출석하기" 버튼 클릭 이벤트 핸들러 추가
-    document.getElementById('attendanceButton').addEventListener('click', () => {
-        const todayElement = Array.from(document.querySelectorAll('.day')).find(dayElement => {
-            return dayElement.textContent == today.getDate();
+        // 달력 생성 함수
+        async function generateCalendar(month, year) {
+            const attendanceData = await fetchAttendanceData();
+            const attendanceDates = attendanceData.map(attendance => new Date(attendance.date));
+
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            // 달의 첫 날과 마지막 날 가져오기
+            const firstDay = new Date(year, month).getDay();
+            const lastDate = new Date(year, month + 1, 0).getDate();
+
+            // 빈 칸 채우기
+            for (let i = 0; i < firstDay; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                calendar.appendChild(dayElement);
+            }
+
+            // 날짜 채우기
+            for (let date = 1; date <= lastDate; date++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'day';
+                dayElement.textContent = date;
+
+                // 출석 여부 표시
+                const attendanceDate = new Date(year, month, date);
+                if (attendanceDates.some(d => d.toDateString() === attendanceDate.toDateString())) {
+                    markAttendance(dayElement);
+                }
+
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        // 출석 표시 함수
+        function markAttendance(dayElement) {
+            const existingStamp = dayElement.querySelector('.stamp');
+
+            if (!existingStamp) {
+                const stamp = document.createElement('div');
+                stamp.className = 'stamp';
+
+                const img = document.createElement('img');
+                img.src = 'https://i.imgur.com/AEGEIjA.png'; // 이미지 경로를 여기에 입력하세요
+                img.alt = 'Attendance Stamp';
+                img.style.width = '50px'; // 이미지 크기를 적절히 조정하세요
+                img.style.height = '50px'; // 이미지 크기를 적절히 조정하세요
+
+                stamp.appendChild(img);
+                dayElement.appendChild(stamp);
+            }
+        }
+
+        // "출석하기" 버튼 클릭 이벤트 핸들러 추가
+        document.getElementById('attendanceButton').addEventListener('click', async () => {
+            const todayElement = Array.from(document.querySelectorAll('.day')).find(dayElement => {
+                return dayElement.textContent == today.getDate();
+            });
+
+            if (todayElement && !todayElement.querySelector('.stamp')) {
+                try {
+                    const response = await fetch(`/attendance/checkin`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+                    });
+
+                    if (!response.ok) {
+                        const text = await response.text();
+                        throw new Error(text);
+                    }
+
+                    const data = await response.text();
+                    console.log('출석 체크 성공:', data);
+
+                    markAttendance(todayElement);
+                } catch (error) {
+                    console.error('출석 체크 실패:', error);
+                }
+            }
         });
 
-        if (todayElement) {
-            markAttendance(todayElement, currentYear, currentMonth, today.getDate());
-        }
-    });
-
-    // 달력 초기 생성
-    generateCalendar(currentMonth, currentYear);
-</script>
-</body>
+        // 달력 초기 생성
+        generateCalendar(currentMonth, currentYear);
+    </script>
+    </body>
+</div>
 </html>

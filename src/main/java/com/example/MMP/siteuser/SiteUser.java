@@ -4,6 +4,7 @@ import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -47,6 +48,7 @@ public class SiteUser {
 //    private List<Wod> wodList;
 
     @OneToMany(mappedBy = "siteUser")
+    @JsonManagedReference
     private List<Attendance> attendanceList = new ArrayList<>();
 
     @OneToMany

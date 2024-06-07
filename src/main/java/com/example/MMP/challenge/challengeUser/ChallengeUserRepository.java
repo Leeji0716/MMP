@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ChallengeUserRepository extends JpaRepository<challengeUser,Long> {
+public interface ChallengeUserRepository extends JpaRepository<ChallengeUser,Long> {
 
-    Optional<challengeUser> findByChallengeAndSiteUser(Challenge challenge, SiteUser siteUser);
-    List<challengeUser> findBySiteUser(SiteUser siteUser);
+    Optional<ChallengeUser> findByChallengeAndSiteUser(Challenge challenge, SiteUser siteUser);
+    List<ChallengeUser> findBySiteUser(SiteUser siteUser);
+
 }

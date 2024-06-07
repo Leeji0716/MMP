@@ -1,7 +1,9 @@
 package com.example.MMP.challenge.challenge;
 
+import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
+import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
-import com.example.MMP.challenge.challengeUser.challengeUser;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import jakarta.validation.Valid;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +32,7 @@ public class ChallengeController {
     private final SiteUserRepository siteUserRepository;
     private final ChallengeUserRepository challengeUserRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeActivityRepository challengeActivityRepository;
 
     @Getter
     @Setter
@@ -72,42 +76,38 @@ public class ChallengeController {
 
     // 챌린지 리스트 기능
     @GetMapping("/challenges")
-    public String listChallenges(Model model) {
-        List<Challenge> challenges = challengeService.getAllChallenges();
-        model.addAttribute("challenges", challenges);
-        return "/challenge/challengeList";
-    }
+    public String listChallenges(Model model, Principal principal) {
+        List<Long> participatedChallengeIds = new ArrayList<>();
+        List<ChallengeUser> challengeUsers = new ArrayList<> ();
 
-    @GetMapping("/list")
-    public String list(Model model, Principal principal) {
         if (principal != null) {
             String userId = principal.getName();
             Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
             if (siteUserOptional.isPresent()) {
                 SiteUser siteUser = siteUserOptional.get();
-                List<challengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
-                List<Long> participatedChallengeIds = challengeUsers.stream()
+                challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+                participatedChallengeIds = challengeUsers.stream()
                         .map(cu -> cu.getChallenge().getId())
                         .collect(Collectors.toList());
-                model.addAttribute("participatedChallengeIds", participatedChallengeIds);
             }
         }
 
         List<Challenge> challenges = challengeRepository.findAll();
         model.addAttribute("challenges", challenges);
+        model.addAttribute("participatedChallengeIds", participatedChallengeIds);
+        model.addAttribute("challengeUsers", challengeUsers);
         return "/challenge/challengeList";
     }
+
 
     // 챌린지 참여 기능
     @PostMapping("/participate")
     public String participate(@RequestParam("challengeId") Long challengeId, Principal principal, Model model) {
         if (principal == null) {
-
             return "redirect:/user/login";
-
         }
 
-        String userId = principal.getName(); // 현재 로그인한 사용자의 userId 가져오기
+        String userId = principal.getName();
         Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
 
         if (siteUserOptional.isPresent()) {
@@ -116,19 +116,37 @@ public class ChallengeController {
 
             if (challengeOptional.isPresent()) {
                 Challenge challenge = challengeOptional.get();
-                Optional<challengeUser> optionalChallengeUser = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser);
+                Optional<ChallengeUser> optionalChallengeUser = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser);
 
                 if (optionalChallengeUser.isEmpty()) {
-                    // 사용자가 아직 이 챌린지에 참여하지 않았다면 새로 추가
-                    challengeUser challengeUser = new challengeUser();
+                    // ChallengeUser 생성
+                    ChallengeUser challengeUser = new ChallengeUser();
                     challengeUser.setChallenge(challenge);
                     challengeUser.setSiteUser(siteUser);
-                    challengeUser.setStartDate(LocalDateTime.now()); // 시작 날짜 설정
-                    challengeUser.setEndDate(challenge.getCloseDate()); // 종료 날짜 설정
-                    challengeUser.setSuccess(false); // 초기 성공 여부 설정
+                    challengeUser.setStartDate(LocalDateTime.now());
+                    challengeUser.setEndDate(challenge.getCloseDate());
+                    challengeUser.setSuccess(false);
                     challengeUserRepository.save(challengeUser);
+
+                    // ChallengeActivity 생성
+                    ChallengeActivity activity = new ChallengeActivity ();
+                    activity.setChallenge(challenge);
+                    activity.setActiveDate(LocalDateTime.now());
+
+                    switch (challenge.getType()) {
+                        case "weight":
+                            activity.setWeight(0); // 초기 값 설정, 나중에 업데이트 필요
+                            break;
+                        case "exerciseTime":
+                            activity.setExerciseTime(0); // 초기 값 설정, 나중에 업데이트 필요
+                            break;
+                        case "attendance":
+                            activity.setAttendance(null); // 초기 값 설정, 나중에 업데이트 필요
+                            break;
+                    }
+
+                    challengeActivityRepository.save(activity);
                 } else {
-                    // 이미 참여한 경우 해당 레코드 삭제 (포기)
                     challengeUserRepository.delete(optionalChallengeUser.get());
                 }
             }

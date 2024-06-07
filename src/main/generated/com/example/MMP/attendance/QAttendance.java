@@ -22,6 +22,8 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public static final QAttendance attendance = new QAttendance("attendance");
 
+    public final com.example.MMP.challenge.challengeActivity.QChallengeActivity challengeActivity;
+
     public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -48,6 +50,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
 
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.challengeActivity = inits.isInitialized("challengeActivity") ? new com.example.MMP.challenge.challengeActivity.QChallengeActivity(forProperty("challengeActivity"), inits.get("challengeActivity")) : null;
         this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
     }
 
