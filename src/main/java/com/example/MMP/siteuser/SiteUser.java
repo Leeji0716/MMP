@@ -1,5 +1,6 @@
 package com.example.MMP.siteuser;
 
+import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
@@ -44,6 +45,9 @@ public class SiteUser {
 //
 //    @OneToMany
 //    private List<Wod> wodList;
+
+    @OneToMany(mappedBy = "siteUser")
+    private List<Attendance> attendanceList = new ArrayList<>();
 
     @OneToMany
     private List<Challenge> challenges = new ArrayList<> ();

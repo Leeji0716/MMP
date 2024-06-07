@@ -24,6 +24,10 @@
         <br>
         <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
         <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+        <br>
+        <a href="attendance/calendar">출석체크</a>
+        <br>
+        <a  sec:authorize="isAuthenticated()" href="user/changePassword">비밀번호 변경</a>
 
 
     </div>
