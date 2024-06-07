@@ -28,8 +28,4 @@ private final PtPassService ptPassService;
         ptPassService.createPt(ptPassDto.getPassName(),ptPassDto.getPassTitle(),ptPassDto.getPassCount(),ptPassDto.getPassPrice(),ptPassDto.getPassDays());
         return "redirect:/";
     }
-
-
-
-
 }

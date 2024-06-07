@@ -21,7 +21,7 @@ public class PtPassService {
         ptPassRepository.save(ptPass);
     }
 
-    public List<PtPass> findAll(){
+    public List<PtPass> findAll() {
         return ptPassRepository.findAll();
     }
 

@@ -1,6 +1,5 @@
 package com.example.MMP.wod;
 
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,20 +11,6 @@ import java.io.IOException;
 public class FileUploadUtil {
     @Value("${upload.directory}")
     private String uploadDirPath;
-
-    public String uploadFile(MultipartFile file) throws IOException {
-        File uploadDir = new File(uploadDirPath);
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-
-        String originalFileName = file.getOriginalFilename();
-        String filePath = uploadDirPath + File.separator + originalFileName;
-        File dest = new File(filePath);
-        file.transferTo(dest);
-
-        return filePath;
-    }
 
     public void saveFile(String directoryPath, String fileName, MultipartFile file) throws IOException {
         File directory = new File(directoryPath);

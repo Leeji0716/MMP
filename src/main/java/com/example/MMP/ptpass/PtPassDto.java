@@ -13,9 +13,7 @@ public class PtPassDto {
     @NotEmpty(message = "회원권 설명을 입력해주세요.")
     private String passTitle;
 
-
     private int passCount;
-
 
     private int passPrice;
 

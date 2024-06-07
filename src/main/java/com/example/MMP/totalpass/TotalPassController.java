@@ -16,15 +16,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/totalPass")
 public class TotalPassController {
-private final PtPassService ptPassService;
-private final DayPassService dayPassService;
+    private final PtPassService ptPassService;
+    private final DayPassService dayPassService;
+
     @GetMapping("/list")
-    public String PtPassList(Model model){
+    public String PtPassList(Model model) {
         List<PtPass> ptPassList = ptPassService.findAll();
         List<DayPass> dayPassList = dayPassService.findAll();
-        model.addAttribute("ptPassList",ptPassList);
-        model.addAttribute("dayPassList",dayPassList);
+        model.addAttribute("ptPassList", ptPassList);
+        model.addAttribute("dayPassList", dayPassList);
         return "pass/passList";
     }
-
 }
