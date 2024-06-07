@@ -4,11 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class sogae {
+public class MapController {
 
     @GetMapping("/map")
-    public String map(){
-
-        return "Nearby_businesses";
+    public String showMap() {
+        return "map"; // map.html 뷰를 반환
     }
 }

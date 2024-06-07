@@ -6,5 +6,4 @@ import java.util.Optional;
 
 public interface PtPassRepository extends JpaRepository<PtPass,Long> {
     Optional<PtPass> findByPassName(String name);
-
 }
