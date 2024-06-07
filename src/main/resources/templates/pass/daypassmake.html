@@ -1,9 +1,9 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container-fluid my-3">
     <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <div class="text-center text-2xl mb-4">요일권 만들기</div>
+        <div class="text-center text-2xl mb-4 text-black">요일권 만들기</div>
         <a href="/pt/add" class="btn">PT회원권 만들기</a>
-        <form th:action="@{|/day/add|}" th:object="${dayPassDto}" class="space-y-4" method="post">
+        <form th:action="@{|/day/add|}" th:object="${dayPassDto}" class="space-y-4 text-black" method="post">
             <input type="text" th:field="*{dayPassName}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
             <p th:if="${#fields.hasErrors('dayPassName')}" th:errors="*{dayPassName}" class="text-red-500 text-sm"></p>
             <textarea placeholder="회원권 설명.." th:field="*{dayPassTitle}" class="textarea textarea-bordered textarea-lg w-full max-w-xs" ></textarea>

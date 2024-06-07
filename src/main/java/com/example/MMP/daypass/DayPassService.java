@@ -11,14 +11,18 @@ public class DayPassService {
 private final DayPassRepository dayPassRepository;
     public void create(String dayPassname, String dayPassTitle,int dayPassPrice,int dayPassDays){
         DayPass dayPass = new DayPass();
-        dayPass.setDayPassName(dayPassname);
-        dayPass.setDayPassTitle(dayPassTitle);
-        dayPass.setDayPassPrice(dayPassPrice);
-        dayPass.setDayPassDays(dayPassDays);
+        dayPass.setPassName(dayPassname);
+        dayPass.setPassTitle(dayPassTitle);
+        dayPass.setPassPrice(dayPassPrice);
+        dayPass.setPassDays(dayPassDays);
         dayPassRepository.save(dayPass);
     }
 
     public List<DayPass> findAll(){
         return dayPassRepository.findAll();
+    }
+
+    public DayPass findByName(String name){
+        return dayPassRepository.findByPassName(name);
     }
 }

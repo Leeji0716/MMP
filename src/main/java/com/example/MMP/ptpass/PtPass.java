@@ -7,8 +7,6 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
@@ -23,10 +21,10 @@ public class PtPass {
 
     private int passCount;
 
-    private LocalDateTime passStart;
-
-    private LocalDateTime passFinish;
-
     private int passPrice;
+
+    private int passDays;
+
+
 
 }

@@ -24,8 +24,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge> challenges = this.<com.example.MMP.challenge.challenge.Challenge, com.example.MMP.challenge.challenge.QChallenge>createList("challenges", com.example.MMP.challenge.challenge.Challenge.class, com.example.MMP.challenge.challenge.QChallenge.class, PathInits.DIRECT2);
 
-    public final ListPath<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass> dayPassList = this.<com.example.MMP.daypass.DayPass, com.example.MMP.daypass.QDayPass>createList("dayPassList", com.example.MMP.daypass.DayPass.class, com.example.MMP.daypass.QDayPass.class, PathInits.DIRECT2);
-
     public final StringPath email = createString("email");
 
     public final StringPath gender = createString("gender");
@@ -38,9 +36,11 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath password = createString("password");
 
-    public final ListPath<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass> ptPassList = this.<com.example.MMP.ptpass.PtPass, com.example.MMP.ptpass.QPtPass>createList("ptPassList", com.example.MMP.ptpass.PtPass.class, com.example.MMP.ptpass.QPtPass.class, PathInits.DIRECT2);
+    public final ListPath<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass> userDayPassList = this.<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass>createList("userDayPassList", com.example.MMP.userPass.UserDayPass.class, com.example.MMP.userPass.QUserDayPass.class, PathInits.DIRECT2);
 
     public final StringPath userId = createString("userId");
+
+    public final ListPath<com.example.MMP.userPass.UserPtPass, com.example.MMP.userPass.QUserPtPass> userPtPassList = this.<com.example.MMP.userPass.UserPtPass, com.example.MMP.userPass.QUserPtPass>createList("userPtPassList", com.example.MMP.userPass.UserPtPass.class, com.example.MMP.userPass.QUserPtPass.class, PathInits.DIRECT2);
 
     public final StringPath userRole = createString("userRole");
 

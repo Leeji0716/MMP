@@ -7,26 +7,20 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @Setter
 public class DayPass {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long dayPassId;
+    private Long passId;
 
-    private String dayPassName;
+    private String passName;
 
-    private String dayPassTitle;
+    private String passTitle;
 
-    private LocalDateTime dayPassStart;
+    private int passPrice;
 
-    private LocalDateTime dayPassFinish;
-
-    private int dayPassPrice;
-
-    private int dayPassDays;
+    private int passDays;
 
 }

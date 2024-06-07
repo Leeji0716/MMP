@@ -24,7 +24,7 @@
                     <p th:text="'횟수 : '+${pt.passCount}"></p>
                     <p th:text="'가격 : '+${pt.passPrice}"></p>
                     <div class="card-actions justify-end">
-                        <a href="/checkout" class="btn btn-primary">Buy Now</a>
+                        <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
                     </div>
                 </div>
             </div>
@@ -35,12 +35,12 @@
             <div class="card w-80 bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
                 <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
                 <div class="card-body">
-                    <h2 class="card-title" th:text="${day.dayPassName}"></h2>
-                    <p th:text="${day.dayPassTitle}"></p>
-                    <p th:text="${day.dayPassDays}+'일'"></p>
-                    <p th:text="'가격 : '+${day.dayPassPrice}"></p>
+                    <h2 class="card-title" th:text="${day.passName}"></h2>
+                    <p th:text="${day.passTitle}"></p>
+                    <p th:text="${day.passDays}+'일'"></p>
+                    <p th:text="'가격 : '+${day.passPrice}"></p>
                     <div class="card-actions justify-end">
-                        <button class="btn btn-primary">Buy Now</button>
+                        <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">Buy Now</a>
                     </div>
                 </div>
             </div>

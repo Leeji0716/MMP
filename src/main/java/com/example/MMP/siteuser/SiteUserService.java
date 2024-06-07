@@ -50,6 +50,9 @@ public class SiteUserService {
         }
     }
 
+    public SiteUser findByUserName(String username){
+        return siteUserRepository.findByUserId(username).orElseThrow();
+    }
 }
 
 

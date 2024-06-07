@@ -1,9 +1,8 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.challenge.challenge.Challenge;
-import com.example.MMP.daypass.DayPass;
-import com.example.MMP.ptpass.PtPass;
-import com.example.MMP.wod.Wod;
+import com.example.MMP.userPass.UserDayPass;
+import com.example.MMP.userPass.UserPtPass;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,11 +36,11 @@ public class SiteUser {
 
     private String userRole;
 
-    @OneToMany
-    List<PtPass> ptPassList = new ArrayList<>();
+    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    List<UserPtPass> userPtPassList = new ArrayList<>();
 
-    @OneToMany
-    List<DayPass> dayPassList = new ArrayList<>();
+    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
+    List<UserDayPass> userDayPassList = new ArrayList<>();
 //
 //    @OneToMany
 //    private List<Wod> wodList;

@@ -19,19 +19,15 @@ public class QDayPass extends EntityPathBase<DayPass> {
 
     public static final QDayPass dayPass = new QDayPass("dayPass");
 
-    public final NumberPath<Integer> dayPassDays = createNumber("dayPassDays", Integer.class);
+    public final NumberPath<Integer> passDays = createNumber("passDays", Integer.class);
 
-    public final DateTimePath<java.time.LocalDateTime> dayPassFinish = createDateTime("dayPassFinish", java.time.LocalDateTime.class);
+    public final NumberPath<Long> passId = createNumber("passId", Long.class);
 
-    public final NumberPath<Long> dayPassId = createNumber("dayPassId", Long.class);
+    public final StringPath passName = createString("passName");
 
-    public final StringPath dayPassName = createString("dayPassName");
+    public final NumberPath<Integer> passPrice = createNumber("passPrice", Integer.class);
 
-    public final NumberPath<Integer> dayPassPrice = createNumber("dayPassPrice", Integer.class);
-
-    public final DateTimePath<java.time.LocalDateTime> dayPassStart = createDateTime("dayPassStart", java.time.LocalDateTime.class);
-
-    public final StringPath dayPassTitle = createString("dayPassTitle");
+    public final StringPath passTitle = createString("passTitle");
 
     public QDayPass(String variable) {
         super(DayPass.class, forVariable(variable));
