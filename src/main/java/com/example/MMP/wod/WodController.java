@@ -77,6 +77,9 @@ public class WodController {
         Wod wod = wodService.getWod(id);
         model.addAttribute("wod", wod);
         model.addAttribute("commentList", wod.getCommentList());
+        for (int a=0; a<wod.getLikeList().size();a++){
+            System.out.println(wod.getLikeList().get(a).getUserId());
+        }
         return "wod/wod_detail";
     }
 
@@ -112,24 +115,34 @@ public class WodController {
         return "redirect:/wod/detail/" + id;
     }
 
+    @GetMapping("/like-status")
+    public ResponseEntity<Map<String, Object>> getLikeStatus(@RequestParam Long wodId, Principal principal) {
+        boolean liked = wodService.isLikedByUser(wodId, principal.getName());
+        int likeCount = wodService.getLikeCount(wodId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("liked", liked);
+        response.put("likeCount", likeCount);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping("/like")
     public ResponseEntity<Map<String, Object>> likeWod(@RequestBody Map<String, Long> payload, Principal principal) {
         Long wodId = payload.get("wodId");
-        int likeListSize = wodService.addLike(wodId, principal.getName());
+        Long likeCount = wodService.addLike(wodId, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("likeListSize", likeListSize);
+        response.put("likeCount", likeCount);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/like")
     public ResponseEntity<Map<String, Object>> unlikeWod(@RequestBody Map<String, Long> payload, Principal principal) {
         Long wodId = payload.get("wodId");
-        int likeListSize = wodService.removeLike(wodId, principal.getName());
+        Long likeCount = wodService.removeLike(wodId, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
-        response.put("likeListSize", likeListSize);
+        response.put("likeCount", likeCount);
         return ResponseEntity.ok(response);
     }
 }

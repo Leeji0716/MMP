@@ -5,16 +5,17 @@ import com.example.MMP.siteuser.SiteUserService;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,4 +49,34 @@ public class HomeTrainingController {
 
         return "redirect:/homeTraining/home";
     }
+
+    @PostMapping("/bookmark")
+    public ResponseEntity<Map<String, Object>> bookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
+        Long htId = payload.get("htId");
+        homeTrainingService.addBookmark(htId, principal.getName());
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/bookmark")
+    public ResponseEntity<Map<String, Object>> unbookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
+        Long htId = payload.get("htId");
+        homeTrainingService.removeBookmark(htId, principal.getName());
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/bookmark/{htId}")
+    public ResponseEntity<String> toggleBookmark(@PathVariable Long htId, Principal principal) {
+        SiteUser user = siteUserService.getUser(principal.getName());
+        boolean bookmarkStatus = homeTrainingService.toggleBookmark(htId, user);
+        if (bookmarkStatus) {
+            return ResponseEntity.ok().body("Bookmark added successfully.");
+        } else {
+            return ResponseEntity.badRequest().body("Bookmark removed successfully.");
+        }
+    }
+
 }

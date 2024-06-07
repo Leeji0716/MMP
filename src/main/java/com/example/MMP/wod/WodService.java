@@ -45,19 +45,33 @@ public class WodService {
         wodRepository.save(wod);
     }
 
-    public int addLike(Long wodId, String username) {
+    public Long addLike(Long wodId, String username) {
         Wod wod = wodRepository.findById(wodId).orElseThrow(() -> new RuntimeException("Wod not found"));
         SiteUser user = siteUserRepository.findByUserId(username).get();
         wod.getLikeList().add(user);
+        Long likeCount = Long.valueOf(wod.getLikeList().size());
+        wod.setLikeCount(likeCount);
         wodRepository.save(wod);
-        return wod.getLikeList().size();
+        return wod.getLikeCount();
     }
 
-    public int removeLike(Long wodId, String username) {
+    public Long removeLike(Long wodId, String username) {
         Wod wod = wodRepository.findById(wodId).orElseThrow(() -> new RuntimeException("Wod not found"));
         SiteUser user = siteUserRepository.findByUserId(username).get();
         wod.getLikeList().remove(user);
+        Long likeCount = Long.valueOf(wod.getLikeList().size());
+        wod.setLikeCount(likeCount);
         wodRepository.save(wod);
+        return wod.getLikeCount();
+    }
+    public boolean isLikedByUser(Long wodId, String username) {
+        Wod wod = wodRepository.findById(wodId).orElseThrow(() -> new IllegalArgumentException("Invalid Wod ID"));
+        return wod.getLikeList().stream().anyMatch(user -> user.getUserId().equals(username));
+    }
+
+    public int getLikeCount(Long wodId) {
+        Wod wod = wodRepository.findById(wodId).orElseThrow(() -> new IllegalArgumentException("Invalid Wod ID"));
         return wod.getLikeList().size();
     }
+
 }

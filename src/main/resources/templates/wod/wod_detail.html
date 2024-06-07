@@ -1,7 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container-fluid my-3 flex justify-center">
     <div class="w-full">
-        
         <div class="flex justify-center items-center">
             <figure>
                 <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
@@ -9,9 +8,8 @@
         </div>
         <div class="flex justify-center items-center h-[50px]">
             <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
-                <i class="fa-regular fa-heart"
-                    th:classappend="${#lists.contains(wod.likeList, principal) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-                <span class="badge rounded-pill bg-success" th:text="${#lists.size(wod.likeList)}"></span>
+                <i class="fa-regular fa-heart" id="heartIcon"></i>
+                <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
                 <div class="hidden" th:data-wod-id="${wod.id}"></div>
             </a>
             <div class="h-full bg-white text-black rounded-lg border border-gray-300 w-[80%]" th:utext="${wod.content}">
@@ -65,87 +63,86 @@
                         <a th:href="@{|/comment/update/${comment.id}|}" class="btn btn-primary my-2">수정</a>
                     </div>
                 </div>
-                <!-- <div class="my-3">
-                    <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
-                        th:data-uri="@{|/answer/vote/${answer.id}|}">
-                        추천
-                        <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
-                    </a>
-                    <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
-                        sec:authorize="isAuthenticated()"
-                        th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                        th:text="수정"></a>
-                    <a href="javascript:void(0);" th:data-uri="@{|/answer/delete/${answer.id}|}"
-                        class="delete btn btn-sm btn-outline-secondary" sec:authorize="isAuthenticated()"
-                        th:if="${answer.author != null and #authentication.getPrincipal().getUsername() == answer.author.username}"
-                        th:text="삭제"></a>
-                </div> -->
             </div>
-            <script>
-                function toggleIcon(event) {
-                    event.preventDefault(); // 링크의 기본 동작을 방지
-                    const icon = event.currentTarget.querySelector('i');
-                    console.log(icon);
-                    const isLiked = icon.classList.contains('fa-solid');
-                    console.log(isLiked);
-                    const div = document.querySelector('.hidden');
-                    // div 요소에서 th:data-wod-id 속성 값 가져오기
-                    const wodId = div.getAttribute('th:data-wod-id');
-                    console.log(wodId);
-
-                    fetch('/wod/like', {
-                        method: isLiked ? 'DELETE' : 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
-                        },
-                        body: JSON.stringify({ wodId: wod.id }) // `wodId`는 현재 wod의 id로 설정
-                    })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                if (isLiked) {
-                                    icon.classList.remove('fa-solid', 'fa-heart');
-                                    icon.classList.add('fa-regular', 'fa-heart');
-                                } else {
-                                    icon.classList.remove('fa-regular', 'fa-heart');
-                                    icon.classList.add('fa-solid', 'fa-heart');
-                                }
-                                // 업데이트된 likeList 크기를 표시합니다.
-                                event.currentTarget.querySelector('.badge').innerText = data.likeListSize;
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                        });
-                }
-
-                // 삭제 확인 모달
-                const delete_elements = document.getElementsByClassName("delete");
-                Array.from(delete_elements).forEach(function (element) {
-                    element.addEventListener('click', function () {
-                        if (confirm("정말로 삭제하시겠습니까?")) {
-                            location.href = this.dataset.uri;
-                        };
-                    });
-                });
-
-                // 비로그인 상태 시, 댓글 창 비활성화
-                document.addEventListener('DOMContentLoaded', function () {
-                    const textareas = document.querySelectorAll('textarea:disabled');
-                    textareas.forEach(textarea => {
-                        textarea.style.backgroundColor = '#d3d3d3';
-                        textarea.style.color = '#7a7a7a';
-                    });
-                });
-            </script>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const heartIcon = document.getElementById('heartIcon');
+            const likeCountSpan = document.getElementById('likeCountSpan');
+            const hiddenDiv = document.querySelector('.hidden');
+            const wodId = hiddenDiv.getAttribute('data-wod-id');
+
+            // 페이지 로드 시 초기 아이콘 상태 설정
+            fetch(`/wod/like-status?wodId=${wodId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.liked) {
+                        heartIcon.classList.remove('fa-regular');
+                        heartIcon.classList.add('fa-solid');
+                    } else {
+                        heartIcon.classList.remove('fa-solid');
+                        heartIcon.classList.add('fa-regular');
+                    }
+                    likeCountSpan.innerText = data.likeCount;
+                })
+                .catch(error => console.error('Error:', error));
+
+            // 아이콘 클릭 이벤트
+            window.toggleIcon = function (event) {
+                event.preventDefault(); // 링크의 기본 동작을 방지
+
+                const isLiked = heartIcon.classList.contains('fa-solid');
+
+                fetch('/wod/like', {
+                    method: isLiked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                    },
+                    body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (isLiked) {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            } else {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            }
+                            likeCountSpan.innerText = data.likeCount;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
+        });
+
+        // 삭제 확인 모달
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        // 비로그인 상태 시, 댓글 창 비활성화
+        document.addEventListener('DOMContentLoaded', function () {
+            const textareas = document.querySelectorAll('textarea:disabled');
+            textareas.forEach(textarea => {
+                textarea.style.backgroundColor = '#d3d3d3';
+                textarea.style.color = '#7a7a7a';
+            });
+        });
+    </script>
 </div>
 
 </html>

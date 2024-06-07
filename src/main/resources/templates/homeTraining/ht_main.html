@@ -11,20 +11,99 @@
                 </a>
             </div>
             <div class="flex">
-                <a th:href="@{|/homeTraining/detail/${homeTraining.id}|}" class="btn w-[75%] text-black" th:text="${homeTraining.content}"></a>
+                <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
+                    onclick="toggleBookmark(event)">
+                    <i class="fa-regular fa-bookmark"></i>
+                    <div class="hidden" th:data-ht-id="${homeTraining.id}"></div>
+                </a>
+                <span class="btn w-[65%] text-black" th:text="${homeTraining.content}"></span>
                 <div class="d-flex justify-content-end w-[25%]">
                     <div class="badge bg-light text-dark p-2 text-start">
                         <div class="mb-2">
                             <span th:if="${homeTraining.writer != null}" th:text="${homeTraining.writer.name}"></span>
                             <div th:text="${#temporals.format(homeTraining.createDate, 'yyyy-MM-dd')}">
+                            </div>
                         </div>
-                        </div>
-                        <!-- <div th:text="${homeTraining.writer.name}"></div>
-                        <div th:text="${#temporals.format(homeTraining.createDate, 'yyyy-MM-dd')}"></div> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            updateBookmarkIcons();
+            console.log("hi");
+        });
+
+
+        function updateBookmarkIcons() {
+            const bookmarks = document.querySelectorAll('.recommend');
+            bookmarks.forEach(bookmark => {
+                const icon = bookmark.querySelector('i');
+                const hiddenDiv = bookmark.querySelector('.hidden');
+                const htId = hiddenDiv.getAttribute('data-ht-id');
+
+                fetch(`/homeTraining/bookmark/${htId}`, {
+                    method: 'POST'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const iconClassList = icon.classList;
+                        if (data.bookmarked) {
+                            iconClassList.add('fa-solid', 'fa-bookmark');
+                        } else {
+                            iconClassList.remove('fa-solid', 'fa-bookmark');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+
+        function toggleBookmark(event) {
+            event.preventDefault(); // 링크의 기본 동작을 방지
+            const icon = event.currentTarget.querySelector('i');
+            const isBookmarked = icon.classList.contains('fa-solid');
+            const hiddenDiv = event.currentTarget.querySelector('.hidden');
+            const htId = hiddenDiv.getAttribute('data-ht-id');
+
+            fetch('/homeTraining/bookmark', {
+                method: isBookmarked ? 'DELETE' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // 'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                },
+                body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (isBookmarked) {
+                            icon.classList.remove('fa-solid', 'fa-bookmark');
+                            icon.classList.add('fa-regular', 'fa-bookmark');
+                        } else {
+                            icon.classList.remove('fa-regular', 'fa-bookmark');
+                            icon.classList.add('fa-solid', 'fa-bookmark');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 </div>
+
 </html>

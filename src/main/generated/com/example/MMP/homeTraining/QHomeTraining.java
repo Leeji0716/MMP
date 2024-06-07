@@ -28,6 +28,8 @@ public class QHomeTraining extends EntityPathBase<HomeTraining> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> saver = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("saver", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
+
     public final StringPath thumbnailUrl = createString("thumbnailUrl");
 
     public final StringPath videoUrl = createString("videoUrl");

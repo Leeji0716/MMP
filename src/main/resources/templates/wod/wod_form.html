@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content">
+<div layout:fragment="content" class="container-fluid my-3">
     <div class="flex flex-start">
         <a class="btn btn-error text-white justify-start" th:href="@{/wod/create}">추가</a>
     </div>
@@ -10,26 +10,72 @@
                 <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
             </figure>
             <div class="flex">
-                <a href="#" class="recommend btn btn-sm btn-outline-secondary w-[20%]" onclick="toggleIcon(event)">
-                    <i class="fa-regular fa-heart"></i>
+                <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
+                    <i class="fa-regular fa-heart" id="heartIcon"></i>
+                    <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
+                    <div class="hidden" th:data-wod-id="${wod.id}"></div>
                 </a>
                 <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
             </div>
         </div>
     </div>
     <script>
-        function toggleIcon(event) {
-          event.preventDefault(); // 링크의 기본 동작을 방지
-          const icon = event.currentTarget.querySelector('i');
-    
-          if (icon.classList.contains('fa-regular')) {
-            icon.classList.remove('fa-regular', 'fa-heart');
-            icon.classList.add('fa-solid', 'fa-heart');
-          } else {
-            icon.classList.remove('fa-solid', 'fa-heart');
-            icon.classList.add('fa-regular', 'fa-heart');
-          }
-        }
+        document.addEventListener("DOMContentLoaded", function () {
+            const heartIcon = document.getElementById('heartIcon');
+            const likeCountSpan = document.getElementById('likeCountSpan');
+            const hiddenDiv = document.querySelector('.hidden');
+            const wodId = hiddenDiv.getAttribute('data-wod-id');
+
+            // 페이지 로드 시 초기 아이콘 상태 설정
+            fetch(`/wod/like-status?wodId=${wodId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.liked) {
+                        heartIcon.classList.remove('fa-regular');
+                        heartIcon.classList.add('fa-solid');
+                    } else {
+                        heartIcon.classList.remove('fa-solid');
+                        heartIcon.classList.add('fa-regular');
+                    }
+                    likeCountSpan.innerText = data.likeCount;
+                })
+                .catch(error => console.error('Error:', error));
+
+            // 아이콘 클릭 이벤트
+            window.toggleIcon = function (event) {
+                event.preventDefault(); // 링크의 기본 동작을 방지
+
+                const isLiked = heartIcon.classList.contains('fa-solid');
+
+                fetch('/wod/like', {
+                    method: isLiked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                    },
+                    body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (isLiked) {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            } else {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            }
+                            likeCountSpan.innerText = data.likeCount;
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            };
+        });
     </script>
 </div>
 </html>
