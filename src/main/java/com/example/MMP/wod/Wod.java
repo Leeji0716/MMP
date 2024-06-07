@@ -1,6 +1,7 @@
 package com.example.MMP.wod;
 
 import com.example.MMP.Comment.Comment;
+import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,17 +17,18 @@ public class Wod {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    private SiteUser writer;
+    @ManyToOne
+    private SiteUser writer;
+
     private String imagePath;
 
     @Column(columnDefinition = "TEXT")
     private String content;
 
-//    @ManyToMany
-//    private List<SiteUser> likeList;
+    @ManyToMany
+    private List<SiteUser> likeList;
 
-//    private Long likeCount;
+    private Long likeCount;
 
     private LocalDateTime createDate;
 

@@ -1,6 +1,5 @@
 package com.example.MMP.Comment;
 
-import com.example.MMP.Comment.CommentRepository;
 import com.example.MMP.DataNotFoundException;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.wod.Wod;
@@ -14,11 +13,12 @@ import java.util.Optional;
 @Service
 public class CommentService {
     private final CommentRepository commentRepository;
-    public Comment create(Wod wod, String content){
+    public Comment create(Wod wod, String content, SiteUser writer){
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setCreateDate(LocalDateTime.now());
         comment.setWod(wod);
+        comment.setWriter(writer);
         this.commentRepository.save(comment);
         return comment;
     }
@@ -38,8 +38,14 @@ public class CommentService {
         this.commentRepository.save(comment);
     }
 
-    public void delete(Comment comment) {
+    public void delete(Long id) {
+        Comment comment = commentRepository.findById(id).get();
         this.commentRepository.delete(comment);
+    }
+
+    public void update(Comment comment, String content) {
+        comment.setContent(content);
+        this.commentRepository.save(comment);
     }
 
 //    public void vote(Comment comment, SiteUser siteUser){

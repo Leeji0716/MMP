@@ -1,5 +1,6 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,9 +15,12 @@ public class HomeTraining {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    //    @ManyToOne
-//    private SiteUser writer;
+    @ManyToOne
+    private SiteUser writer;
+
     private String videoUrl;
+
+    private String thumbnailUrl;
 
     @Column(columnDefinition = "TEXT")
     private String content;

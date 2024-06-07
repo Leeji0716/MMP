@@ -41,6 +41,11 @@ public class SiteUserService {
         siteUserRepository.save(siteUser);
     }
 
+    public SiteUser getUser(String name) {
+        SiteUser siteUser = siteUserRepository.findByUserId(name).get();
+        return siteUser;
+    }
+
     public SiteUser getUserByUsername(String username) {
         Optional<SiteUser> siteUser = this.siteUserRepository.findByName (username);
         if (siteUser.isPresent()) {

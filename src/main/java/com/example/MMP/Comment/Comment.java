@@ -26,9 +26,9 @@ public class Comment {
 
     @ManyToOne
     private Wod wod;
-//
-//    @ManyToOne
-//    private SiteUser author;
+
+    @ManyToOne
+    private SiteUser writer;
 //
 //    @ManyToMany
 //    Set<SiteUser> likeList;

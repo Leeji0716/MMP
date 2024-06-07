@@ -1,5 +1,30 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="container-fluid my-3 flex justify-center">
-    
+    <div class="flex flex-start">
+        <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">추가</a>
+    </div>
+    <div class="flex w-full">
+        <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">
+            <div class="text-black">
+                <a th:href="${homeTraining.videoUrl}">
+                    <img th:src="${homeTraining.thumbnailUrl}" alt="video">
+                </a>
+            </div>
+            <div class="flex">
+                <a th:href="@{|/homeTraining/detail/${homeTraining.id}|}" class="btn w-[75%] text-black" th:text="${homeTraining.content}"></a>
+                <div class="d-flex justify-content-end w-[25%]">
+                    <div class="badge bg-light text-dark p-2 text-start">
+                        <div class="mb-2">
+                            <span th:if="${homeTraining.writer != null}" th:text="${homeTraining.writer.name}"></span>
+                            <div th:text="${#temporals.format(homeTraining.createDate, 'yyyy-MM-dd')}">
+                        </div>
+                        </div>
+                        <!-- <div th:text="${homeTraining.writer.name}"></div>
+                        <div th:text="${#temporals.format(homeTraining.createDate, 'yyyy-MM-dd')}"></div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </html>
