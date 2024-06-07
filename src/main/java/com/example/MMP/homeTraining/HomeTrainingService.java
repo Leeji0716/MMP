@@ -62,16 +62,16 @@ public class HomeTrainingService {
         if (homeTraining != null) {
             if (homeTrainingSet.contains(homeTraining)) {
                 // 이미 책갈피가 있는 경우, 책갈피를 제거합니다.
-                homeTrainingSet.remove(homeTraining);
-                user.setSaveTraining(homeTrainingSet);
-                siteUserRepository.save(user);
-                return false; // 책갈피가 제거되었음을 반환합니다.
+//                homeTrainingSet.remove(homeTraining);
+//                user.setSaveTraining(homeTrainingSet);
+//                siteUserRepository.save(user);
+                return true; // 책갈피가 제거되었음을 반환합니다.
             } else {
                 // 책갈피가 없는 경우, 책갈피를 추가합니다.
-                homeTrainingSet.add(homeTraining);
-                user.setSaveTraining(homeTrainingSet);
-                siteUserRepository.save(user);
-                return true; // 책갈피가 추가되었음을 반환합니다.
+//                homeTrainingSet.add(homeTraining);
+//                user.setSaveTraining(homeTrainingSet);
+//                siteUserRepository.save(user);
+                return false; // 책갈피가 추가되었음을 반환합니다.
             }
         }
         return false; // 책갈피를 찾을 수 없는 경우, 실패를 반환합니다.

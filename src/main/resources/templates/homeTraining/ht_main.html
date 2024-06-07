@@ -31,41 +31,30 @@
     </div>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            updateBookmarkIcons();
-            console.log("hi");
+            updateInitialIconState();
         });
 
-
-        function updateBookmarkIcons() {
+        function updateInitialIconState() {
             const bookmarks = document.querySelectorAll('.recommend');
             bookmarks.forEach(bookmark => {
                 const icon = bookmark.querySelector('i');
                 const hiddenDiv = bookmark.querySelector('.hidden');
                 const htId = hiddenDiv.getAttribute('data-ht-id');
 
-                fetch(`/homeTraining/bookmark/${htId}`, {
-                    method: 'POST'
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
+                fetch(`/homeTraining/bookmark/${htId}`)
+                    .then(response => response.json())
                     .then(data => {
-                        const iconClassList = icon.classList;
                         if (data.bookmarked) {
-                            iconClassList.add('fa-solid', 'fa-bookmark');
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
                         } else {
-                            iconClassList.remove('fa-solid', 'fa-bookmark');
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
                         }
                     })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
+                    .catch(error => console.error('Error:', error));
             });
         }
-
 
         function toggleBookmark(event) {
             event.preventDefault(); // 링크의 기본 동작을 방지

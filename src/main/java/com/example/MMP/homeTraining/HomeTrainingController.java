@@ -32,7 +32,6 @@ public class HomeTrainingController {
         return "homeTraining/ht_main";
     }
 
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     private String create(HomeTrainingForm homeTrainingForm){
@@ -68,15 +67,16 @@ public class HomeTrainingController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/bookmark/{htId}")
-    public ResponseEntity<String> toggleBookmark(@PathVariable Long htId, Principal principal) {
+    @GetMapping("/bookmark/{htId}")
+    public ResponseEntity<Map<String, Boolean>> toggleBookmark(@PathVariable Long htId, Principal principal) {
         SiteUser user = siteUserService.getUser(principal.getName());
         boolean bookmarkStatus = homeTrainingService.toggleBookmark(htId, user);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("bookmarked", bookmarkStatus);
         if (bookmarkStatus) {
-            return ResponseEntity.ok().body("Bookmark added successfully.");
+            return ResponseEntity.ok().body(response);
         } else {
-            return ResponseEntity.badRequest().body("Bookmark removed successfully.");
+            return ResponseEntity.ok().body(response);
         }
     }
-
 }
