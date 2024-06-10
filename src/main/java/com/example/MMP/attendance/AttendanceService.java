@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,6 @@ public class AttendanceService {
 
     public boolean checkIn(Authentication authentication, Principal principal) {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        String username = userDetail.getUsername();
         LocalDate today = LocalDate.now();
 
         String userId = principal.getName();
@@ -44,17 +44,19 @@ public class AttendanceService {
         Attendance attendance = new Attendance();
         attendance.setSiteUser(siteUser);
         attendance.setDate(today);
+        attendance.setPresent(true); // 출석 체크 여부 설정
 
         attendanceRepository.save(attendance);
         return true;
     }
+
     public List<Attendance> getUserAttendance(Long siteUserId) {
         return attendanceRepository.findBySiteUserId(siteUserId);
     }
 
     public double calculateAttendanceRate(Long siteUserId, LocalDate startDate, LocalDate endDate) {
         List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween(siteUserId, startDate, endDate);
-        long totalDays = startDate.until(endDate).getDays() + 1; // 포함된 총 일수 계산
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1; // 포함된 총 일수 계산
         return ((double) attendanceList.size() / totalDays) * 100;
     }
 }

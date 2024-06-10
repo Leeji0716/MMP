@@ -1,5 +1,7 @@
 package com.example.MMP.challenge.challenge;
 
+import com.example.MMP.attendance.Attendance;
+import com.example.MMP.attendance.AttendanceRepository;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
@@ -17,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,7 @@ public class ChallengeController {
     private final ChallengeUserRepository challengeUserRepository;
     private final ChallengeRepository challengeRepository;
     private final ChallengeActivityRepository challengeActivityRepository;
+    private final AttendanceRepository attendanceRepository;
 
     @Getter
     @Setter
@@ -60,42 +64,42 @@ public class ChallengeController {
     // 챌린지 생성 기능
     @GetMapping("/create")
     public String challengeCreate(Model model) {
-        model.addAttribute("challengeForm", new challengeForm ());
+        model.addAttribute ("challengeForm", new challengeForm ());
         return "/challenge/challengeCreate_form";
     }
 
     @PostMapping("/create")
     public String challengeCreate(@Valid @ModelAttribute challengeForm challengeForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors ()) {
             return "challengeForm";
         }
-        challengeService.create(challengeForm.getName(), challengeForm.getDescription(), challengeForm.getOpenDate(),
-                challengeForm.getCloseDate(), challengeForm.getRequiredPoint(), challengeForm.getType());
+        challengeService.create (challengeForm.getName (), challengeForm.getDescription (), challengeForm.getOpenDate (),
+                challengeForm.getCloseDate (), challengeForm.getRequiredPoint (), challengeForm.getType ());
         return "redirect:/challenge/challenges";
     }
 
     // 챌린지 리스트 기능
     @GetMapping("/challenges")
     public String listChallenges(Model model, Principal principal) {
-        List<Long> participatedChallengeIds = new ArrayList<>();
+        List<Long> participatedChallengeIds = new ArrayList<> ();
         List<ChallengeUser> challengeUsers = new ArrayList<> ();
 
         if (principal != null) {
-            String userId = principal.getName();
-            Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
-            if (siteUserOptional.isPresent()) {
-                SiteUser siteUser = siteUserOptional.get();
-                challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
-                participatedChallengeIds = challengeUsers.stream()
-                        .map(cu -> cu.getChallenge().getId())
-                        .collect(Collectors.toList());
+            String userId = principal.getName ();
+            Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId (userId);
+            if (siteUserOptional.isPresent ()) {
+                SiteUser siteUser = siteUserOptional.get ();
+                challengeUsers = challengeUserRepository.findBySiteUser (siteUser);
+                participatedChallengeIds = challengeUsers.stream ()
+                        .map (cu -> cu.getChallenge ().getId ())
+                        .collect (Collectors.toList ());
             }
         }
 
-        List<Challenge> challenges = challengeRepository.findAll();
-        model.addAttribute("challenges", challenges);
-        model.addAttribute("participatedChallengeIds", participatedChallengeIds);
-        model.addAttribute("challengeUsers", challengeUsers);
+        List<Challenge> challenges = challengeRepository.findAll ();
+        model.addAttribute ("challenges", challenges);
+        model.addAttribute ("participatedChallengeIds", participatedChallengeIds);
+        model.addAttribute ("challengeUsers", challengeUsers);
         return "/challenge/challengeList";
     }
 
@@ -107,52 +111,13 @@ public class ChallengeController {
             return "redirect:/user/login";
         }
 
-        String userId = principal.getName();
-        Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
+        challengeService.participateInChallenge(challengeId, principal);
 
-        if (siteUserOptional.isPresent()) {
-            SiteUser siteUser = siteUserOptional.get();
-            Optional<Challenge> challengeOptional = challengeRepository.findById(challengeId);
-
-            if (challengeOptional.isPresent()) {
-                Challenge challenge = challengeOptional.get();
-                Optional<ChallengeUser> optionalChallengeUser = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser);
-
-                if (optionalChallengeUser.isEmpty()) {
-                    // ChallengeUser 생성
-                    ChallengeUser challengeUser = new ChallengeUser();
-                    challengeUser.setChallenge(challenge);
-                    challengeUser.setSiteUser(siteUser);
-                    challengeUser.setStartDate(LocalDateTime.now());
-                    challengeUser.setEndDate(challenge.getCloseDate());
-                    challengeUser.setSuccess(false);
-                    challengeUserRepository.save(challengeUser);
-
-                    // ChallengeActivity 생성
-                    ChallengeActivity activity = new ChallengeActivity ();
-                    activity.setChallenge(challenge);
-                    activity.setActiveDate(LocalDateTime.now());
-
-                    switch (challenge.getType()) {
-                        case "weight":
-                            activity.setWeight(0); // 초기 값 설정, 나중에 업데이트 필요
-                            break;
-                        case "exerciseTime":
-                            activity.setExerciseTime(0); // 초기 값 설정, 나중에 업데이트 필요
-                            break;
-                        case "attendance":
-                            activity.setAttendance(null); // 초기 값 설정, 나중에 업데이트 필요
-                            break;
-                    }
-
-                    challengeActivityRepository.save(activity);
-                } else {
-                    challengeUserRepository.delete(optionalChallengeUser.get());
-                }
-            }
-        }
+        // 참여 후 달성률 업데이트
+        SiteUser siteUser = siteUserRepository.findByUserId(principal.getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndSiteUser(challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다.")), siteUser).orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다."));
+        challengeService.updateAchievementRate(challengeUser.getId());
 
         return "redirect:/challenge/challenges";
     }
-
 }

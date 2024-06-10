@@ -22,22 +22,15 @@ public class ChallengeUserService {
         ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
                 .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
 
-        Long challengeId = challengeUser.getChallenge().getId();
         Long siteUserId = challengeUser.getSiteUser().getId();
         LocalDate startDate = challengeUser.getStartDate().toLocalDate();
         LocalDate endDate = challengeUser.getEndDate().toLocalDate();
 
         double attendanceRate = attendanceService.calculateAttendanceRate(siteUserId, startDate, endDate);
-        List<ChallengeActivity> activities = challengeActivityRepository.findByChallengeId(challengeId);
-
-        double activityRate = calculateActivityRate(activities);
-        double achievementRate = (attendanceRate + activityRate) / 2;
-
-        challengeUser.setAchievementRate(achievementRate);
+        challengeUser.setAchievementRate(attendanceRate);
 
         challengeUserRepository.save(challengeUser);
     }
-
 
     private double calculateActivityRate(List<ChallengeActivity> activities) {
         // 활동 데이터를 기반으로 달성률 계산 로직 구현

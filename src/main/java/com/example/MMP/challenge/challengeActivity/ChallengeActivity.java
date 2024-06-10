@@ -2,6 +2,7 @@ package com.example.MMP.challenge.challengeActivity;
 
 import com.example.MMP.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class ChallengeActivity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "attendance_id", nullable = true)
+    @JsonManagedReference
     private Attendance attendance;
 
     private int exerciseTime;

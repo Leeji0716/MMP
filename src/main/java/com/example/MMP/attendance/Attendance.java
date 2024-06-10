@@ -28,6 +28,7 @@ public class Attendance {
     private boolean present;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)
+    @JsonBackReference
     private ChallengeActivity challengeActivity;
 
 }
