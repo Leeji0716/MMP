@@ -1,16 +1,5 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
-<div>
-    <div class="flex flex-col gap-4">
-        <h1 sec:authorize="isAuthenticated()" th:text="${#authentication.principal.username}">User Profile</h1>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${email}">user@example.com</p>
-        </div>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${userNickname}">User Nickname</p>
-        </div>
-    </div>
-</div>
     <div class="h-full bg-black p-8">
         <div class="bg-white rounded-lg shadow-xl pb-8">
             <div class="w-full h-[250px]">
@@ -51,15 +40,7 @@
 
         <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
             <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <!--                <h4 class="text-xl text-gray-900 font-bold">User Info</h4>-->
-                    <!--                <ul class="mt-2 text-gray-700">-->
-                    <!--                    <li class="flex border-y py-2">-->
-                    <!--                        <span class="font-bold w-24">Name:</span>-->
-                    <!--                        <span class="text-gray-700" th:text="${user.name}"></span>-->
-                    <!--                    </li>-->
-                    <!--                </ul>-->
-                </div>
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
             </div>
             <div class="flex flex-col w-full 2xl:w-2/3">
                 <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
