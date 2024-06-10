@@ -12,54 +12,75 @@
         }
         .scroll-button {
             position: absolute;
-            top: 50%;
+            top: 25%;
             transform: translateY(-50%);
             width: 40px;
             height: 40px;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1;
+        }
+            .scroll-button2 {
+            position: absolute;
+            top: 75%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: black;
             border: none;
             border-radius: 50%;
             cursor: pointer;
             z-index: 1;
         }
         #ptScrollLeftButton {
-            left: 10px;
+            left: -40px;
         }
         #ptScrollRightButton {
-            right: 10px;
+            right: -40px;
         }
         #dayScrollLeftButton {
-            left: 10px;
+            left: -40px;
         }
         #dayScrollRightButton {
-            right: 10px;
+            right: -40px;
         }
-        .card-container {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            overflow:hidden;
-            margin-bottom: 20px;
-        }
-        .card {
-            width: 500px;
-            flex: 0 0 auto;
-            margin-right: 20px;
-        }
+    .card-container {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow:hidden;
+        margin-right: 10px; /* 변경된 값 */
+    }
+   .card {
+        width: 500px;
+        flex: 0 0 auto;
+        margin-right: 20px;
+    }
+    .card-container2 {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow:hidden;
+        margin-right: 10px; /* 변경된 값 */
+    }
     </style>
 </head>
 <body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
 
+    <div class="custom-scale">
     <!-- PT Pass Section -->
-    <div th:if="${#lists.size(ptPassList) != 0}" class="custom-scale relative mb-12">
+    <div th:if="${#lists.size(ptPassList) != 0}">
         <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
         <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
         <div class="card-container">
             <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
-                <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
+                <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT"/></figure>
                 <div class="card-body">
                     <h2 class="card-title" th:text="${pt.passName}"></h2>
                     <p th:text="${pt.passTitle}"></p>
@@ -74,12 +95,12 @@
     </div>
 
     <!-- Day Pass Section -->
-    <div class="custom-scale relative" th:if="${#lists.size(dayPassList) != 0}">
-        <button class="scroll-button left-0 ml-4" id="dayScrollLeftButton">&#8249;</button>
-        <button class="scroll-button right-0 mr-4" id="dayScrollRightButton">&#8250;</button>
-        <div class="card-container">
+    <div  th:if="${#lists.size(dayPassList) != 0}">
+        <button class="scroll-button2 " id="dayScrollLeftButton">&#8249;</button>
+        <button class="scroll-button2 " id="dayScrollRightButton">&#8250;</button>
+        <div class="card-container2">
             <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
-                <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
+                <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day"/></figure>
                 <div class="card-body">
                     <h2 class="card-title" th:text="${day.passName}"></h2>
                     <p th:text="${day.passTitle}"></p>
@@ -91,6 +112,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </div>
 
@@ -112,13 +134,13 @@
         }
         // Day Pass 스크롤링 함수
         function dayScrollLeft() {
-            document.querySelector('.card-container:nth-of-type(2)').scrollBy({
+            document.querySelector('.card-container2').scrollBy({
                 left: -200,
                 behavior: 'smooth'
             });
         }
         function dayScrollRight() {
-            document.querySelector('.card-container:nth-of-type(2)').scrollBy({
+            document.querySelector('.card-container2').scrollBy({
                 left: 200,
                 behavior: 'smooth'
             });
