@@ -4,7 +4,8 @@
     <div class="flex flex-start">
         <a class="btn btn-error text-white justify-start" th:href="@{/wod/create}">추가</a>
     </div>
-    <div class="flex flex-wrap w-screen h-[500px] justify-center">
+    <div th:replace="wod/wodCard :: wodCard(${wodList})"></div>
+    <!-- <div class="flex flex-wrap w-screen h-[500px] justify-center">
         <div class="inline card w-96 bg-base-100 shadow-xl m-4 block h-[350px] w-[300px]" th:each="wod:${wodList}">
             <figure class="h-[85%] w-[100%] flex items-center">
                 <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD" class="w-full h-full object-cover">
@@ -19,9 +20,8 @@
                 </a>
             </div>
         </div>
-    </div>
+    </div> -->
     <script>
-
         document.addEventListener("DOMContentLoaded", function () {
             const wodCards = document.querySelectorAll('.card');
 
