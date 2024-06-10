@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -120,5 +121,20 @@ public class SiteUserController {
             return "user/changePassword";
         }
         return "redirect:/";
+    }
+
+    @GetMapping("/profile")
+    public String getUserProfile(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName ();
+        Optional<SiteUser> userOptional = siteUserRepository.findByUserId (userId);
+
+        if (userOptional.isPresent()) {
+            model.addAttribute("user", userOptional.get());
+            return "/user/userProfile_form";
+        } else {
+            model.addAttribute("단순 에러", "유저를 찾을 수 없습니다");
+            return "errorPage";  // Make sure you have an errorPage.html to display errors
+        }
     }
 }
