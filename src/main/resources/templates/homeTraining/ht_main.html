@@ -1,26 +1,30 @@
 <html layout:decorate="~{layout}">
-
-<div layout:fragment="content" class="container-fluid my-3 flex justify-center">
+<div layout:fragment="content" class="w-full my-3 flex justify-center items-center flex-col">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <span th:text="${#authentication.principal.authorities.iterator().next().authority}"></span>
-    <div class="row my-3 h-[10%]">
+    <div class="flex my-3 h-[10%]">
         <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
         <div th:each="category : ${categoryList}">
             <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home?categoryId=${category.id}|}"
-               th:text="${category.name}"></a>
+                th:text="${category.name}"></a>
         </div>
         <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-            <a th:href="@{|/category/create|}"
-               class="btn btn-primary">카테고리 추가</a>
+            <a th:href="@{|/category/create|}" class="btn btn-primary">카테고리 추가</a>
             <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">추가</a>
         </div>
+    </div>
+    <div class="col-6 text-black">
+        <form th:action="@{/homeTraining/home}" method="get">
+            <input type="text" id="search_kw" name="kw" class="input" th:value="${kw}" placeholder="검색어를 입력하세요.">
+            <input class="btn btn-error" type="submit" id="btn_search" value="찾기">
+        </form>
     </div>
     <div class="flex w-full">
         <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">
             <div class="text-black">
                 <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
                     <a href="javascript:void(0);" th:data-uri="@{|/homeTraining/delete/${homeTraining.id}|}"
-                       class="delete btn btn-error my-2" th:text="삭제"></a>
+                        class="delete btn btn-error my-2" th:text="삭제"></a>
                     <a th:href="@{|/homeTraining/update/${homeTraining.id}|}" class="btn btn-primary my-2">수정</a>
                 </div>
                 <a th:href="${homeTraining.videoUrl}">
@@ -48,9 +52,9 @@
     </div>
     <script>
         const delete_elements = document.getElementsByClassName("delete");
-        Array.from(delete_elements).forEach(function(element) {
-            element.addEventListener('click', function() {
-                if(confirm("정말로 삭제하시겠습니까?")) {
+        Array.from(delete_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
                     location.href = this.dataset.uri;
                 };
             });
@@ -86,11 +90,8 @@
             event.preventDefault(); // 링크의 기본 동작을 방지
             const icon = event.currentTarget.querySelector('i');
             const isBookmarked = icon.classList.contains('fa-solid');
-            console.log(isBookmarked);
             const hiddenDiv = event.currentTarget.querySelector('.hidden');
             const htId = hiddenDiv.getAttribute('data-ht-id');
-            console.log(htId);
-            console.log(document.querySelector('input[name="_csrf"]').value);
 
             fetch('/homeTraining/bookmark', {
                 method: isBookmarked ? 'DELETE' : 'POST',

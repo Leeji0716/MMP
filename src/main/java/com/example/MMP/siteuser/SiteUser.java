@@ -5,6 +5,7 @@ import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.wod.Wod;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,9 +47,6 @@ public class SiteUser {
 
     @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
     List<UserDayPass> userDayPassList = new ArrayList<>();
-//
-//    @OneToMany
-//    private List<Wod> wodList;
 
     @OneToMany(mappedBy = "siteUser")
     @JsonManagedReference
@@ -65,4 +63,6 @@ public class SiteUser {
     )
     private Set<HomeTraining> saveTraining = new HashSet<>();
 
+    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
+    private List<Wod> wodList;
 }
