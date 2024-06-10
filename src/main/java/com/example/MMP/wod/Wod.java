@@ -18,6 +18,7 @@ public class Wod {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "site_user_id") // 외래 키 컬럼 지정
     private SiteUser writer;
 
     private String imagePath;

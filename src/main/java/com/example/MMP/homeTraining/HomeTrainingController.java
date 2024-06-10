@@ -29,18 +29,27 @@ public class HomeTrainingController {
     private final CategoryService categoryService;
 
     @GetMapping("/home")
-    public String main(Model model, @RequestParam(value = "categoryId", defaultValue = "0") int categoryId){
+    public String main(Model model, @RequestParam(value = "categoryId", defaultValue = "0") int categoryId,
+                       @RequestParam(value = "kw", defaultValue = "") String kw){
         List<HomeTraining> homeTrainingList = new ArrayList<>();
 
         List<Category> categoryList = categoryService.getList();
 
-        for (Category category : categoryList){
-            if (categoryId == 0){
-                homeTrainingList.addAll(category.getHomeTrainingList());
-//                homeTrainingList = homeTrainingService.getList();
-            }else {
-                if (categoryId == category.getId()){
-                    homeTrainingList = homeTrainingService.getCategoryList(categoryId);
+        for (Category category : categoryList) {
+            if (categoryId == 0 || categoryId == category.getId()) {
+                if (kw.isEmpty()) {
+                    // 카테고리별로 homeTraining을 가져옴
+                    homeTrainingList.addAll(category.getHomeTrainingList());
+                } else {
+                    // 키워드가 포함된 homeTraining만 선택
+                    for (HomeTraining homeTraining : category.getHomeTrainingList()) {
+                        if (homeTraining.getContent().contains(kw)) {
+                            homeTrainingList.add(homeTraining);
+                        }
+                    }
+                }
+                if (categoryId != 0) {
+                    // categoryId가 0이 아니면 해당 카테고리를 찾았으므로 반복 중단
                     break;
                 }
             }
@@ -93,7 +102,6 @@ public class HomeTrainingController {
     @DeleteMapping("/bookmark")
     public ResponseEntity<Map<String, Object>> unBookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
         Long htId = payload.get("htId");
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + htId);
         homeTrainingService.removeBookmark(htId, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);

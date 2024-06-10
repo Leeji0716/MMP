@@ -1,5 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full my-3">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div class="flex flex-start">
         <a class="btn btn-error text-white justify-start" th:href="@{/wod/create}">추가</a>
     </div>
@@ -51,7 +52,7 @@
                     method: isLiked ? 'DELETE' : 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        // 'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
                     },
                     body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
                 })
