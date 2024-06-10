@@ -94,4 +94,13 @@ public class HomeTrainingService {
         List<HomeTraining> homeTrainingList = homeTrainingRepository.findByCategory(category);
         return homeTrainingList;
     }
+
+    public HomeTraining getHomeTraining(Long id) {
+        HomeTraining homeTraining = homeTrainingRepository.findById(id).get();
+        return homeTraining;
+    }
+
+    public void delete(HomeTraining homeTraining) {
+        homeTrainingRepository.delete(homeTraining);
+    }
 }

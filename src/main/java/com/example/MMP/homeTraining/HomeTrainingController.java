@@ -111,4 +111,28 @@ public class HomeTrainingController {
             return ResponseEntity.ok().body(response);
         }
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable("id") Long id){
+        HomeTraining homeTraining = homeTrainingService.getHomeTraining(id);
+        homeTrainingService.delete(homeTraining);
+        return "redirect:/homeTraining/home";
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Long id, HomeTrainingForm homeTrainingForm, Model model){
+        HomeTraining homeTraining = homeTrainingService.getHomeTraining(id);
+
+        List<Category> categoryList = categoryService.getList();
+
+        int categoryId = homeTraining.getCategory().getId();
+
+        model.addAttribute("categoryList", categoryList);
+        model.addAttribute("categoryId", categoryId);
+
+        homeTrainingForm.setContent(homeTraining.getContent());
+        homeTrainingForm.setVideoUrl(homeTraining.getVideoUrl());
+        homeTrainingForm.setCategoryID(categoryId);
+        return "homeTraining/ht_create";
+    }
 }
