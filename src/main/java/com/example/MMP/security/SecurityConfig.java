@@ -1,5 +1,6 @@
 package com.example.MMP.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +14,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig{
+
+    private final UserDetailService userDetailService;
         @Bean
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
@@ -26,6 +30,11 @@ public class SecurityConfig{
                             .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                             .logoutSuccessUrl("/")
                             .invalidateHttpSession(true))
+                    .rememberMe((rememberMe) -> rememberMe
+                            .key("uniqueAndSecret")
+                            .tokenValiditySeconds(30 * 24 * 60 * 60) // 30 days
+                            .rememberMeParameter("remember-me")
+                            .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
 
                             new AntPathRequestMatcher("/pt/**"),
