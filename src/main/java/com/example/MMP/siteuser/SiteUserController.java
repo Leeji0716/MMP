@@ -4,10 +4,13 @@ package com.example.MMP.siteuser;
 //import com.example.MMP.mail.MailService;
 import com.example.MMP.mail.MailService;
 import com.example.MMP.security.UserDetail;
+import com.example.MMP.wod.Wod;
+import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,7 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,6 +33,7 @@ public class SiteUserController {
     private final SiteUserService siteUserService;
     private final SiteUserRepository siteUserRepository;
     private final MailService mailService;
+    private final WodService wodService;
 
     @GetMapping("/adminSignup")
     public String AdminSignup(AdminDto adminDto) {
@@ -124,17 +130,11 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String userId = authentication.getName ();
-        Optional<SiteUser> userOptional = siteUserRepository.findByUserId (userId);
+    public String getUserProfile(Model model, Principal principal) {
+        SiteUser user = this.siteUserService.getUser(principal.getName());
+        List<Wod> wodList = wodService.findByUserWod(user);
+        model.addAttribute("wodList",wodList);
 
-        if (userOptional.isPresent()) {
-            model.addAttribute("user", userOptional.get());
-            return "/user/userProfile_form";
-        } else {
-            model.addAttribute("단순 에러", "유저를 찾을 수 없습니다");
-            return "errorPage";  // Make sure you have an errorPage.html to display errors
-        }
+        return "user/userProfile_form" ;
     }
 }

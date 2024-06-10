@@ -74,4 +74,7 @@ public class WodService {
         return wod.getLikeList().size();
     }
 
+    public List<Wod> findByUserWod(SiteUser siteUser){
+        return wodRepository.findByUserWod(siteUser);
+    }
 }
