@@ -1,22 +1,22 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full my-3">
+<div layout:fragment="content" class="w-full my-3 overflow-y-auto h-screen justify-center">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div class="flex flex-start">
         <a class="btn btn-error text-white justify-start" th:href="@{/wod/create}">추가</a>
     </div>
-    <div class="flex w-full">
-        <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
-            <figure class="h-[85%] flex items-center">
-                <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
+    <div class="flex flex-wrap w-screen h-[500px] justify-center">
+        <div class="inline card w-96 bg-base-100 shadow-xl m-4 block h-[350px] w-[300px]" th:each="wod:${wodList}">
+            <figure class="h-[85%] w-[100%] flex items-center">
+                <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD" class="w-full h-full object-cover">
             </figure>
-            <div class="flex h-[15%]">
+            <div class="flex h-[15%] w-[100%]">
                 <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
                    th:onclick="'toggleIcon(event, ' + ${wod.id} + ')'">
                     <i class="fa-regular fa-heart" th:id="heartIcon- + ${wod.id}"></i>
                     <span class="badge bg-error" th:id="likeCountSpan- + ${wod.id}" th:text="${wod.likeCount}"></span>
                     <div class="hidden" th:data-wod-id="${wod.id}"></div>
+                    <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
                 </a>
-                <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
             </div>
         </div>
     </div>
