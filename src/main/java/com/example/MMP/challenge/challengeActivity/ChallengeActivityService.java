@@ -1,5 +1,7 @@
 package com.example.MMP.challenge.challengeActivity;
 
+import com.example.MMP.attendance.Attendance;
+import com.example.MMP.attendance.AttendanceRepository;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,19 +15,32 @@ public class ChallengeActivityService {
 
     private final ChallengeActivityRepository challengeActivityRepository;
     private final ChallengeRepository challengeRepository;
+    private final AttendanceRepository attendanceRepository;
 
-    public void addActivity(Long challengeId, LocalDateTime activeDate, int duration, int weight, int exerciseTime) {
-        Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
 
-        ChallengeActivity activity = new ChallengeActivity();
-        activity.setChallenge(challenge);
-        activity.setActiveDate(activeDate);
-        activity.setDuration(duration);
-        activity.setWeight(weight);
-        activity.setExerciseTime(exerciseTime);
-        activity.setAttendance(null); // 명시적으로 null로 설정
+    public void participate(Long challengeId, Long attendanceId, int duration, int exerciseTime, int weight) {
+        ChallengeActivity challengeActivity = new ChallengeActivity();
+        challengeActivity.setActiveDate(LocalDateTime.now());
+        challengeActivity.setDuration(duration);
+        challengeActivity.setWeight(weight);
+        challengeActivity.setExerciseTime(exerciseTime);
 
-        challengeActivityRepository.save(activity);
+        Challenge challenge = challengeRepository.findById(challengeId).orElse(null);
+        if (challenge == null) {
+            return;
+        }
+        challengeActivity.setChallenge(challenge);
+
+        if (attendanceId != null) {
+            Attendance attendance = attendanceRepository.findById(attendanceId).orElse(null);
+            if (attendance == null) {
+                return;
+            }
+            challengeActivity.setAttendance(attendance);
+        } else {
+            challengeActivity.setAttendance(null); // 기본값 설정
+        }
+
+        challengeActivityRepository.save(challengeActivity);
     }
 }

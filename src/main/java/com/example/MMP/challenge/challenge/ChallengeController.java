@@ -152,7 +152,7 @@ public class ChallengeController {
             }
         }
 
-        return "redirect:/challenge/list";
+        return "redirect:/challenge/challenges";
     }
 
 }

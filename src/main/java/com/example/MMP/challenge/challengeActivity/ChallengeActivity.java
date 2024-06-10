@@ -33,4 +33,9 @@ public class ChallengeActivity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    // 기본 생성자에서 새 Attendance 객체 생성 부분 제거
+    public ChallengeActivity() {
+        // this.attendance = new Attendance();
+    }
+
 }
