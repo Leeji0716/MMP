@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en" layout:decorate="~{layout}">
 <head>
     <meta charset="UTF-8">
@@ -9,14 +10,54 @@
         .custom-scale {
           transform: scale(var(--custom-scale));
         }
+        .scroll-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1;
+        }
+        #ptScrollLeftButton {
+            left: 10px;
+        }
+        #ptScrollRightButton {
+            right: 10px;
+        }
+        #dayScrollLeftButton {
+            left: 10px;
+        }
+        #dayScrollRightButton {
+            right: 10px;
+        }
+        .card-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow:hidden;
+            margin-bottom: 20px;
+        }
+        .card {
+            width: 300px;
+            flex: 0 0 auto;
+            margin-right: 20px;
+        }
     </style>
 </head>
+<body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
-<div layout:fragment="content" class="w-full mx-auto h-64">
-    <div class="custom-scale">
-        <div class="flex justify-between -translate-y-12">
-            <!-- ptPassList 요소들 -->
-            <div class="card w-80 bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
+<div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
+    <!-- PT Pass Section -->
+    <div class="custom-scale relative mb-12">
+        <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
+        <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
+        <div class="card-container">
+            <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
                 <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
                 <div class="card-body">
                     <h2 class="card-title" th:text="${pt.passName}"></h2>
@@ -29,10 +70,14 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="flex justify-between -translate-y-12">
-            <!-- dayPassList 요소들 -->
-            <div class="card w-80 bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
+    <!-- Day Pass Section -->
+    <div class="custom-scale relative">
+        <button class="scroll-button left-0 ml-4" id="dayScrollLeftButton">&#8249;</button>
+        <button class="scroll-button right-0 mr-4" id="dayScrollRightButton">&#8250;</button>
+        <div class="card-container">
+            <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
                 <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
                 <div class="card-body">
                     <h2 class="card-title" th:text="${day.passName}"></h2>
@@ -48,6 +93,42 @@
     </div>
 </div>
 
-<!-- 추가 스크립트가 있을 경우 여기에 추가 -->
-<div layout:fragment="script"></div>
+<!-- 추가 스크립트 -->
+<div layout:fragment="script">
+    <script>
+        // PT Pass 스크롤링 함수
+        function ptScrollLeft() {
+            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        }
+        function ptScrollRight() {
+            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }
+        // Day Pass 스크롤링 함수
+        function dayScrollLeft() {
+            document.querySelector('.card-container:nth-of-type(2)').scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        }
+        function dayScrollRight() {
+            document.querySelector('.card-container:nth-of-type(2)').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }
+
+        // 이벤트 리스너 추가
+        document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
+        document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
+        document.getElementById('dayScrollLeftButton').addEventListener('click', dayScrollLeft);
+        document.getElementById('dayScrollRightButton').addEventListener('click', dayScrollRight);
+    </script>
+</div>
+</body>
 </html>
