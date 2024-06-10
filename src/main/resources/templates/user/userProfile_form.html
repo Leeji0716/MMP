@@ -1,15 +1,90 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
-<div>
-    <div class="flex flex-col gap-4">
-        <h1 sec:authorize="isAuthenticated()" th:text="${#authentication.principal.username}">User Profile</h1>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${email}">user@example.com</p>
+    <div class="h-full bg-black p-8">
+        <div class="bg-white rounded-lg shadow-xl pb-8">
+            <div class="w-full h-[250px]">
+                <img src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
+                     class="w-full h-full rounded-tl-lg rounded-tr-lg">
+            </div>
+            <div class="flex flex-col items-center -mt-20">
+                <img alt="Tailwind CSS Navbar component" class="w-40 border-4 border-white rounded-full"
+                     th:src="${url != null ? url : '/1715046707.gif'}" loop="infinite" id="profile_img"/>
+                <div class="flex items-center space-x-2 mt-2">
+                    <li class="flex border-y py-2">
+                        <span class="font-bold w-auto text-black inline-block">Name : </span>
+                        <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${#authentication.principal.username}"></span>
+                    </li>
+                </div>
+                <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
+                    <input id="file" type="file"  name="file" value="이미지 등록" style="display: none;">
+                </form>
+                <form id="image_save_form" th:action="@{|/user/imagesaveform|}" method="post">
+                    <input type="hidden" name="url" th:value="${url}">
+                    <input type="submit" value="이미지 저장">
+                </form>
+            </div>
+            <div class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
+                <div class="flex items-center space-x-4 mt-2">
+                    <button
+                            class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd"
+                                  d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                                  clip-rule="evenodd"></path>
+                        </svg>
+                        <span>Message</span>
+                    </button>
+                </div>
+            </div>
         </div>
-        <div class="flex flex-col gap-1">
-            <p sec:authorize="isAuthenticated()" th:text="${userNickname}">User Nickname</p>
+
+        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
+            <div class="w-full flex flex-col 2xl:w-1/3">
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                    <!--                <h4 class="text-xl text-gray-900 font-bold">User Info</h4>-->
+                    <!--                <ul class="mt-2 text-gray-700">-->
+                    <!--                    <li class="flex border-y py-2">-->
+                    <!--                        <span class="font-bold w-24">Name:</span>-->
+                    <!--                        <span class="text-gray-700" th:text="${user.name}"></span>-->
+                    <!--                    </li>-->
+                    <!--                </ul>-->
+                </div>
+            </div>
+            <div class="flex flex-col w-full 2xl:w-2/3">
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                    <h4 class="text-xl text-gray-900 font-bold">Activity log</h4>
+                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                        <div class="flex w-full">
+                            <!-- ptPassList 요소들 -->
+                            <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
+                                <figure>
+                                    <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
+                                </figure>
+                                <div class="flex">
+                                    <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary" onclick="toggleIcon(event)">
+                                        <i class="fa-regular fa-heart" id="heartIcon"></i>
+                                        <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
+                                        <div class="hidden" th:data-wod-id="${wod.id}"></div>
+                                    </a>
+                                    <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+    <script>
+        const profile_img = document.getElementById('profile_img');
+        profile_img.addEventListener('click', ()=>{
+            document.getElementById('file').click();
+        });
+        const file = document.getElementById('file');
+        file.addEventListener('change', ()=>{
+            document.getElementById('image_form').submit();
+        });
+    </script>
 </div>
 </html>
