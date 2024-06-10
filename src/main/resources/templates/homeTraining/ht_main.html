@@ -1,10 +1,5 @@
 <html layout:decorate="~{layout}">
-<<<<<<< HEAD
 <div layout:fragment="content" class="w-full my-3 flex justify-center">
-=======
-<div layout:fragment="content" class="container-fluid my-3 flex justify-center">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
->>>>>>> d96014907b00b9bc742b12d654b783ea5e4e4702
     <span th:text="${#authentication.principal.authorities.iterator().next().authority}"></span>
     <div class="row my-3 h-[10%]">
         <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
