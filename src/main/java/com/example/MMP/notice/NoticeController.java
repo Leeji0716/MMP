@@ -32,7 +32,7 @@ public class NoticeController {
 
     @GetMapping("/create")
     public String create(NoticeForm noticeForm){
-        return "noticeCreate_form";
+        return "notice/noticeCreate_form";
     }
 
     @PostMapping("/create")

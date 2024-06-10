@@ -45,6 +45,10 @@ dependencies {
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 	implementation 'org.json:json:20230227'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail:3.3.0'
+
 }
 
 tasks.named('test') {

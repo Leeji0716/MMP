@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container my-3">
-    <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+<div layout:fragment="content" class="w-full flex items-center justify-center my-3">
+    <div class="w-full bg-gray-100 max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div class="text-center text-2xl mb-4 text-black">PT회원권 만들기</div>
         <a href="/day/add" class="btn">요일권 만들기</a>
         <form th:action="@{|/pt/add|}" th:object="${ptPassDto}" class="space-y-4 text-black" method="post">

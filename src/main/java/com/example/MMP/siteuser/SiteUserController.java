@@ -1,6 +1,8 @@
 package com.example.MMP.siteuser;
 
 
+//import com.example.MMP.mail.MailService;
+import com.example.MMP.mail.MailService;
 import com.example.MMP.security.UserDetail;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +26,17 @@ import java.util.Optional;
 public class SiteUserController {
     private final SiteUserService siteUserService;
     private final SiteUserRepository siteUserRepository;
+    private final MailService mailService;
 
     @GetMapping("/adminSignup")
-    public String AdminSignup(AdminDto adminDto){
+    public String AdminSignup(AdminDto adminDto) {
 
         return "user/adminSignup";
     }
 
     @PostMapping("/adminSignup")
-    public String AdminSignup(@Valid AdminDto adminDto, BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public String AdminSignup(@Valid AdminDto adminDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "user/adminSignup";
         }
         try {
@@ -55,17 +58,20 @@ public class SiteUserController {
     }
 
     @GetMapping("/signup")
-    public String userSignup(UserDto userDto){
+    public String userSignup(UserDto userDto) {
 
         return "user/userSignup";
     }
 
     @PostMapping("/signup")
-    public String userSignup(@Valid UserDto userDto,BindingResult bindingResult){
-        if(bindingResult.hasErrors()){
+    public String userSignup(@Valid UserDto userDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "user/userSignup";
-        } try {
-            siteUserService.userSignup(userDto.getName(),userDto.getNumber(),userDto.getGender(),userDto.getBirthDate(),userDto.getEmail(),userDto.getUserRole());
+        }
+        try {
+            SiteUser siteUser = siteUserService.userSignup(userDto.getName(), userDto.getNumber(), userDto.getGender(), userDto.getBirthDate(), userDto.getEmail(), userDto.getUserRole());
+            if(siteUser.getUserRole().equals("user"))
+                mailService.mailSend(siteUser.getEmail()," [MMP] 회원가입을 환영합니다!","MMP의 회원이 되어주셔서 감사합니다!! 아이디는 전화번호, 비밀번호는 생년월일입니다..! 당신의 건강한 득근을 기원합니다 :)");
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "user/userSignup";
@@ -104,9 +110,9 @@ public class SiteUserController {
         }
         try {
             UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-            String userId = userDetail.getUsername ();
-            Optional<SiteUser> optionalSiteUser = siteUserRepository.findByUserId (userId);
-            SiteUser user = optionalSiteUser.get ();
+            String userId = userDetail.getUsername();
+            Optional<SiteUser> optionalSiteUser = siteUserRepository.findByUserId(userId);
+            SiteUser user = optionalSiteUser.get();
             siteUserService.changePassword(user.getId(), passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
         } catch (Exception e) {
             bindingResult.reject("changePasswordFailed", e.getMessage());

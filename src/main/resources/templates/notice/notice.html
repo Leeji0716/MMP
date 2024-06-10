@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container-fluid my-3">
+<div layout:fragment="content" class="w-full my-3">
     <div class="overflow-x-auto">
         <table class="table">
             <thead class="table-dark text-white">
@@ -44,7 +44,7 @@
                 </li>
             </ul>
             <!-- 다음 버튼 -->
-            <a class="page-link" th:if="${paging.number < paging.totalPages - 1}"
+            <a class="page -link" th:if="${paging.number < paging.totalPages - 1}"
                th:href="@{|?page=${paging.number + 1}|}">
                 <svg class="w-8 h-8 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                     <path d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"/>

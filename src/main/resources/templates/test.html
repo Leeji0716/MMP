@@ -1,111 +1,49 @@
-<html layout:decorate="~{layout1}">
-<div layout:fragment="content" class="container-fluid my-3">
-    <!-- 질문 -->
-    <section class="text-gray-600 body-font overflow-hidden">
-        <div class="container px-5 py-24 mx-auto">
-            <div class="-my-8 divide-y-2 divide-gray-100">
-                <div class="py-8 flex flex-wrap md:flex-nowrap bg-lime-400 rounded-lg">
-                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-                        <span class="font-semibold title-font text-gray-700" th:if="${notice.author != null}"
-                              th:text="${notice.author.username}"></span>
-                        <div class="mb-2">Modified At:
-                            <span class="mt-1 text-black-500 text-sm"
-                                  th:text="${notice.modifyDate != null ? #temporals.format(notice.modifyDate, 'yyyy-MM-dd HH:mm') : #temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}"></span>
-                        </div>
-                    </div>
-                    <div class="md:flex-grow">
-                        <h2 class="text-2xl font-medium text-gray-900 title-font mb-2" th:text="${notice.subject}">
-                        </h2>
-                        <p class="leading-relaxed" th:utext="${@commonUtil.markdown(notice.content)}"></p>
-                    </div>
-                    <!-- 버튼 및 작업 -->
-                    <div class="my-3">
-                        <a th:href="@{|/question/modify/${question.id}|}"
-                           class="text-slate-800 hover:text-blue-600 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-lg font-medium px-4 py-2 inline-flex space-x-1 items-center"
-                           sec:authorize="isAuthenticated()"
-                           th:if="${notice.author != null and #authentication.getPrincipal().getUsername() == notice.author.username}">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
-                            </svg> <!-- 수정 아이콘 -->
-                        </a>
-                        <a href="javascript:void(0);" th:data-uri="@{|/question/delete/${question.id}|}"
-                           class="text-slate-800 hover:text-blue-600 text-sm bg-white hover:bg-slate-100 border border-slate-200 rounded-lg font-medium px-4 py-2 inline-flex space-x-1 items-center delete"
-                           sec:authorize="isAuthenticated()"
-                           th:if="${notice.author != null and #authentication.getPrincipal().getUsername() == notice.author.username}">
-                            <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
-                                </svg> <!-- 삭제 아이콘 -->
-                            </span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <script layout:fragment="script" type='text/javascript'>
-        (function () {
-            const simpleMarkDownEditor = new SimpleMDE({ element: document.getElementById("markdown") });
-
-            // 페이징 이벤트 처리
-            const page_elements = document.getElementsByClassName("page-link");
-            Array.from(page_elements).forEach(element => {
-                element.addEventListener('click', function () {
-                    document.getElementById('page').value = this.dataset.page;
-                    document.getElementById('searchForm').submit();
-                });
-            });
-
-            // 삭제, 추천, 댓글 토글 이벤트
-            const toggleDisplay = (element) => {
-                element.style.display = (element.style.display === "none") ? "block" : "none";
-            };
-
-            const elements = {
-                delete: document.getElementsByClassName("delete"),
-                recommend: document.getElementsByClassName("recommend"),
-                comment_question: document.getElementsByClassName("comment-question"),
-                comment_answer: document.getElementsByClassName("comment-answer"),
-            };
-
-            Array.from(elements.delete).forEach(element => {
-                element.addEventListener('click', function () {
-                    if (confirm("정말로 삭제하시겠습니까?")) {
-                        location.href = this.dataset.uri;
-                    }
-                });
-            });
-
-            Array.from(elements.recommend).forEach(element => {
-                element.addEventListener('click', function () {
-                    if (confirm("정말로 추천하시겠습니까?")) {
-                        location.href = this.dataset.uri;
-                    }
-                });
-            });
-
-            Array.from(elements.comment_question).forEach(element => {
-                element.addEventListener('click', function () {
-                    const blocks = document.getElementsByClassName("comment-question-block");
-                    Array.from(blocks).forEach(toggleDisplay);
-                });
-            });
-
-            Array.from(elements.comment_answer).forEach(element => {
-                element.addEventListener('click', function () {
-                    const block_answers = document.getElementsByClassName("comment-answer-block");
-                    Array.from(block_answers).forEach(x => {
-                        if (x.id === this.dataset.num) {
-                            toggleDisplay(x);
-                        }
-                    });
-                });
-            });
-        })();
-    </script>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+        .map_wrap, .map_wrap * {margin:0;padding:0;font-family:'Malgun Gothic',dotum,'돋움',sans-serif;font-size:12px;}
+        .map_wrap a, .map_wrap a:hover, .map_wrap a:active{color:#000;text-decoration: none;}
+        .map_wrap {position:relative;width:100%;height:500px;}
+        #menu_wrap {position:absolute;top:0;left:0;bottom:0;width:250px;margin:10px 0 30px 10px;padding:5px;overflow-y:auto;background:rgba(255, 255, 255, 0.7);z-index: 1;font-size:12px;border-radius: 10px;}
+        .bg_white {background:#fff;}
+        #menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
+        #menu_wrap .option{text-align: center;}
+        #menu_wrap .option p {margin:10px 0;}
+        #menu_wrap .option button {margin-left:5px;}
+        #placesList li {list-style: none;}
+        #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
+        #placesList .item span {display: block;margin-top:4px;}
+        #placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+        #placesList .item .info{padding:10px 0 10px 55px;}
+        #placesList .info .gray {color:#8a8a8a;}
+        #placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
+        #placesList .info .tel {color:#009900;}
+        #placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
+        #placesList .item .marker_1 {background-position: 0 -10px;}
+        #placesList .item .marker_2 {background-position: 0 -56px;}
+        #placesList .item .marker_3 {background-position: 0 -102px}
+        #placesList .item .marker_4 {background-position: 0 -148px;}
+        #placesList .item .marker_5 {background-position: 0 -194px;}
+        #placesList .item .marker_6 {background-position: 0 -240px;}
+        #placesList .item .marker_7 {background-position: 0 -286px;}
+        #placesList .item .marker_8 {background-position: 0 -332px;}
+        #placesList .item .marker_9 {background-position: 0 -378px;}
+        #placesList .item .marker_10 {background-position: 0 -423px;}
+        #placesList .item .marker_11 {background-position: 0 -470px;}
+        #placesList .item .marker_12 {background-position: 0 -516px;}
+        #placesList .item .marker_13 {background-position: 0 -562px;}
+        #placesList .item .marker_14 {background-position: 0 -608px;}
+        #placesList .item .marker_15 {background-position: 0 -654px;}
+        #pagination {margin:10px auto;text-align: center;}
+        #pagination a {display:inline-block;margin-right:10px;}
+        #pagination .on {font-weight: bold; cursor: default;color:#777;}
+    </style>
+</head>
+<body class="min-h-screen bg-black text-white">
+<nav th:replace="~{navbar :: navbarFragment}"></nav>
+<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="script"></th:block>
+</body>
 </html>

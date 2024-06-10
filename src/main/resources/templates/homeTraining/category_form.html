@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="container text-black">
+<div layout:fragment="content" class="w-full text-black">
     <div class="navbar bg-base-100">
         <div th:each="category : ${categoryList}">
             <a class="btn btn-ghost text-xs" th:href="@{|/category/modify/${category.id}|}" th:text="${category.name}"></a>

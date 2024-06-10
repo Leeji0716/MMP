@@ -29,9 +29,7 @@ public class HomeTrainingService {
         homeTraining.setWriter(writer);
         homeTraining.setCategory(category);
 
-        String videoId = videoUrl.split("v=")[1];
-        String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
-        homeTraining.setThumbnailUrl(thumbnailUrl);
+        homeTraining.setThumbnailUrl(intro(videoUrl));
         homeTrainingRepository.save(homeTraining);
     }
 
@@ -65,16 +63,8 @@ public class HomeTrainingService {
         HomeTraining homeTraining = homeTrainingRepository.findById(htId).orElse(null);
         if (homeTraining != null) {
             if (homeTrainingSet.contains(homeTraining)) {
-                // 이미 책갈피가 있는 경우, 책갈피를 제거합니다.
-//                homeTrainingSet.remove(homeTraining);
-//                user.setSaveTraining(homeTrainingSet);
-//                siteUserRepository.save(user);
                 return true; // 책갈피가 제거되었음을 반환합니다.
             } else {
-                // 책갈피가 없는 경우, 책갈피를 추가합니다.
-//                homeTrainingSet.add(homeTraining);
-//                user.setSaveTraining(homeTrainingSet);
-//                siteUserRepository.save(user);
                 return false; // 책갈피가 추가되었음을 반환합니다.
             }
         }
@@ -102,5 +92,21 @@ public class HomeTrainingService {
 
     public void delete(HomeTraining homeTraining) {
         homeTrainingRepository.delete(homeTraining);
+    }
+
+    public void update(HomeTraining homeTraining, int categoryID, String content, String videoUrl) {
+        Category category = categoryRepository.findById(categoryID);
+        homeTraining.setCategory(category);
+        homeTraining.setContent(content);
+        homeTraining.setVideoUrl(videoUrl);
+
+        homeTraining.setThumbnailUrl(intro(videoUrl));
+        homeTrainingRepository.save(homeTraining);
+    }
+
+    public String intro(String videoUrl){
+        String videoId = videoUrl.split("v=")[1];
+        String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
+        return thumbnailUrl;
     }
 }

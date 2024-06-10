@@ -91,8 +91,9 @@ public class HomeTrainingController {
     }
 
     @DeleteMapping("/bookmark")
-    public ResponseEntity<Map<String, Object>> unbookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
+    public ResponseEntity<Map<String, Object>> unBookmarkHomeTraining(@RequestBody Map<String, Long> payload, Principal principal) {
         Long htId = payload.get("htId");
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + htId);
         homeTrainingService.removeBookmark(htId, principal.getName());
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -113,16 +114,15 @@ public class HomeTrainingController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable("id") Long id){
+    public String deleteHT(@PathVariable("id") Long id){
         HomeTraining homeTraining = homeTrainingService.getHomeTraining(id);
         homeTrainingService.delete(homeTraining);
         return "redirect:/homeTraining/home";
     }
 
     @GetMapping("/update/{id}")
-    public String update(@PathVariable("id") Long id, HomeTrainingForm homeTrainingForm, Model model){
+    public String updateHT(@PathVariable("id") Long id, HomeTrainingForm homeTrainingForm, Model model){
         HomeTraining homeTraining = homeTrainingService.getHomeTraining(id);
-
         List<Category> categoryList = categoryService.getList();
 
         int categoryId = homeTraining.getCategory().getId();
@@ -134,5 +134,21 @@ public class HomeTrainingController {
         homeTrainingForm.setVideoUrl(homeTraining.getVideoUrl());
         homeTrainingForm.setCategoryID(categoryId);
         return "homeTraining/ht_create";
+    }
+
+    @PostMapping("/update/{id}")
+    public String updateHT(@PathVariable("id") Long id, @Valid HomeTrainingForm homeTrainingForm, BindingResult bindingResult, Model model){
+        HomeTraining homeTraining = homeTrainingService.getHomeTraining(id);
+        List<Category> categoryList = categoryService.getList();
+        int categoryId = homeTraining.getCategory().getId();
+        if(bindingResult.hasErrors()){
+            model.addAttribute("categoryList", categoryList);
+            model.addAttribute("categoryId", categoryId);
+            return "homeTraining/ht_create";
+        }
+
+        homeTrainingService.update(homeTraining, homeTrainingForm.getCategoryID(), homeTrainingForm.getContent(), homeTrainingForm.getVideoUrl());
+
+        return "redirect:/homeTraining/home";
     }
 }
