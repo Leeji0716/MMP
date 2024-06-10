@@ -6,10 +6,10 @@
     </div>
     <div class="flex w-full">
         <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
-            <figure>
+            <figure class="h-[85%] flex items-center">
                 <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
             </figure>
-            <div class="flex">
+            <div class="flex h-[15%]">
                 <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
                     th:onclick="'toggleIcon(event, ' + ${wod.id} + ')'">
                     <i class="fa-regular fa-heart" th:id="heartIcon- + ${wod.id}"></i>

@@ -52,8 +52,9 @@
 <body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
 <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
+
     <!-- PT Pass Section -->
-    <div class="custom-scale relative mb-12">
+    <div th:if="${#lists.size(ptPassList) != 0}" class="custom-scale relative mb-12">
         <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
         <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
         <div class="card-container">
@@ -73,7 +74,7 @@
     </div>
 
     <!-- Day Pass Section -->
-    <div class="custom-scale relative">
+    <div class="custom-scale relative" th:if="${#lists.size(dayPassList) != 0}">
         <button class="scroll-button left-0 ml-4" id="dayScrollLeftButton">&#8249;</button>
         <button class="scroll-button right-0 mr-4" id="dayScrollRightButton">&#8250;</button>
         <div class="card-container">
