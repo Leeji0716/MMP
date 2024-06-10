@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
 
@@ -66,7 +67,7 @@
         // 출석 데이터 가져오기
         async function fetchAttendanceData() {
             try {
-                const response = await fetch('/attendance/user/1'); // 사용자의 출석 데이터를 가져오는 엔드포인트로 변경
+                const response = await fetch('/attendance/myAttendance'); // 현재 사용자의 출석 데이터를 가져오는 엔드포인트로 변경
                 if (!response.ok) {
                     throw new Error('출석 데이터를 불러오는 데 실패했습니다.');
                 }
@@ -123,10 +124,10 @@
                 stamp.className = 'stamp';
 
                 const img = document.createElement('img');
-                img.src = 'https://i.imgur.com/AEGEIjA.png'; // 이미지 경로를 여기에 입력하세요
+                img.src = 'https://i.imgur.com/JjFIfDd.png'; // 이미지 경로를 여기에 입력하세요
                 img.alt = 'Attendance Stamp';
-                img.style.width = '50px'; // 이미지 크기를 적절히 조정하세요
-                img.style.height = '50px'; // 이미지 크기를 적절히 조정하세요
+                img.style.width = '140px'; // 이미지 크기를 적절히 조정하세요
+                img.style.height = '60px'; // 이미지 크기를 적절히 조정하세요
 
                 stamp.appendChild(img);
                 dayElement.appendChild(stamp);

@@ -31,6 +31,9 @@ public class UserDetail implements UserDetails {
         return siteUser.getUserId();
     }
 
+
+    public Long getId(){return siteUser.getId ();}
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
