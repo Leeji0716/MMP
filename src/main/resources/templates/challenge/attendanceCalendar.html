@@ -44,7 +44,7 @@
     </style>
 
     <body>
-    <div style="border: 2px solid white; padding: 40px; width: 1000px; height: 800px; margin: 20px auto 0;">
+    <div style="border: 2px solid white; padding: 40px; width: 1000px; height: 850px; margin: 20px auto 0;">
         <h1 id="monthTitle" style="text-align: center; font-weight: bold; font-size: 30px;">출석 이벤트</h1>
         <br>
         <br>
@@ -84,6 +84,7 @@
         async function generateCalendar(month, year) {
             const attendanceData = await fetchAttendanceData();
             const attendanceDates = attendanceData.map(attendance => new Date(attendance.date));
+            updateAttendanceRate(attendanceDates);
 
             const calendar = document.getElementById('calendar');
             calendar.innerHTML = '';
@@ -134,6 +135,12 @@
             }
         }
 
+        // 출석 횟수 업데이트 함수
+        function updateAttendanceRate(attendanceDates) {
+            const attendanceRateElement = document.getElementById('attendanceRate');
+            attendanceRateElement.textContent = `출석한 횟수: ${attendanceDates.length}회`;
+        }
+
         // "출석하기" 버튼 클릭 이벤트 핸들러 추가
         document.getElementById('attendanceButton').addEventListener('click', async () => {
             const todayElement = Array.from(document.querySelectorAll('.day')).find(dayElement => {
@@ -157,6 +164,8 @@
                     console.log('출석 체크 성공:', data);
 
                     markAttendance(todayElement);
+                    const attendanceDates = await fetchAttendanceData();
+                    updateAttendanceRate(attendanceDates.map(attendance => new Date(attendance.date)));
                 } catch (error) {
                     console.error('출석 체크 실패:', error);
                 }
