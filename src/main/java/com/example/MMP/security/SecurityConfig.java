@@ -22,7 +22,7 @@ public class SecurityConfig{
         SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             http
                     .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                            .requestMatchers("/**").permitAll().anyRequest().authenticated())
+                            .requestMatchers("/user/login").permitAll().anyRequest().authenticated())
                     .formLogin((formLogin) -> formLogin
                             .loginPage("/user/login")
                             .defaultSuccessUrl("/"))
@@ -32,7 +32,7 @@ public class SecurityConfig{
                             .invalidateHttpSession(true))
                     .rememberMe((rememberMe) -> rememberMe
                             .key("uniqueAndSecret")
-                            .tokenValiditySeconds(30 * 24 * 60 * 60) // 30 days
+                            .tokenValiditySeconds(5 * 60) // 30 days
                             .rememberMeParameter("remember-me")
                             .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
@@ -44,8 +44,7 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/notice/**"), // CSRF 보호에서 제외
                             new AntPathRequestMatcher("/user/**"),
                             new AntPathRequestMatcher("/challenge/**"),
-                            new AntPathRequestMatcher("/success"),
-                            new AntPathRequestMatcher("/**")
+                            new AntPathRequestMatcher("/success")
                     ))
             ;
 
