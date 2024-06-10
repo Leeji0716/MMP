@@ -58,6 +58,11 @@ public class SiteUser {
     private List<Challenge> challenges = new ArrayList<> ();
 
     @ManyToMany
+    @JoinTable(
+            name = "site_user_save_training",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "training_id")
+    )
     private Set<HomeTraining> saveTraining = new HashSet<>();
 
 }

@@ -28,10 +28,11 @@ public class Wod {
     @ManyToMany
     private List<SiteUser> likeList;
 
-    private Long likeCount;
+    private Long likeCount = 0L;
 
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "wod", cascade = CascadeType.REMOVE)
     private List<Comment> commentList;
+
 }

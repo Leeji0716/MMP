@@ -22,6 +22,8 @@ public class QHomeTraining extends EntityPathBase<HomeTraining> {
 
     public static final QHomeTraining homeTraining = new QHomeTraining("homeTraining");
 
+    public final com.example.MMP.homeTraining.category.QCategory category;
+
     public final StringPath content = createString("content");
 
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
@@ -54,6 +56,7 @@ public class QHomeTraining extends EntityPathBase<HomeTraining> {
 
     public QHomeTraining(Class<? extends HomeTraining> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.category = inits.isInitialized("category") ? new com.example.MMP.homeTraining.category.QCategory(forProperty("category")) : null;
         this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
     }
 

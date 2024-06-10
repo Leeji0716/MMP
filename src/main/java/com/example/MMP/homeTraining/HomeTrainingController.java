@@ -1,5 +1,7 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.homeTraining.category.Category;
+import com.example.MMP.homeTraining.category.CategoryService;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import jakarta.persistence.SequenceGenerator;
@@ -13,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +26,26 @@ import java.util.Map;
 public class HomeTrainingController {
     private final HomeTrainingService homeTrainingService;
     private final SiteUserService siteUserService;
+    private final CategoryService categoryService;
 
     @GetMapping("/home")
-    public String main(Model model){
-        List<HomeTraining> homeTrainingList = homeTrainingService.getList();
+    public String main(Model model, @RequestParam(value = "categoryId", defaultValue = "0") int categoryId){
+        List<HomeTraining> homeTrainingList = new ArrayList<>();
+
+        List<Category> categoryList = categoryService.getList();
+
+        for (Category category : categoryList){
+            if (categoryId == 0){
+                homeTrainingList.addAll(category.getHomeTrainingList());
+//                homeTrainingList = homeTrainingService.getList();
+            }else {
+                if (categoryId == category.getId()){
+                    homeTrainingList = homeTrainingService.getCategoryList(categoryId);
+                    break;
+                }
+            }
+        }
+        model.addAttribute("categoryList", categoryList);
         model.addAttribute("homeTrainingList", homeTrainingList);
 
         return "homeTraining/ht_main";
@@ -34,17 +53,30 @@ public class HomeTrainingController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
-    private String create(HomeTrainingForm homeTrainingForm){
+    private String create(HomeTrainingForm homeTrainingForm, Model model){
+        List<Category> categoryList = this.categoryService.getList(); // 모든 카테고리를 가져옴
+        model.addAttribute("categoryList", categoryList); // 카테고리 목록을 모델에 추가
         return "homeTraining/ht_create";
     }
 
     @PostMapping("/create")
-    private String create(@Valid HomeTrainingForm homeTrainingForm, BindingResult bindingResult, Principal principal){
+    private String create(@Valid HomeTrainingForm homeTrainingForm, BindingResult bindingResult, Principal principal, Model model){
+        List<Category> categoryList = this.categoryService.getList(); // 모든 카테고리를 가져옴
+        model.addAttribute("categoryList", categoryList); // 카테고리 목록을 모델에 추가
         if(bindingResult.hasErrors()){
             return "homeTraining/ht_create";
         }
         SiteUser writer = siteUserService.getUser(principal.getName());
-        homeTrainingService.create(homeTrainingForm.getContent(), homeTrainingForm.getVideoUrl(), writer);
+
+        Category category = this.categoryService.getCategory(homeTrainingForm.getCategoryID());
+
+        if (category == null) {
+            // 해당 ID에 해당하는 카테고리가 없는 경우
+            bindingResult.rejectValue("categoryID", "category.error", "유효하지 않은 카테고리입니다.");
+            return "product_form";
+        }
+
+        homeTrainingService.create(homeTrainingForm.getContent(), homeTrainingForm.getVideoUrl(), writer, category);
 
         return "redirect:/homeTraining/home";
     }

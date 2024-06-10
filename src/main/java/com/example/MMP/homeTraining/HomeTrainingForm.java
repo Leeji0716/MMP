@@ -1,5 +1,6 @@
 package com.example.MMP.homeTraining;
 
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,4 +12,7 @@ public class HomeTrainingForm {
     private String content;
 
     private String videoUrl;
+
+    @NotNull
+    private int categoryID;
 }

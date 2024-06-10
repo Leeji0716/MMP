@@ -1,6 +1,8 @@
 package com.example.MMP.homeTraining;
 
+import com.example.MMP.homeTraining.category.Category;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,5 +37,9 @@ public class HomeTraining {
 
     @ManyToMany
     private List<SiteUser> saver;
+
+    @ManyToOne
+    @JsonBackReference
+    private Category category;
 
 }
