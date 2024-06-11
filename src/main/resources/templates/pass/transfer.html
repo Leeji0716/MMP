@@ -1,19 +1,52 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full my-3">
-    <div class="flex items-center ">
-    <form action="/totalPass/transfer" method="post">
-        
-        <label class="input input-bordered flex items-center gap-2">
-            Number
-            <input type="text" class="grow text-black" placeholder="Number" name="number" />
-          </label>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
+    <div class="flex items-center text-black flex flex-wrap">
+        <form action="/totalPass/transfer" method="post">
+            <label class="input input-bordered flex items-center gap-2">
+                <input type="text" class="grow text-black" placeholder="Number" name="number" />
+            </label>
+            <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black">
+                <option disabled selected>양도할 이용권을 선택해주세요.</option>
+                <option th:each="pt : ${user.userPtPassList}" th:value="${pt.passName}" th:text="${pt.passName}">
+                </option>
+                <option th:each="day : ${user.userDayPassList}" th:value="${day.passName}" th:text="${day.passName}">
+                </option>
+            </select>
+        </form>
+        <div id="pass"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const userId = document.getElementById('userId').value;
+            console.log(userId);
+            const passSelect = document.getElementById('passSelect');
+            console.log(passSelect);
 
-        <select class="select text-black select-error w-full max-w-xs">
-            <option disabled selected>양도할 이용권을 선택해주세요.</option>
-            <option value="" name="passName"> </option>
-          </select>
-    </form>
-</div>
-</div>
+            passSelect.addEventListener('change', function () {
+                const selectedPassName = passSelect.value;
+                if (selectedPassName) {
+                    fetch(`/totalPass/transfer/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                        },
+                        body: JSON.stringify({ passName: selectedPassName })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.passCount != null){
 
+                                console.log(data.passCount);
+                            }
+                            console.log(data);
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            });
+        });
+    </script>
+</div>
 </html>

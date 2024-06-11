@@ -2,14 +2,11 @@
     <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"
          th:each="pt:${user.userPtPassList}">
         <figure class="h-[60%] w-full"><img src="https://i.imgur.com/kW3S5se.png" alt="PT" class="h-[80%] w-[80%] mx-auto"/></figure>
-        <div class="card-body h-[40%] w-full p-2">
+        <div class="card-body h-[40%] w-full p-2 inline-block">
             <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${pt.passName}"></h2>
             <p th:text="${pt.passTitle}" class="h-[20%] w-[80%] mx-auto"></p>
             <p th:text="'횟수 : '+${pt.passCount}" class="h-[20%] w-[80%] mx-auto"></p>
             <p th:text="'가격 : '+${pt.passPrice}" class="h-[20%] w-[80%] mx-auto"></p>
-            <div class="card-actions items-start p-2">
-                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">양도</a>
-            </div>
         </div>
     </div>
     <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"

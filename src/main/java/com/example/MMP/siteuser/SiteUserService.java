@@ -86,6 +86,10 @@ public class SiteUserService {
         return siteUserRepository.findByUserId(username).orElseThrow();
     }
 
+    public SiteUser findById(Long id){
+        return siteUserRepository.findById(id).orElseThrow();
+    }
+
 }
 
 
