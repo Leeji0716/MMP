@@ -53,7 +53,7 @@
         <div class="option">
             <div>
                 <form onsubmit="searchPlaces(); return false;">
-                    키워드 : <input type="text" value="둔산동 샐러드" id="keyword"  size="15" placeholder="장소를 검색해주세요.">
+                    키워드 : <input type="text" value="둔산동 샐러드" id="keyword" size="15" placeholder="장소를 검색해주세요.">
                     <button type="submit">검색하기</button>
                 </form>
             </div>
@@ -62,8 +62,25 @@
         <ul id="placesList"></ul>
         <div id="pagination"></div>
     </div>
+    <div class="text-2xl text-white font-bold flex justify-center mt-20">
+        카카오로 장소 검색
+    </div>
+    <div class="flex justify-center mt-2">
+        <input type="text" placeholder="장소를 검색해주세요." id="link-keyword" class="input input-bordered input-error w-full max-w-xs"/>
+        <button onclick="searchLocation()" class="btn btn-primary ml-2">검색</button>
+    </div>
 </div>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
+
+<script>
+    function searchLocation() {
+        const keyword = document.getElementById('link-keyword').value;
+        const url = `https://map.kakao.com/link/search/${encodeURIComponent(keyword)}`;
+        window.location.href = url;
+    }
+</script>
+
+<script type="text/javascript"
+        src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
 <script>
     // 마커를 담을 배열입니다
     var markers = [];
