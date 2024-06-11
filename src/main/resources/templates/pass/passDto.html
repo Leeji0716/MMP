@@ -1,0 +1,28 @@
+<div th:fragment="passDto(${user})">
+    <div class="card w-60 h-60 bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[300px]"
+         th:each="pt:${user.userPtPassList}">
+        <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT"/></figure>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${pt.passName}"></h2>
+            <p th:text="${pt.passTitle}"></p>
+            <p th:text="'횟수 : '+${pt.passCount}"></p>
+            <p th:text="'가격 : '+${pt.passPrice}"></p>
+            <div class="card-actions justify-end">
+                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">양도</a>
+            </div>
+        </div>
+    </div>
+    <div class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px] text-block"
+         th:each="day:${user.userDayPassList}">
+        <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day"/></figure>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${day.passName}"></h2>
+            <p th:text="${day.passTitle}"></p>
+            <p th:text="${day.passDays}+'일'"></p>
+            <p th:text="'가격 : '+${day.passPrice}"></p>
+            <div class="card-actions justify-end">
+                <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">양도</a>
+            </div>
+        </div>
+    </div>
+</div>

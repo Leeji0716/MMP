@@ -45,7 +45,11 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/user/**"),
                             new AntPathRequestMatcher("/challenge/**"),
                             new AntPathRequestMatcher("/success"),
-                            new AntPathRequestMatcher ("/attendance/**")
+                            new AntPathRequestMatcher ("/attendance/**"),
+                            new AntPathRequestMatcher("/checkout"),
+                            new AntPathRequestMatcher("/success"),
+                            new AntPathRequestMatcher("/fail"),
+                            new AntPathRequestMatcher("/confirm")
                     ))
             ;
 

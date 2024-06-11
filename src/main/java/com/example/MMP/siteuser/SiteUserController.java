@@ -2,10 +2,18 @@ package com.example.MMP.siteuser;
 
 
 //import com.example.MMP.mail.MailService;
+import com.example.MMP.daypass.DayPass;
+import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
+import com.example.MMP.ptpass.PtPass;
+import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
+import com.example.MMP.userPass.UserDayPass;
+import com.example.MMP.userPass.UserDayPassService;
+import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.userPass.UserPtPassService;
 import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
@@ -37,7 +45,8 @@ public class SiteUserController {
     private final MailService mailService;
     private final WodService wodService;
     private final HomeTrainingService homeTrainingService;
-
+    private final UserPtPassService userPtPassService;
+    private final UserDayPassService userDayPassService;
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
         model.addAttribute("passwordResetRequestDto", new PasswordResetRequestDto());
@@ -162,7 +171,7 @@ public class SiteUserController {
 
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
-
+        model.addAttribute("user",user);
         return "user/userProfile_form" ;
     }
 }

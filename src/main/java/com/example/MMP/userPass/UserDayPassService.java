@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,5 +21,10 @@ public class UserDayPassService {
         userDayPass.setPassFinish(userDayPass.getPassStart().plusDays(passDays));
         userDayPass.setSiteUser(siteUser);
         return userDayPassRepository.save(userDayPass);
+    }
+
+    public List<UserDayPass> findBySiteUser(SiteUser siteUser){
+
+        return userDayPassRepository.findBySiteUser(siteUser);
     }
 }
