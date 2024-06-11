@@ -1,5 +1,6 @@
 package com.example.MMP.security;
 
+import com.example.MMP.point.Point;
 import com.example.MMP.siteuser.SiteUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +32,9 @@ public class UserDetail implements UserDetails {
         return siteUser.getUserId();
     }
 
+    public int getPoints(){
+        return siteUser.getPoint ().getPoints ();
+    }
 
     public Long getId(){return siteUser.getId ();}
 

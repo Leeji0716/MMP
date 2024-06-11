@@ -54,7 +54,7 @@ public class QUserDayPass extends EntityPathBase<UserDayPass> {
 
     public QUserDayPass(Class<? extends UserDayPass> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
+        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 
 }

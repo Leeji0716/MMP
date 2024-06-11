@@ -109,9 +109,10 @@ public class ChallengeController {
         return "/challenge/challengeList";
     }
 
-    // 챌린지 참여 기능
-    @GetMapping("/participate")
-    public String participate(@RequestParam("challengeId") Long challengeId, Principal principal, Model model) {
+
+    // 챌린지 참여 기능 (POST)
+    @PostMapping("/participate")
+    public String participate(@RequestParam("challengeId") Long challengeId, Principal principal) {
         if (principal == null) {
             return "redirect:/user/login";
         }
@@ -120,25 +121,20 @@ public class ChallengeController {
         if (challengeOptional.isPresent()) {
             Challenge challenge = challengeOptional.get();
             if ("weight".equals(challenge.getType())) {
-                model.addAttribute("challengeId", challengeId);
                 return "redirect:/challenge/enterWeight?challengeId=" + challengeId;
             } else {
                 challengeService.participateInChallenge(challengeId, principal);
-                return "redirect:/challenge/challenges";
             }
-        } else {
-            return "redirect:/challenge/challenges";
         }
+        return "redirect:/challenge/challenges";
     }
 
-    // 몸무게 입력 폼 반환
     @GetMapping("/enterWeight")
     public String enterWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
         model.addAttribute("challengeId", challengeId);
-        return "/challenge/enterWeight";
+        return "challenge/enterWeight";
     }
 
-    // 초기 몸무게 입력 처리
     @PostMapping("/enterWeight")
     public String enterWeight(@RequestParam("challengeId") Long challengeId, @RequestParam("weight") double weight, Principal principal) {
         if (principal == null) {
@@ -149,11 +145,12 @@ public class ChallengeController {
         return "redirect:/challenge/challenges";
     }
 
+
     // 변경된 몸무게 입력 폼 반환
     @GetMapping("/updateWeight")
     public String updateWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
         model.addAttribute("challengeId", challengeId);
-        return "/challenge/enterWeight";
+        return "/challenge/weightForm";
     }
 
     // 변경된 몸무게 입력 처리

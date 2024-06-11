@@ -53,7 +53,7 @@ public class QComment extends EntityPathBase<Comment> {
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.wod = inits.isInitialized("wod") ? new com.example.MMP.wod.QWod(forProperty("wod"), inits.get("wod")) : null;
-        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
+        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer"), inits.get("writer")) : null;
     }
 
 }

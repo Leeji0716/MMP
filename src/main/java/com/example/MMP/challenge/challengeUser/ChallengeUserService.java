@@ -6,8 +6,10 @@ import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
 import com.example.MMP.challenge.userWeight.UserWeight;
 import com.example.MMP.challenge.userWeight.UserWeightService;
+import com.example.MMP.point.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,11 +19,27 @@ import java.util.List;
 public class ChallengeUserService {
 
     private final ChallengeUserRepository challengeUserRepository;
+    private final UserWeightService userWeightService;
+    private final PointService pointService;
     private final AttendanceService attendanceService;
     private final ChallengeActivityRepository challengeActivityRepository;
-    private final UserWeightService userWeightService;
 
 
+
+    @Transactional
+    public void markChallengeAsSuccessful(Long challengeUserId) {
+        ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
+                .orElseThrow(() -> new RuntimeException("ChallengeUser not found"));
+        challengeUser.setSuccess(true);
+        challengeUserRepository.save(challengeUser);
+
+        // 챌린지 성공 시 requiredPoint를 추가
+        Challenge challenge = challengeUser.getChallenge();
+        int pointsToAdd = challenge.getRequiredPoint();
+        pointService.addPoints(challengeUser.getSiteUser().getId(), pointsToAdd);
+    }
+
+    // 챌린지 성공 여부와 달성률 업데이트
     public void updateAchievementRate(Long challengeUserId) {
         ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
                 .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
@@ -30,11 +48,7 @@ public class ChallengeUserService {
         Long siteUserId = challengeUser.getSiteUser().getId();
         double achievementRate = 0;
 
-        if ("출석".equals(challenge.getType())) {
-            // 출석률 계산 로직
-        } else if ("운동시간".equals(challenge.getType())) {
-            // 운동시간 계산 로직
-        } else if ("몸무게".equals(challenge.getType())) {
+        if ("weight".equals(challenge.getType())) {
             List<UserWeight> weights = userWeightService.getUserWeights(siteUserId);
             if (!weights.isEmpty()) {
                 double initialWeight = weights.get(0).getWeight();
@@ -47,6 +61,11 @@ public class ChallengeUserService {
 
         challengeUser.setAchievementRate(achievementRate);
         challengeUserRepository.save(challengeUser);
+
+        // 달성률이 100%인 경우 챌린지 성공 처리
+        if (achievementRate >= 100) {
+            markChallengeAsSuccessful(challengeUserId);
+        }
     }
 
     private double calculateActivityRate(List<ChallengeActivity> activities, Integer targetExerciseMinutes) {
@@ -56,23 +75,9 @@ public class ChallengeUserService {
         }
 
         int successfulActivities = (int) activities.stream()
-                .filter(a -> a.getDuration() >= targetExerciseMinutes)
+                .filter(a -> a.getExerciseTime() >= targetExerciseMinutes)
                 .count();
         return ((double) successfulActivities / totalActivities) * 100;
     }
 }
-//    public double calculateAchievementRate(challengeUser challengeUser) {
-//        // 예시: 성공 여부와 활동 데이터를 기반으로 달성률 계산
-//        if (challengeUser.isSuccess ()) {
-//            return 100.0;
-//        } else {
-//            if(challengeUser.)
-//            // 실제 계산 로직은 요구사항에 따라 구현
-    // 도원아 이 부분은 나중에 몸무게, 출석률 등을 계산할 때 로직을 넣으면 되는데 그거는 미래의 네가 로직을 짜야해
-    // 예를 들어 출석이 30일이면 10%센트면 3일겠지? 이런식으로 10, 20, 30, 40, 50, 60, 70, 80, 90까지 넣어야 하는데
-    // 10은 너무 많나? 네가 하고 싶은대로 해 (25 가 나을 거  같아)
-//            double rate = ...;
-//            return rate;
-//        }
-//    }
 

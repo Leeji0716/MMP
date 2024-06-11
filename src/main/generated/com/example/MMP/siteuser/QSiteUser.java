@@ -18,6 +18,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     private static final long serialVersionUID = 1960345023L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QSiteUser siteUser = new QSiteUser("siteUser");
 
     public final ListPath<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance> attendanceList = this.<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance>createList("attendanceList", com.example.MMP.challenge.attendance.Attendance.class, com.example.MMP.challenge.attendance.QAttendance.class, PathInits.DIRECT2);
@@ -38,6 +40,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final StringPath password = createString("password");
 
+    public final com.example.MMP.point.QPoint point;
+
     public final ListPath<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining> saveTraining = this.<com.example.MMP.homeTraining.HomeTraining, com.example.MMP.homeTraining.QHomeTraining>createList("saveTraining", com.example.MMP.homeTraining.HomeTraining.class, com.example.MMP.homeTraining.QHomeTraining.class, PathInits.DIRECT2);
 
     public final ListPath<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass> userDayPassList = this.<com.example.MMP.userPass.UserDayPass, com.example.MMP.userPass.QUserDayPass>createList("userDayPassList", com.example.MMP.userPass.UserDayPass.class, com.example.MMP.userPass.QUserDayPass.class, PathInits.DIRECT2);
@@ -51,15 +55,24 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
     public final ListPath<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod> wodList = this.<com.example.MMP.wod.Wod, com.example.MMP.wod.QWod>createList("wodList", com.example.MMP.wod.Wod.class, com.example.MMP.wod.QWod.class, PathInits.DIRECT2);
 
     public QSiteUser(String variable) {
-        super(SiteUser.class, forVariable(variable));
+        this(SiteUser.class, forVariable(variable), INITS);
     }
 
     public QSiteUser(Path<? extends SiteUser> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QSiteUser(PathMetadata metadata) {
-        super(SiteUser.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QSiteUser(PathMetadata metadata, PathInits inits) {
+        this(SiteUser.class, metadata, inits);
+    }
+
+    public QSiteUser(Class<? extends SiteUser> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.point = inits.isInitialized("point") ? new com.example.MMP.point.QPoint(forProperty("point"), inits.get("point")) : null;
     }
 
 }

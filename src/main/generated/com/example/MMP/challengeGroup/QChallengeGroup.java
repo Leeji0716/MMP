@@ -52,7 +52,7 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public QChallengeGroup(Class<? extends ChallengeGroup> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.leader = inits.isInitialized("leader") ? new com.example.MMP.siteuser.QSiteUser(forProperty("leader")) : null;
+        this.leader = inits.isInitialized("leader") ? new com.example.MMP.siteuser.QSiteUser(forProperty("leader"), inits.get("leader")) : null;
     }
 
 }

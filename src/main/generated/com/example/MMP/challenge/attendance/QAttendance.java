@@ -51,7 +51,7 @@ public class QAttendance extends EntityPathBase<Attendance> {
     public QAttendance(Class<? extends Attendance> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.challengeActivity = inits.isInitialized("challengeActivity") ? new com.example.MMP.challenge.challengeActivity.QChallengeActivity(forProperty("challengeActivity"), inits.get("challengeActivity")) : null;
-        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
+        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 
 }

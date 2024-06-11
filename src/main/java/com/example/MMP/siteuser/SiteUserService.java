@@ -2,6 +2,7 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.DataNotFoundException;
 import com.example.MMP.mail.MailService;
+import com.example.MMP.point.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,13 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole(userRole);
+
+
+        // Point 설정
+        Point point = new Point ();
+        point.setSiteUser(siteUser); // Point와 SiteUser 연결
+        siteUser.setPoint(point); // SiteUser에 Point 설정
+
         return siteUserRepository.save(siteUser);
     }
 

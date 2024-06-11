@@ -31,4 +31,7 @@ public class ChallengeUser {
     private Challenge challenge;
 
     private double achievementRate; // 달성률 추가
+
+    private Double initialWeight; // 초기 몸무게 추가
+
 }

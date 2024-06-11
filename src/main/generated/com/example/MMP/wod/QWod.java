@@ -56,7 +56,7 @@ public class QWod extends EntityPathBase<Wod> {
 
     public QWod(Class<? extends Wod> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
+        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer"), inits.get("writer")) : null;
     }
 
 }

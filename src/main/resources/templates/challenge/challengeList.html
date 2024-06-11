@@ -3,57 +3,82 @@
 <head>
     <title>챌린지 리스트</title>
     <style>
+        .achievement-image-container {
+            position: relative;
+            width: 100%;
+            height: 105px; /* 필요한 높이로 설정합니다 */
+            overflow: hidden;
+        }
         .achievement-image {
-            width: 1000px;
-            height: 75px;
-            object-fit: cover; /* 이미지가 영역을 채우도록 조절 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 75%;
+            object-fit: cover;
+        }
+        .scrollable-container {
+            max-height: 100vh;
+            overflow-y: auto; /* 세로 스크롤을 추가합니다 */
+        }
+        .button-group {
+            display: flex;
+            gap: 10px; /* 버튼 사이의 간격을 조절합니다 */
         }
     </style>
 </head>
 <body>
 <div layout:fragment="content" class="w-full my-3">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div th:each="challenge : ${challenges}" class="card bg-gray-800 text-white p-4 rounded-lg shadow-lg">
-            <div class="card-body rounded-lg" style="background-color: white; color: black; border-radius: 10px;">
-                <h2 class="card-title" style="color: red;" th:text="${challenge.name}">챌린지 이름</h2>
-                <p style="color: black;" th:text="${challenge.description}">챌린지 설명</p>
-                <p style="color: black;"><strong>시작 날짜: </strong><span th:text="${challenge.openDate}">YYYY-MM-DD</span></p>
-                <p style="color: black;"><strong>종료 날짜: </strong><span th:text="${challenge.closeDate}">YYYY-MM-DD</span></p>
-                <p style="color: black;"><strong>보상: </strong><span th:text="${challenge.requiredPoint}">보상 포인트</span></p>
-                <p style="color: black;"><strong>분류: </strong><span th:text="${challenge.type}">챌린지 분류</span></p>
-                <p style="color: black;"><strong>내 달성률: </strong>
-                    <span th:each="challengeUser : ${challengeUsers}"
-                          th:if="${challengeUser.challenge.id == challenge.id}"
-                          th:text="${challengeUser.achievementRate}">달성률</span>
-                </p>
-                <!-- 달성률에 따른 이미지 표시 -->
-                <div th:each="challengeUser : ${challengeUsers}" th:if="${challengeUser.challenge.id == challenge.id}">
-                    <img th:if="${challengeUser.achievementRate == 0}" th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image" class="achievement-image">
-                    <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate <= 25}" th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image" class="achievement-image">
-                    <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate <= 50}" th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image" class="achievement-image">
-                    <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}" th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image" class="achievement-image">
-                    <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}" th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image" class="achievement-image">
+    <div class="scrollable-container">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div th:each="challenge : ${challenges}" class="card bg-gray-800 text-white p-4 rounded-lg shadow-lg">
+                <div class="card-body rounded-lg" style="background-color: white; color: black; border-radius: 10px;">
+                    <h2 class="card-title" style="color: red;" th:text="${challenge.name}">챌린지 이름</h2>
+                    <p style="color: black;" th:text="${challenge.description}">챌린지 설명</p>
+                    <p style="color: black;"><strong>시작 날짜: </strong><span th:text="${challenge.openDate}">YYYY-MM-DD</span></p>
+                    <p style="color: black;"><strong>종료 날짜: </strong><span th:text="${challenge.closeDate}">YYYY-MM-DD</span></p>
+                    <p style="color: black;"><strong>보상: </strong><span th:text="${challenge.requiredPoint}">보상 포인트</span></p>
+                    <p style="color: black;"><strong>분류: </strong><span th:text="${challenge.type}">챌린지 분류</span></p>
+                    <p style="color: black;"><strong>내 달성률: </strong>
+                        <span th:each="challengeUser : ${challengeUsers}"
+                              th:if="${challengeUser.challenge.id == challenge.id}"
+                              th:text="${#numbers.formatDecimal(challengeUser.achievementRate, 1, 1)} + '%'">달성률</span>
+
+                    </p>
+                    <!-- 달성률에 따른 이미지 표시 -->
+                    <div class="achievement-image-container" th:each="challengeUser : ${challengeUsers}" th:if="${challengeUser.challenge.id == challenge.id}">
+                        <img th:if="${challengeUser.achievementRate <= 0}" th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}" th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate == 25}" th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate < 50}" th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate == 50}" th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}" th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate == 75}" th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}" th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image" class="achievement-image">
+                        <img th:if="${challengeUser.achievementRate >= 100}" th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image" class="achievement-image">
+                    </div>
+                    <div class="button-group">
+                        <form th:action="@{/challenge/participate}" method="post" style="display:inline;">
+                            <input type="hidden" name="challengeId" th:value="${challenge.id}">
+                            <button type="submit" class="btn btn-error mt-4"
+                                    th:if="${participatedChallengeIds != null and not #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    style="color: black;">참여</button>
+                            <button type="button" class="btn btn-success mt-4"
+                                    th:if="${participatedChallengeIds != null and #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    style="color: black;">참여 중</button>
+                        </form>
+                        <form th:action="@{/challenge/updateWeight}" method="get" style="display:inline;" th:if="${challenge.type == 'weight'}">
+                            <input type="hidden" name="challengeId" th:value="${challenge.id}">
+                            <button type="submit" class="btn btn-warning mt-4" style="color: black;">몸무게 업데이트</button>
+                        </form>
+                    </div>
                 </div>
-                <form th:action="@{/challenge/participate}" method="get" style="display:inline;">
-                    <input type="hidden" name="challengeId" th:value="${challenge.id}">
-                    <button type="submit" class="btn btn-error mt-4"
-                            th:if="${participatedChallengeIds != null and not #lists.contains(participatedChallengeIds, challenge.id)}"
-                            style="color: black;">참여</button>
-                    <button type="button" class="btn btn-success mt-4"
-                            th:if="${participatedChallengeIds != null and #lists.contains(participatedChallengeIds, challenge.id)}"
-                            style="color: black;">참여 중</button>
-                </form>
-                <form th:action="@{/challenge/updateWeight}" method="get" style="display:inline;" th:if="${challenge.type == 'weight'}">
-                    <input type="hidden" name="challengeId" th:value="${challenge.id}">
-                    <button type="submit" class="btn btn-warning mt-4" style="color: black;">몸무게 업데이트</button>
-                </form>
             </div>
         </div>
+        <a href="/challenge/create">
+            <button class="btn btn-error mt-4" style="color: black;">챌린지 추가</button>
+        </a>
     </div>
-
-    <a href="/challenge/create">
-        <button class="btn btn-error mt-4" style="color: black;">챌린지 추가</button>
-    </a>
 </div>
 </body>
 </html>

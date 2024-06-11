@@ -57,7 +57,7 @@ public class QHomeTraining extends EntityPathBase<HomeTraining> {
     public QHomeTraining(Class<? extends HomeTraining> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.example.MMP.homeTraining.category.QCategory(forProperty("category")) : null;
-        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer")) : null;
+        this.writer = inits.isInitialized("writer") ? new com.example.MMP.siteuser.QSiteUser(forProperty("writer"), inits.get("writer")) : null;
     }
 
 }

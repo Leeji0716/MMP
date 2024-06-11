@@ -168,6 +168,8 @@ public class SiteUserController {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
+        int points = user.getPoint().getPoints(); // 포인트 가져오기
+
         List<Comment> commentList;
         List<Comment> topComment = new ArrayList<>();
         for (Wod wod : wodList){
@@ -180,6 +182,7 @@ public class SiteUserController {
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
         model.addAttribute("user",user);
+        model.addAttribute("points", points); // 모델에 포인트 추가
         model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
         return "user/userProfile_form" ;
     }

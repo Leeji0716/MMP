@@ -56,7 +56,7 @@ public class QUserPtPass extends EntityPathBase<UserPtPass> {
 
     public QUserPtPass(Class<? extends UserPtPass> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser")) : null;
+        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 
 }

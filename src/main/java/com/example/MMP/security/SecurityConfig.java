@@ -49,7 +49,8 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/checkout"),
                             new AntPathRequestMatcher("/success"),
                             new AntPathRequestMatcher("/fail"),
-                            new AntPathRequestMatcher("/confirm")
+                            new AntPathRequestMatcher("/confirm"),
+                            new AntPathRequestMatcher ("/weight/**")
                     ))
             ;
 
