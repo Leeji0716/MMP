@@ -59,7 +59,7 @@ public class HomeTrainingService {
     }
 
     public boolean toggleBookmark(Long htId, SiteUser user) {
-        Set<HomeTraining> homeTrainingSet = user.getSaveTraining();
+        List<HomeTraining> homeTrainingSet = user.getSaveTraining();
         HomeTraining homeTraining = homeTrainingRepository.findById(htId).orElse(null);
         if (homeTraining != null) {
             if (homeTrainingSet.contains(homeTraining)) {
@@ -71,7 +71,7 @@ public class HomeTrainingService {
         return false; // 책갈피를 찾을 수 없는 경우, 실패를 반환합니다.
     }
     public boolean getBookmarkStatus(Long htId, SiteUser user) {
-        Set<HomeTraining> homeTrainingSet = user.getSaveTraining();
+        List<HomeTraining> homeTrainingSet = user.getSaveTraining();
         HomeTraining homeTraining = homeTrainingRepository.findById(htId).get();
         if(homeTrainingSet.contains(homeTraining)){
             return true;
@@ -108,5 +108,10 @@ public class HomeTrainingService {
         String videoId = videoUrl.split("v=")[1];
         String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
         return thumbnailUrl;
+    }
+
+    public List<HomeTraining> getSaveTraining(SiteUser user) {
+        List<HomeTraining> saveTraining = user.getSaveTraining();
+        return saveTraining;
     }
 }

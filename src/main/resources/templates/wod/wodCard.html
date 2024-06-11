@@ -1,5 +1,5 @@
 <div class="h-full" th:fragment="wodCard(${wod})">
-    <figure class="h-[85%] w-[100%] flex items-center">
+    <figure class="h-[85%] w-[100%] flex items-center rounded-lg">
         <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD" class="w-full h-full object-cover">
     </figure>
     <div class="flex h-[15%] w-[100%]">
@@ -8,7 +8,7 @@
             <i class="fa-regular fa-heart" th:id="heartIcon- + ${wod.id}"></i>
             <span class="badge bg-error" th:id="likeCountSpan- + ${wod.id}" th:text="${wod.likeCount}"></span>
             <div class="hidden" th:data-wod-id="${wod.id}"></div>
-            <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black" th:text="${wod.content}"></a>
+            <a th:href="@{|/wod/detail/${wod.id}|}" class="w-[80%] flex text-black justify-center font-bold items-center" th:text="${wod.content}"></a>
         </a>
     </div>
 </div>

@@ -61,7 +61,7 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "training_id")
     )
-    private Set<HomeTraining> saveTraining = new HashSet<>();
+    private List<HomeTraining> saveTraining = new ArrayList<>();
 
     @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
     private List<Wod> wodList;

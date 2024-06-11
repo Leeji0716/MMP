@@ -23,6 +23,19 @@
             cursor: pointer;
             z-index: 1;
         }
+        .scroll-button2 {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 1;
+        }
         #ptScrollLeftButton {
             left: 10px;
         }
@@ -42,6 +55,13 @@
             overflow:hidden;
             margin-bottom: 20px;
         }
+        .card-container2 {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow:hidden;
+            margin-bottom: 20px;
+        }
         .card {
             width: 500px;
             flex: 0 0 auto;
@@ -51,7 +71,7 @@
 </head>
 <body>
 <nav th:replace="~{navbar :: navbarFragment}"></nav>
-<div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
+<div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-y-auto">
     <div class="h-full bg-black p-8">
         <div class="bg-white rounded-lg shadow-xl pb-8">
             <div class="w-full h-[250px]">
@@ -102,24 +122,31 @@
                     <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
                         <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
                         <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
-                        <div class="flex w-full card-container">
-
+                        <div class="flex w-full card-container border-gray-300">
                             <!-- ptPassList 요소들 -->
-                            <div class="card w-60 h-60 bg-base-100 shadow-xl m-4 block" th:each="wod:${wodList}">
-                                <figure class="w-full h-40">
-                                    <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
-                                </figure>
-                                <div class="flex w-full h-20">
-                                    <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
-                                       onclick="toggleIcon(event)">
-                                        <i class="fa-regular fa-heart" id="heartIcon"></i>
-                                        <span class="badge bg-error" id="likeCountSpan"
-                                              th:text="${wod.likeCount}"></span>
-                                        <div class="hidden" th:data-wod-id="${wod.id}"></div>
-                                    </a>
-                                    <a th:href="@{|/wod/detail/${wod.id}|}" class="btn w-[80%] text-black"
-                                       th:text="${wod.content}"></a>
-                                </div>
+                            <div class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]" th:each="wod:${wodList}">
+                                <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4">
+            <div class="w-full flex flex-col 2xl:w-1/3">
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8"></div>
+            </div>
+            <div class="flex flex-col w-full 2xl:w-2/3">
+                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                    <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
+                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                        <button class="scroll-button2 " id="ptScrollLeftButton2">&#8249;</button>
+                        <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
+                        <div class="flex w-full card-container2 border-gray-300">
+                            <!-- ptPassList 요소들 -->
+                            <div class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]" th:each="homeTraining:${saveTraining}">
+                                <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
                             </div>
                         </div>
                     </div>
@@ -155,12 +182,156 @@
                 behavior: 'smooth'
             });
         }
+        function ptScrollLeft2() {
+            document.querySelector('.card-container2').scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        }
+        function ptScrollRight2() {
+            document.querySelector('.card-container2').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }+
 
         // 이벤트 리스너 추가
         document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
         document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
+        document.getElementById('ptScrollLeftButton2').addEventListener('click', ptScrollLeft2);
+        document.getElementById('ptScrollRightButton2').addEventListener('click', ptScrollRight2);
+        
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const wodCards = document.querySelectorAll('.card');
+
+            wodCards.forEach(card => {
+                const hiddenDiv = card.querySelector('.hidden');
+                const wodId = hiddenDiv.getAttribute('data-wod-id');
+                const heartIcon = document.getElementById(`heartIcon-${wodId}`);
+                const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
+
+                // 페이지 로드 시 초기 아이콘 상태 설정
+                fetch(`/wod/like-status?wodId=${wodId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.liked) {
+                            heartIcon.classList.remove('fa-regular');
+                            heartIcon.classList.add('fa-solid');
+                        } else {
+                            heartIcon.classList.remove('fa-solid');
+                            heartIcon.classList.add('fa-regular');
+                        }
+                        likeCountSpan.innerText = data.likeCount;
+                    })
+                    .catch(error => console.error('Error:', error));
+
+                // 아이콘 클릭 이벤트
+                window.toggleIcon = function (event, wodId) {
+                    event.preventDefault(); // 링크의 기본 동작을 방지
+
+                    const heartIcon = document.getElementById(`heartIcon-${wodId}`);
+                    const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
+                    const isLiked = heartIcon.classList.contains('fa-solid');
+
+                    fetch('/wod/like', {
+                        method: isLiked ? 'DELETE' : 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                        },
+                        body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
+                    })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                if (isLiked) {
+                                    heartIcon.classList.remove('fa-solid');
+                                    heartIcon.classList.add('fa-regular');
+                                } else {
+                                    heartIcon.classList.remove('fa-regular');
+                                    heartIcon.classList.add('fa-solid');
+                                }
+                                likeCountSpan.innerText = data.likeCount;
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                };
+            });
+        });
     </script>
 
+    <script>
+               document.addEventListener("DOMContentLoaded", function () {
+            updateInitialIconState();
+        });
+
+        function updateInitialIconState() {
+            const bookmarks = document.querySelectorAll('.recommend');
+            bookmarks.forEach(bookmark => {
+                const icon = bookmark.querySelector('i');
+                const hiddenDiv = bookmark.querySelector('.hidden');
+                const htId = hiddenDiv.getAttribute('data-ht-id');
+
+                fetch(`/homeTraining/bookmark/${htId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.bookmarked) {
+                            icon.classList.remove('fa-regular');
+                            icon.classList.add('fa-solid');
+                        } else {
+                            icon.classList.remove('fa-solid');
+                            icon.classList.add('fa-regular');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+        }
+
+        function toggleBookmark(event) {
+            event.preventDefault(); // 링크의 기본 동작을 방지
+            const icon = event.currentTarget.querySelector('i');
+            const isBookmarked = icon.classList.contains('fa-solid');
+            const hiddenDiv = event.currentTarget.querySelector('.hidden');
+            const htId = hiddenDiv.getAttribute('data-ht-id');
+
+            fetch('/homeTraining/bookmark', {
+                method: isBookmarked ? 'DELETE' : 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                },
+                body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (isBookmarked) {
+                            icon.classList.remove('fa-solid', 'fa-bookmark');
+                            icon.classList.add('fa-regular', 'fa-bookmark');
+                        } else {
+                            icon.classList.remove('fa-regular', 'fa-bookmark');
+                            icon.classList.add('fa-solid', 'fa-bookmark');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
 </div>
 </body>
 </html>

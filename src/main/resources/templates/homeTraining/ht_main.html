@@ -19,35 +19,9 @@
             <input class="btn btn-error" type="submit" id="btn_search" value="찾기">
         </form>
     </div>
-    <div class="flex w-full">
+    <div class="flex w-full justify-center">
         <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">
-            <div class="text-black">
-                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-                    <a href="javascript:void(0);" th:data-uri="@{|/homeTraining/delete/${homeTraining.id}|}"
-                        class="delete btn btn-error my-2" th:text="삭제"></a>
-                    <a th:href="@{|/homeTraining/update/${homeTraining.id}|}" class="btn btn-primary my-2">수정</a>
-                </div>
-                <a th:href="${homeTraining.videoUrl}">
-                    <img th:src="${homeTraining.thumbnailUrl}" alt="video">
-                </a>
-            </div>
-            <div class="flex">
-                <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
-                    onclick="toggleBookmark(event)">
-                    <i class="fa-regular fa-bookmark"></i>
-                    <div class="hidden" th:data-ht-id="${homeTraining.id}"></div>
-                </a>
-                <span class="btn w-[65%] text-black" th:text="${homeTraining.content}"></span>
-                <div class="d-flex justify-content-end w-[25%]">
-                    <div class="badge bg-light text-dark p-2 text-start">
-                        <div class="mb-2">
-                            <span th:if="${homeTraining.writer != null}" th:text="${homeTraining.writer.name}"></span>
-                            <div th:text="${#temporals.format(homeTraining.createDate, 'yyyy-MM-dd')}">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
         </div>
     </div>
     <script>

@@ -2,6 +2,8 @@ package com.example.MMP.siteuser;
 
 
 //import com.example.MMP.mail.MailService;
+import com.example.MMP.homeTraining.HomeTraining;
+import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.wod.Wod;
@@ -34,6 +36,7 @@ public class SiteUserController {
     private final SiteUserRepository siteUserRepository;
     private final MailService mailService;
     private final WodService wodService;
+    private final HomeTrainingService homeTrainingService;
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -155,7 +158,10 @@ public class SiteUserController {
     public String getUserProfile(Model model, Principal principal) {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
+        List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
+
         model.addAttribute("wodList",wodList);
+        model.addAttribute("saveTraining",saveTraining);
 
         return "user/userProfile_form" ;
     }
