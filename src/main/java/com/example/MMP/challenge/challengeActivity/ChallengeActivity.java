@@ -1,6 +1,6 @@
 package com.example.MMP.challenge.challengeActivity;
 
-import com.example.MMP.attendance.Attendance;
+import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -37,7 +37,6 @@ public class ChallengeActivity {
 
     // 기본 생성자에서 새 Attendance 객체 생성 부분 제거
     public ChallengeActivity() {
-        // this.attendance = new Attendance();
     }
 
 }

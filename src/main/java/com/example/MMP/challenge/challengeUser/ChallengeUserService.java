@@ -1,8 +1,11 @@
 package com.example.MMP.challenge.challengeUser;
 
-import com.example.MMP.attendance.AttendanceService;
+import com.example.MMP.challenge.attendance.AttendanceService;
+import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
+import com.example.MMP.challenge.userWeight.UserWeight;
+import com.example.MMP.challenge.userWeight.UserWeightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,33 +19,48 @@ public class ChallengeUserService {
     private final ChallengeUserRepository challengeUserRepository;
     private final AttendanceService attendanceService;
     private final ChallengeActivityRepository challengeActivityRepository;
+    private final UserWeightService userWeightService;
 
 
     public void updateAchievementRate(Long challengeUserId) {
         ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
                 .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
 
+        Challenge challenge = challengeUser.getChallenge();
         Long siteUserId = challengeUser.getSiteUser().getId();
-        LocalDate startDate = challengeUser.getStartDate().toLocalDate();
-        LocalDate endDate = challengeUser.getEndDate().toLocalDate();
+        double achievementRate = 0;
 
-        double attendanceRate = attendanceService.calculateAttendanceRate(siteUserId, startDate, endDate);
-        challengeUser.setAchievementRate(attendanceRate);
+        if ("출석".equals(challenge.getType())) {
+            // 출석률 계산 로직
+        } else if ("운동시간".equals(challenge.getType())) {
+            // 운동시간 계산 로직
+        } else if ("몸무게".equals(challenge.getType())) {
+            List<UserWeight> weights = userWeightService.getUserWeights(siteUserId);
+            if (!weights.isEmpty()) {
+                double initialWeight = weights.get(0).getWeight();
+                double latestWeight = weights.get(weights.size() - 1).getWeight();
+                double weightLoss = initialWeight - latestWeight;
+                double targetWeightLoss = challenge.getTargetWeightLoss();
+                achievementRate = (weightLoss / targetWeightLoss) * 100;
+            }
+        }
 
+        challengeUser.setAchievementRate(achievementRate);
         challengeUserRepository.save(challengeUser);
     }
 
-    private double calculateActivityRate(List<ChallengeActivity> activities) {
-        // 활동 데이터를 기반으로 달성률 계산 로직 구현
+    private double calculateActivityRate(List<ChallengeActivity> activities, Integer targetExerciseMinutes) {
         int totalActivities = activities.size();
         if (totalActivities == 0) {
             return 0;
         }
 
-        int successfulActivities = (int) activities.stream().filter(a -> a.getDuration() > 0 && a.getWeight() > 0).count();
+        int successfulActivities = (int) activities.stream()
+                .filter(a -> a.getDuration() >= targetExerciseMinutes)
+                .count();
         return ((double) successfulActivities / totalActivities) * 100;
     }
-
+}
 //    public double calculateAchievementRate(challengeUser challengeUser) {
 //        // 예시: 성공 여부와 활동 데이터를 기반으로 달성률 계산
 //        if (challengeUser.isSuccess ()) {
@@ -58,6 +76,3 @@ public class ChallengeUserService {
 //        }
 //    }
 
-
-
-}

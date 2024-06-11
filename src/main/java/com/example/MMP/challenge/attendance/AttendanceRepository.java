@@ -1,4 +1,4 @@
-package com.example.MMP.attendance;
+package com.example.MMP.challenge.attendance;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

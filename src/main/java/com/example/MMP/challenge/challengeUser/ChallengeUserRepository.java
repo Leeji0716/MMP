@@ -1,6 +1,7 @@
 package com.example.MMP.challenge.challengeUser;
 
 import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.challenge.challenge.ChallengeRepository;
 import com.example.MMP.siteuser.SiteUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,5 +12,5 @@ public interface ChallengeUserRepository extends JpaRepository<ChallengeUser,Lon
 
     Optional<ChallengeUser> findByChallengeAndSiteUser(Challenge challenge, SiteUser siteUser);
     List<ChallengeUser> findBySiteUser(SiteUser siteUser);
-
+    List<ChallengeUser> findByChallenge(Challenge challenge);
 }

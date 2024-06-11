@@ -1,4 +1,4 @@
-package com.example.MMP.attendance;
+package com.example.MMP.challenge.attendance;
 
 import com.example.MMP.security.UserDetail;
 import lombok.RequiredArgsConstructor;

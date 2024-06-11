@@ -1,9 +1,5 @@
 package com.example.MMP.challenge.challenge;
 
-import com.example.MMP.attendance.Attendance;
-import com.example.MMP.attendance.AttendanceRepository;
-import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
-import com.example.MMP.challenge.challengeActivity.ChallengeActivityRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.siteuser.SiteUser;
@@ -19,7 +15,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,12 +30,10 @@ public class ChallengeController {
     private final SiteUserRepository siteUserRepository;
     private final ChallengeUserRepository challengeUserRepository;
     private final ChallengeRepository challengeRepository;
-    private final ChallengeActivityRepository challengeActivityRepository;
-    private final AttendanceRepository attendanceRepository;
 
     @Getter
     @Setter
-    public class challengeForm {
+    public static class ChallengeForm {
         @NotNull(message = "제목은 필수로 채워주세요")
         private String name;
 
@@ -58,66 +51,119 @@ public class ChallengeController {
 
         @NotNull(message = "챌린지 타입은 필수로 채워주세요")
         private String type;
-    }
 
+        // 몸무게 챌린지일 때만 사용
+        private Double targetWeightLoss;
+
+        // 운동시간 챌린지일 때만 사용
+        private Integer targetExerciseMinutes;
+    }
 
     // 챌린지 생성 기능
     @GetMapping("/create")
     public String challengeCreate(Model model) {
-        model.addAttribute ("challengeForm", new challengeForm ());
+        model.addAttribute("challengeForm", new ChallengeForm());
         return "/challenge/challengeCreate_form";
     }
 
     @PostMapping("/create")
-    public String challengeCreate(@Valid @ModelAttribute challengeForm challengeForm, BindingResult bindingResult) {
-        if (bindingResult.hasErrors ()) {
+    public String challengeCreate(@Valid @ModelAttribute ChallengeForm challengeForm, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return "challengeForm";
         }
-        challengeService.create (challengeForm.getName (), challengeForm.getDescription (), challengeForm.getOpenDate (),
-                challengeForm.getCloseDate (), challengeForm.getRequiredPoint (), challengeForm.getType ());
+        challengeService.create(
+                challengeForm.getName(),
+                challengeForm.getDescription(),
+                challengeForm.getOpenDate(),
+                challengeForm.getCloseDate(),
+                challengeForm.getRequiredPoint(),
+                challengeForm.getType(),
+                challengeForm.getTargetWeightLoss(),
+                challengeForm.getTargetExerciseMinutes()
+        );
         return "redirect:/challenge/challenges";
     }
 
     // 챌린지 리스트 기능
     @GetMapping("/challenges")
     public String listChallenges(Model model, Principal principal) {
-        List<Long> participatedChallengeIds = new ArrayList<> ();
-        List<ChallengeUser> challengeUsers = new ArrayList<> ();
+        List<Long> participatedChallengeIds = new ArrayList<>();
+        List<ChallengeUser> challengeUsers = new ArrayList<>();
 
         if (principal != null) {
-            String userId = principal.getName ();
-            Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId (userId);
-            if (siteUserOptional.isPresent ()) {
-                SiteUser siteUser = siteUserOptional.get ();
-                challengeUsers = challengeUserRepository.findBySiteUser (siteUser);
-                participatedChallengeIds = challengeUsers.stream ()
-                        .map (cu -> cu.getChallenge ().getId ())
-                        .collect (Collectors.toList ());
+            String userId = principal.getName();
+            Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
+            if (siteUserOptional.isPresent()) {
+                SiteUser siteUser = siteUserOptional.get();
+                challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+                participatedChallengeIds = challengeUsers.stream()
+                        .map(cu -> cu.getChallenge().getId())
+                        .collect(Collectors.toList());
             }
         }
 
-        List<Challenge> challenges = challengeRepository.findAll ();
-        model.addAttribute ("challenges", challenges);
-        model.addAttribute ("participatedChallengeIds", participatedChallengeIds);
-        model.addAttribute ("challengeUsers", challengeUsers);
+        List<Challenge> challenges = challengeRepository.findAll();
+        model.addAttribute("challenges", challenges);
+        model.addAttribute("participatedChallengeIds", participatedChallengeIds);
+        model.addAttribute("challengeUsers", challengeUsers);
         return "/challenge/challengeList";
     }
 
-
     // 챌린지 참여 기능
-    @PostMapping("/participate")
+    @GetMapping("/participate")
     public String participate(@RequestParam("challengeId") Long challengeId, Principal principal, Model model) {
         if (principal == null) {
             return "redirect:/user/login";
         }
 
-        challengeService.participateInChallenge(challengeId, principal);
+        Optional<Challenge> challengeOptional = challengeRepository.findById(challengeId);
+        if (challengeOptional.isPresent()) {
+            Challenge challenge = challengeOptional.get();
+            if ("weight".equals(challenge.getType())) {
+                model.addAttribute("challengeId", challengeId);
+                return "redirect:/challenge/enterWeight?challengeId=" + challengeId;
+            } else {
+                challengeService.participateInChallenge(challengeId, principal);
+                return "redirect:/challenge/challenges";
+            }
+        } else {
+            return "redirect:/challenge/challenges";
+        }
+    }
 
-        // 참여 후 달성률 업데이트
-        SiteUser siteUser = siteUserRepository.findByUserId(principal.getName()).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-        ChallengeUser challengeUser = challengeUserRepository.findByChallengeAndSiteUser(challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다.")), siteUser).orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다."));
-        challengeService.updateAchievementRate(challengeUser.getId());
+    // 몸무게 입력 폼 반환
+    @GetMapping("/enterWeight")
+    public String enterWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
+        model.addAttribute("challengeId", challengeId);
+        return "/challenge/enterWeight";
+    }
 
+    // 초기 몸무게 입력 처리
+    @PostMapping("/enterWeight")
+    public String enterWeight(@RequestParam("challengeId") Long challengeId, @RequestParam("weight") double weight, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
+
+        challengeService.participateInChallengeWithWeight(challengeId, principal, weight);
+        return "redirect:/challenge/challenges";
+    }
+
+    // 변경된 몸무게 입력 폼 반환
+    @GetMapping("/updateWeight")
+    public String updateWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
+        model.addAttribute("challengeId", challengeId);
+        return "/challenge/enterWeight";
+    }
+
+    // 변경된 몸무게 입력 처리
+    @PostMapping("/updateWeight")
+    public String updateWeight(@RequestParam("challengeId") Long challengeId, @RequestParam("weight") double weight, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
+
+        challengeService.updateWeight(challengeId, principal, weight);
         return "redirect:/challenge/challenges";
     }
 }

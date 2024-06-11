@@ -1,4 +1,4 @@
-package com.example.MMP.attendance;
+package com.example.MMP.challenge.attendance;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -16,7 +16,7 @@ import com.querydsl.core.types.dsl.PathInits;
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
 public class QAttendance extends EntityPathBase<Attendance> {
 
-    private static final long serialVersionUID = 1236114879L;
+    private static final long serialVersionUID = 841262388L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 

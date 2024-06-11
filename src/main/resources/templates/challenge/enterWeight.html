@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>현재 몸무게 업데이트</title>
+</head>
+<body>
+<div class="container">
+    <h1>현재 몸무게 업데이트</h1>
+    <form th:action="@{/challenge/updateWeight}" method="post">
+        <input type="hidden" name="challengeId" th:value="${challengeId}">
+        <div>
+            <label for="weight">현재 몸무게 (kg)</label>
+            <input type="number" step="0.1" id="weight" name="weight" required>
+        </div>
+        <button type="submit">제출</button>
+    </form>
+</div>
+</body>
+</html>

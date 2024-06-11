@@ -1,6 +1,6 @@
 package com.example.MMP.siteuser;
 
-import com.example.MMP.attendance.Attendance;
+import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.userPass.UserDayPass;

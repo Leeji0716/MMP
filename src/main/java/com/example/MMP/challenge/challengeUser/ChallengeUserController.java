@@ -1,7 +1,7 @@
 package com.example.MMP.challenge.challengeUser;
 
 
-import com.example.MMP.attendance.AttendanceService;
+import com.example.MMP.challenge.attendance.AttendanceService;
 import com.example.MMP.challenge.challenge.ChallengeRepository;
 import com.example.MMP.siteuser.SiteUserRepository;
 import lombok.RequiredArgsConstructor;

@@ -24,7 +24,7 @@ public class QChallengeActivity extends EntityPathBase<ChallengeActivity> {
 
     public final DateTimePath<java.time.LocalDateTime> activeDate = createDateTime("activeDate", java.time.LocalDateTime.class);
 
-    public final com.example.MMP.attendance.QAttendance attendance;
+    public final com.example.MMP.challenge.attendance.QAttendance attendance;
 
     public final com.example.MMP.challenge.challenge.QChallenge challenge;
 
@@ -54,7 +54,7 @@ public class QChallengeActivity extends EntityPathBase<ChallengeActivity> {
 
     public QChallengeActivity(Class<? extends ChallengeActivity> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.attendance = inits.isInitialized("attendance") ? new com.example.MMP.attendance.QAttendance(forProperty("attendance"), inits.get("attendance")) : null;
+        this.attendance = inits.isInitialized("attendance") ? new com.example.MMP.challenge.attendance.QAttendance(forProperty("attendance"), inits.get("attendance")) : null;
         this.challenge = inits.isInitialized("challenge") ? new com.example.MMP.challenge.challenge.QChallenge(forProperty("challenge")) : null;
     }
 
