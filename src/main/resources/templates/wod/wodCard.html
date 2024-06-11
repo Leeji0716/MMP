@@ -3,7 +3,7 @@
         <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD" class="w-full h-full object-cover">
     </figure>
     <div class="flex h-[15%] w-[100%]">
-        <a href="#" class="recommend w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
+        <a href="#" class="w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
            th:onclick="'toggleIcon(event, ' + ${wod.id} + ')'">
             <i class="fa-regular fa-heart" th:id="heartIcon- + ${wod.id}"></i>
             <span class="badge bg-error" th:id="likeCountSpan- + ${wod.id}" th:text="${wod.likeCount}"></span>
