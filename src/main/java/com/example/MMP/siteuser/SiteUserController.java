@@ -168,7 +168,6 @@ public class SiteUserController {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
-
         List<Comment> commentList;
         List<Comment> topComment = new ArrayList<>();
         for (Wod wod : wodList){
@@ -185,3 +184,4 @@ public class SiteUserController {
         return "user/userProfile_form" ;
     }
 }
+ 
