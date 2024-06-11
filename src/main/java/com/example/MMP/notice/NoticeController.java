@@ -1,5 +1,6 @@
 package com.example.MMP.notice;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -54,12 +57,29 @@ public class NoticeController {
 
     @RequestMapping(value = "/detail/{id}")
     public String detail(Model model,
+                         HttpSession session,
                          @RequestParam(value = "so", defaultValue = "recent") String so,
                          @RequestParam(value = "page", defaultValue = "0") int page,
                          @PathVariable("id") Integer id,
                          Principal principal) {
 
         Notice notice = this.noticeService.getNotice(id);
+
+        // 현재 사용자의 세션에서 조회한 공지사항 ID 목록을 가져옵니다.
+        Set<Integer> viewedNotices = (Set<Integer>) session.getAttribute("viewedNotices");
+
+        // 만약 조회한 공지사항 ID 목록이 없으면 빈 목록을 생성합니다.
+        if (viewedNotices == null) {
+            viewedNotices = new HashSet<>();
+        }
+
+        // 만약 사용자가 해당 공지사항을 처음 조회하는 경우에만 조회수를 증가시킵니다.
+        if (!viewedNotices.contains(id)) {
+            notice.increaseHit(); // 조회수 증가
+            viewedNotices.add(id); // 조회한 공지사항 ID 목록에 추가
+            session.setAttribute("viewedNotices", viewedNotices); // 세션에 조회한 공지사항 ID 목록 저장
+            this.noticeService.saveNotice(notice); // 변경된 조회수를 데이터베이스에 저장
+        }
 
         Page<Notice> paging = this.noticeService.getList(page);
 
@@ -68,7 +88,7 @@ public class NoticeController {
         model.addAttribute("notice", notice);
         model.addAttribute("so", so);
 
-        // 뷰 이름인 "question_detail"을 반환합니다.
+        // 뷰 이름인 "notice_detail"을 반환합니다.
         return "notice/notice_detail";
     }
 }

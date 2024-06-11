@@ -50,4 +50,8 @@ public class NoticeService {
         notice.setHit(notice.getHit() + 1);
         this.noticeRepository.save(notice);
     }
+
+    public void saveNotice(Notice notice) {
+        noticeRepository.save(notice);
+    }
 }
