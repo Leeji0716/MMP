@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -48,10 +50,20 @@ public class CommentService {
         this.commentRepository.save(comment);
     }
 
-//    public void vote(Comment comment, SiteUser siteUser){
-//        comment.getLikeList().add(siteUser);
-//        int vote = comment.getLikeList().size();
-//        comment.setLike(vote);
-//        this.commentRepository.save(comment);
-//    }
+    public List<Comment> getCommentsByWodOrderByCreateDateDesc(Wod wod) {
+        return commentRepository.findByWodOrderByCreateDateDesc(wod);
+    }
+
+    public List<Comment> sortCommentsByCreateDateDesc(List<Comment> comments) {
+        return comments.stream()
+                .sorted((c1, c2) -> c2.getCreateDate().compareTo(c1.getCreateDate()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Comment> getTop7Comments(List<Comment> comments) {
+        List<Comment> sortedComments = sortCommentsByCreateDateDesc(comments);
+        return sortedComments.stream()
+                .limit(7)
+                .collect(Collectors.toList());
+    }
 }

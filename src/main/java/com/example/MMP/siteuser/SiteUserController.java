@@ -2,6 +2,8 @@ package com.example.MMP.siteuser;
 
 
 //import com.example.MMP.mail.MailService;
+import com.example.MMP.Comment.Comment;
+import com.example.MMP.Comment.CommentService;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
@@ -31,10 +33,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,6 +46,7 @@ public class SiteUserController {
     private final HomeTrainingService homeTrainingService;
     private final UserPtPassService userPtPassService;
     private final UserDayPassService userDayPassService;
+    private final CommentService commentService;
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
         model.addAttribute("passwordResetRequestDto", new PasswordResetRequestDto());
@@ -163,15 +163,25 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-
     public String getUserProfile(Model model, Principal principal) {
+
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
 
+        List<Comment> commentList;
+        List<Comment> topComment = new ArrayList<>();
+        for (Wod wod : wodList){
+            commentList = commentService.getCommentsByWodOrderByCreateDateDesc(wod);
+            for (Comment comment : commentList){
+                topComment.add(comment);
+            }
+        }
+
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
         model.addAttribute("user",user);
+        model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
         return "user/userProfile_form" ;
     }
 }

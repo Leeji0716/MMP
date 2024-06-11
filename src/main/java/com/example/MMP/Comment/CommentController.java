@@ -44,7 +44,7 @@ public class CommentController {
         SiteUser writer = siteUserService.getUser(principal.getName());
 
         Comment comment = this.commentService.create(wod, commentForm.getContent(), writer);
-        return String.format("redirect:/wod/detail/%s#comment_%s", comment.getWod().getId(), comment.getId());
+        return String.format("redirect:/wod/detail/%s", comment.getWod().getId());
     }
 
     @GetMapping("/delete/{id}")
