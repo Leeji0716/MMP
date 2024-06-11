@@ -10,4 +10,5 @@ public class SiteUserCustomImpl implements SiteUserCustom{
 
     QSiteUser qSiteUser = QSiteUser.siteUser;
 
+
 }

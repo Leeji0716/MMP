@@ -14,4 +14,5 @@ public class WodCustomImpl implements WodCustom{
     public List<Wod> findByUserWod(SiteUser siteUser) {
         return jpaQueryFactory.select(qWod).from(qWod).where(qWod.writer.eq(siteUser)).fetch();
     }
+
 }

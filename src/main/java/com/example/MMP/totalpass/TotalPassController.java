@@ -8,8 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.rmi.StubNotFoundException;
 import java.util.List;
 
 @Controller
@@ -26,5 +29,18 @@ public class TotalPassController {
         model.addAttribute("ptPassList", ptPassList);
         model.addAttribute("dayPassList", dayPassList);
         return "pass/passList";
+    }
+
+    @GetMapping("/transfer")
+    public String transferPass(){
+
+
+        return "pass/transfer";
+    }
+
+    @PostMapping("/transfer")
+    public String transferPass(@RequestParam("number") String number,@RequestParam("passName") String passName){
+
+        return "";
     }
 }

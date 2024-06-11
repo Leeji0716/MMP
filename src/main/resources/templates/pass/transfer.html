@@ -1,0 +1,19 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3">
+    <div class="flex items-center ">
+    <form action="/totalPass/transfer" method="post">
+        
+        <label class="input input-bordered flex items-center gap-2">
+            Number
+            <input type="text" class="grow text-black" placeholder="Number" name="number" />
+          </label>
+
+        <select class="select text-black select-error w-full max-w-xs">
+            <option disabled selected>양도할 이용권을 선택해주세요.</option>
+            <option value="" name="passName"> </option>
+          </select>
+    </form>
+</div>
+</div>
+
+</html>
