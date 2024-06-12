@@ -7,6 +7,10 @@ import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
+import com.example.MMP.userPass.UserDayPass;
+import com.example.MMP.userPass.UserDayPassService;
+import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.userPass.UserPtPassService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,9 +19,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.rmi.StubNotFoundException;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.example.MMP.ptpass.QPtPass.ptPass;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,6 +33,8 @@ public class TotalPassController {
     private final PtPassService ptPassService;
     private final DayPassService dayPassService;
     private final SiteUserService siteUserService;
+    private final UserPtPassService userPtPassService;
+    private final UserDayPassService userDayPassService;
 
     @GetMapping("/list")
     public String PtPassList(Model model) {
@@ -37,36 +46,35 @@ public class TotalPassController {
     }
 
     @GetMapping("/transfer/{id}")
-    public String transferPass(@PathVariable("id")Long id, @AuthenticationPrincipal UserDetail userDetail,Model model){
+    public String transferPass(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
         SiteUser _siteUser = siteUserService.findById(id);
-        if(siteUser != _siteUser){
+        if (siteUser != _siteUser) {
             return "/";
         }
-        model.addAttribute("user",siteUser);
+        model.addAttribute("user", siteUser);
         return "pass/transfer";
     }
 
     @PostMapping("/transfer/{id}")
-    public ResponseEntity<?> handlePassSelection(@RequestBody Map<String, String> payload,@PathVariable("id")Long id) {
+    public ResponseEntity<?> handlePassSelection(@RequestBody Map<String, String> payload, @PathVariable("id") Long id) {
         String passName = payload.get("passName");
-        PtPass ptPass = ptPassService.findByName(passName);
-        if(ptPass == null){
-            DayPass dayPass = dayPassService.findByName(passName);
-            Map<String,String> response = new HashMap<>();
-            response.put("passName",dayPass.getPassName());
-            response.put("passTitle",dayPass.getPassTitle());
-            response.put("passPrice",Integer.toString(dayPass.getPassPrice()));
-            response.put("passDays",Integer.toString(dayPass.getPassDays()));
+        UserPtPass userPtPass = userPtPassService.findByPassName(passName);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (userPtPass == null) {
+            UserDayPass userDayPass = userDayPassService.findByPassName(passName);
+            Map<String, String> response = new HashMap<>();
+            response.put("passName", userDayPass.getPassName());
+            response.put("passStart", userDayPass.getPassStart().format(formatter));
+            response.put("passFinish",userDayPass.getPassFinish().format(formatter));
 
             return ResponseEntity.ok().body(response);
-        }else{
-            Map<String,String> response = new HashMap<>();
-            response.put("passName", ptPass.getPassName());
-            response.put("passTitle", ptPass.getPassTitle());
-            response.put("passCount",Integer.toString(ptPass.getPassCount()));
-            response.put("passPrice",Integer.toString(ptPass.getPassPrice()));
-            response.put("passDays",Integer.toString(ptPass.getPassDays()));
+        } else {
+            Map<String, String> response = new HashMap<>();
+            response.put("passName", userPtPass.getPassName());
+            response.put("passCount", Integer.toString(userPtPass.getPassCount()));
+            response.put("passStart", userPtPass.getPassStart().format(formatter));
+            response.put("passFinish",userPtPass.getPassFinish().format(formatter));
 
             return ResponseEntity.ok().body(response);
         }

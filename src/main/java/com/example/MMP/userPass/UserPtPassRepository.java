@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserPtPassRepository extends JpaRepository<UserPtPass,Long> {
 
     List<UserPtPass> findBySiteUser(SiteUser siteUser);
+
+    UserPtPass findByPassName(String passName);
 }

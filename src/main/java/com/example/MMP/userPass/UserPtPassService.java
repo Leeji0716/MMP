@@ -28,4 +28,9 @@ public class UserPtPassService {
     public List<UserPtPass> findBySiteUser(SiteUser siteUser){
         return userPtPassRepository.findBySiteUser(siteUser);
     }
+
+    public UserPtPass findByPassName(String passName) {
+
+        return userPtPassRepository.findByPassName(passName);
+    }
 }

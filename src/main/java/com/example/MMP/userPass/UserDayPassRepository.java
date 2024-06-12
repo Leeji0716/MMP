@@ -9,4 +9,6 @@ import java.util.List;
 public interface UserDayPassRepository extends JpaRepository<UserDayPass,Long> {
 
     List<UserDayPass> findBySiteUser(SiteUser siteUser);
+
+    UserDayPass findByPassName(String passName);
 }

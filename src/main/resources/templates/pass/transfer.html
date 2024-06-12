@@ -1,8 +1,8 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full my-3">
+<div layout:fragment="content" class="w-full my-3 ">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
-    <div class="flex items-center text-black flex flex-wrap">
+    <div class="flex items-center text-black flex justify-center items-center">
         <form action="/totalPass/transfer" method="post">
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text" class="grow text-black" placeholder="Number" name="number"/>
@@ -62,29 +62,27 @@
                         cardTitle.className = 'card-title';
                         cardTitle.innerText = data.passName; // 받아온 데이터 사용
 
-                        const cardDescription = document.createElement('p');
-                        cardDescription.innerText = data.passTitle; // 받아온 데이터 사용
+
 
                         const cardCount = document.createElement('p');
-                        cardCount.innerText = `횟수 : ${data.passDays}`; // 받아온 데이터 사용
+                        cardCount.innerText = `횟수 : ${data.passCount}`; // 받아온 데이터 사용
 
-                        const cardPrice = document.createElement('p');
-                        cardPrice.innerText = `가격 : ${data.passPrice}`; // 받아온 데이터 사용
+                        const cardStart = document.createElement('p');
+                        cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
+
+                        const cardFinish = document.createElement('p');
+                        cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
+
 
                         const cardActions = document.createElement('div');
                         cardActions.className = 'card-actions justify-end';
 
-                        const buyNowButton = document.createElement('a');
-                        buyNowButton.href = `/checkout/${data.passName}`; // 구매 링크에 데이터 사용
-                        buyNowButton.className = 'btn btn-primary';
-                        buyNowButton.innerText = 'Buy Now';
 
-                        cardActions.appendChild(buyNowButton);
 
                         cardBody.appendChild(cardTitle);
-                        cardBody.appendChild(cardDescription);
                         cardBody.appendChild(cardCount);
-                        cardBody.appendChild(cardPrice);
+                        cardBody.appendChild(cardStart);
+                        cardBody.appendChild(cardFinish);
                         cardBody.appendChild(cardActions);
 
                         card.appendChild(figure);
@@ -112,29 +110,20 @@
                 cardTitle.className = 'card-title';
                 cardTitle.innerText = data.passName; // 받아온 데이터 사용
 
-                const cardDescription = document.createElement('p');
-                cardDescription.innerText = data.passTitle; // 받아온 데이터 사용
 
-                const cardDays = document.createElement('p');
-                cardDays.innerText = `${data.passDays}일`; // 받아온 데이터 사용
+                const cardStart = document.createElement('p');
+                cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
 
-                const cardPrice = document.createElement('p');
-                cardPrice.innerText = `가격 : ${data.passPrice}`; // 받아온 데이터 사용
+                const cardFinish = document.createElement('p');
+                cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
 
                 const cardActions = document.createElement('div');
                 cardActions.className = 'card-actions justify-end';
 
-                const buyNowButton = document.createElement('a');
-                buyNowButton.href = `/checkout/${data.passName}`; // 구매 링크에 데이터 사용
-                buyNowButton.className = 'btn btn-primary';
-                buyNowButton.innerText = 'Buy Now';
-
-                cardActions.appendChild(buyNowButton);
 
                 cardBody.appendChild(cardTitle);
-                cardBody.appendChild(cardDescription);
-                cardBody.appendChild(cardDays);
-                cardBody.appendChild(cardPrice);
+                cardBody.appendChild(cardStart);
+                cardBody.appendChild(cardFinish);
                 cardBody.appendChild(cardActions);
 
                 card.appendChild(figure);
