@@ -15,6 +15,8 @@ import com.example.MMP.mail.MailService;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
+import com.example.MMP.transPass.TransPass;
+import com.example.MMP.transPass.TransPassService;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
@@ -34,6 +36,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.*;
@@ -49,6 +52,7 @@ public class SiteUserController {
     private final HomeTrainingService homeTrainingService;
     private final CommentService commentService;
     private final ChallengeService challengeService;
+    private final TransPassService transPassService;
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -166,7 +170,7 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(Model model, Principal principal) {
+    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter",defaultValue = "pt") String passFilter) {
 
         try {
             SiteUser user = this.siteUserService.getUser (principal.getName ());
@@ -186,6 +190,19 @@ public class SiteUserController {
             List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
             List<Challenge> failedChallenges = challengesByStatus.get ("failed");
             int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+            if(passFilter.equals("pt")) {
+                List<TransPass> MySendPass = transPassService.MySendPass(user);
+                if(MySendPass == null){
+                    model.addAttribute("MySendPass",null);
+                }
+                model.addAttribute("MySendPass",MySendPass);
+            }else{
+                List<TransPass> MyAcceptPass = transPassService.MyAcceptPass(user);
+                if(MyAcceptPass == null){
+                    model.addAttribute("MyAcceptPass",null);
+                }
+                model.addAttribute("MyAcceptPass",MyAcceptPass);
+            }
 
             model.addAttribute ("wodList", wodList);
             model.addAttribute ("saveTraining", saveTraining);

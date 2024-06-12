@@ -3,17 +3,18 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
     <div class="flex items-center text-black flex justify-center items-center">
-        <form action="/totalPass/transfer" method="post">
+        <form action="/totalPass/transfer/success">
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text" class="grow text-black" placeholder="Number" name="number"/>
             </label>
             <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
-                <option th:each="pt : ${user.userPtPassList}" th:value="${pt.passName}" th:text="${pt.passName}">
+                <option th:each="pt : ${user.userPtPassList}" name="pt" th:value="${pt.passName}" th:text="${pt.passName}">
                 </option>
-                <option th:each="day : ${user.userDayPassList}" th:value="${day.passName}" th:text="${day.passName}">
+                <option th:each="day : ${user.userDayPassList}" name="day" th:value="${day.passName}" th:text="${day.passName}">
                 </option>
             </select>
+            <input type="submit" class="btn" value="양도하기">
         </form>
 
         <div>

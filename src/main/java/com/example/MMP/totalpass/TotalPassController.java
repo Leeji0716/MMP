@@ -7,6 +7,8 @@ import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
+import com.example.MMP.transPass.TransPass;
+import com.example.MMP.transPass.TransPassService;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
@@ -35,6 +37,7 @@ public class TotalPassController {
     private final SiteUserService siteUserService;
     private final UserPtPassService userPtPassService;
     private final UserDayPassService userDayPassService;
+    private final TransPassService transPassService;
 
     @GetMapping("/list")
     public String PtPassList(Model model) {
@@ -79,5 +82,24 @@ public class TotalPassController {
             return ResponseEntity.ok().body(response);
         }
 
+    }
+
+    @GetMapping("/transfer/success")
+    public String agree(@RequestParam("number")String number,@RequestParam("pass")String pass,@AuthenticationPrincipal UserDetail userDetail){
+        SiteUser sendUser = siteUserService.getUser(userDetail.getUsername());
+        SiteUser acceptUser = siteUserService.getUser(number);
+        UserPtPass userPtPass = userPtPassService.findByPassName(pass);
+        if(userPtPass != null){
+            TransPass transPass = TransPass.builder().sendUser(sendUser).acceptUser(acceptUser).build();
+            transPass.setUserPtPass(userPtPass);
+            transPassService.save(transPass);
+        }else{
+            UserDayPass userDayPass = userDayPassService.findByPassName(pass);
+            TransPass transPass = TransPass.builder().sendUser(sendUser).acceptUser(acceptUser).build();
+            transPass.setUserDayPass(userDayPass);
+            transPassService.save(transPass);
+        }
+
+        return "redirect:/";
     }
 }
