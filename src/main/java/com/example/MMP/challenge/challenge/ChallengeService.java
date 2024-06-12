@@ -12,12 +12,13 @@ import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -112,7 +113,7 @@ public class ChallengeService {
         userWeightService.recordWeight(siteUser.getId(), weight);
     }
 
-
+    @Transactional
     public void updateWeight(Long challengeId, Principal principal, double weight) {
         String userId = principal.getName();
         SiteUser siteUser = siteUserRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
@@ -129,7 +130,49 @@ public class ChallengeService {
             double achievementRate = (currentWeightLoss / targetWeightLoss) * 100;
             challengeUser.setAchievementRate(achievementRate);
             challengeUserRepository.save(challengeUser);
+
+            // 달성률이 100% 이상인 경우 챌린지 성공 처리
+            if (achievementRate >= 100) {
+                challengeUserService.markChallengeAsSuccessful(challengeUser.getId());
+            }
         });
+    }
+
+    @Transactional(readOnly = true)
+    public List<Challenge> getParticipatedChallenges(Long userId) {
+        SiteUser siteUser = siteUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+        return challengeUsers.stream()
+                .map(ChallengeUser::getChallenge)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, List<Challenge>> getChallengesByStatus(Long userId) {
+        SiteUser siteUser = siteUserRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+
+        List<Challenge> ongoingChallenges = new ArrayList<>();
+        List<Challenge> successfulChallenges = new ArrayList<>();
+        List<Challenge> failedChallenges = new ArrayList<>();
+
+        for (ChallengeUser challengeUser : challengeUsers) {
+            if (challengeUser.isSuccess()) {
+                successfulChallenges.add(challengeUser.getChallenge());
+            } else if (challengeUser.getEndDate().isBefore(LocalDateTime.now())) {
+                failedChallenges.add(challengeUser.getChallenge());
+            } else {
+                ongoingChallenges.add(challengeUser.getChallenge());
+            }
+        }
+
+        Map<String, List<Challenge>> challengesByStatus = new HashMap<>();
+        challengesByStatus.put("ongoing", ongoingChallenges);
+        challengesByStatus.put("successful", successfulChallenges);
+        challengesByStatus.put("failed", failedChallenges);
+        return challengesByStatus;
     }
 }
 

@@ -17,7 +17,8 @@ public class PointService {
     public void addPoints(Long userId, int pointsToAdd) {
         Point point = pointRepository.findBySiteUserId(userId);
         if (point == null) {
-            SiteUser user = siteUserRepository.findById(userId).orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
+            SiteUser user = siteUserRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다"));
             point = new Point();
             point.setSiteUser(user);
             pointRepository.save(point);
@@ -25,5 +26,4 @@ public class PointService {
         point.addPoints(pointsToAdd);
         pointRepository.save(point);
     }
-
 }

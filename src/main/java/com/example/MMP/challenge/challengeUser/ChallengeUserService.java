@@ -25,11 +25,10 @@ public class ChallengeUserService {
     private final ChallengeActivityRepository challengeActivityRepository;
 
 
-
     @Transactional
     public void markChallengeAsSuccessful(Long challengeUserId) {
         ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
-                .orElseThrow(() -> new RuntimeException("ChallengeUser not found"));
+                .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
         challengeUser.setSuccess(true);
         challengeUserRepository.save(challengeUser);
 
@@ -40,6 +39,7 @@ public class ChallengeUserService {
     }
 
     // 챌린지 성공 여부와 달성률 업데이트
+    @Transactional
     public void updateAchievementRate(Long challengeUserId) {
         ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
                 .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
@@ -80,4 +80,3 @@ public class ChallengeUserService {
         return ((double) successfulActivities / totalActivities) * 100;
     }
 }
-

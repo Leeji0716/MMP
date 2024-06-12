@@ -4,6 +4,9 @@ package com.example.MMP.siteuser;
 //import com.example.MMP.mail.MailService;
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
+import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
@@ -44,9 +47,9 @@ public class SiteUserController {
     private final MailService mailService;
     private final WodService wodService;
     private final HomeTrainingService homeTrainingService;
-    private final UserPtPassService userPtPassService;
-    private final UserDayPassService userDayPassService;
     private final CommentService commentService;
+    private final ChallengeService challengeService;
+
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
         model.addAttribute("passwordResetRequestDto", new PasswordResetRequestDto());
@@ -168,7 +171,7 @@ public class SiteUserController {
         SiteUser user = this.siteUserService.getUser(principal.getName());
         List<Wod> wodList = wodService.findByUserWod(user);
         List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
-        int points = user.getPoint().getPoints(); // 포인트 가져오기
+        int points = user.getPoint().getPoints();
 
         List<Comment> commentList;
         List<Comment> topComment = new ArrayList<>();
@@ -179,11 +182,21 @@ public class SiteUserController {
             }
         }
 
+        Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus(user.getId()); // 참여한 챌린지 목록 가져오기
+        List<Challenge> ongoingChallenges = challengesByStatus.get("ongoing");
+        List<Challenge> successfulChallenges = challengesByStatus.get("successful");
+        List<Challenge> failedChallenges = challengesByStatus.get("failed");
+        int challengeCount = ongoingChallenges.size() + successfulChallenges.size() + failedChallenges.size(); // 총 챌린지 개수
+
         model.addAttribute("wodList",wodList);
         model.addAttribute("saveTraining",saveTraining);
         model.addAttribute("user",user);
-        model.addAttribute("points", points); // 모델에 포인트 추가
+        model.addAttribute("points", points);
         model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
+        model.addAttribute("ongoingChallenges", ongoingChallenges);
+        model.addAttribute("successfulChallenges", successfulChallenges);
+        model.addAttribute("failedChallenges", failedChallenges);
+        model.addAttribute("challengeCount", challengeCount);
         return "user/userProfile_form" ;
     }
 }
