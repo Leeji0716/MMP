@@ -28,11 +28,6 @@ public class HomeTraining {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    //    @ManyToMany
-//    private List<SiteUser> likeList;
-
-//    private Long likeCount;
-
     private LocalDateTime createDate;
 
     @ManyToMany

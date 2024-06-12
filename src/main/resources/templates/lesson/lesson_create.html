@@ -1,0 +1,46 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
+    <div class="h-screen flex items-center justify-center bg-black">
+        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
+            <form th:object="${lessonForm}" method="post" enctype="multipart/form-data">
+                <!-- CSRF 토큰 입력 -->
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <!-- 레슨명 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="text" class="file-input file-input-bordered w-full max-w-xl text-black"
+                        th:field="*{lessonName}" placeholder="레슨명" />
+                </div>
+
+                <!-- 참여인원 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="text" class="file-input file-input-bordered w-full max-w-xl text-black"
+                        th:field="*{headCount}" placeholder="참여 인원" />
+                </div>
+
+                <!-- 레슨 시작 시간 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="date" class="input w-full input-bordered text-black" th:field="*{lessonDate}"
+                        placeholder="레슨 날짜">
+                </div>
+
+                <!-- 레슨 시작 시간 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="time" class="input w-full input-bordered text-black" th:field="*{startTime}"
+                        placeholder="시작 시간">
+                </div>
+
+                <!-- 레슨 끝 시간 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="time" class="input w-full input-bordered text-black" th:field="*{endTime}"
+                        placeholder="끝 시간">
+                </div>
+
+                <!-- 수정 완료 버튼 -->
+                <button type="submit" class="btn btn-error">업로드</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</html>

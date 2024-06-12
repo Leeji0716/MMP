@@ -20,4 +20,9 @@ public class MapController {
     public String game() {
         return "game";
     }
+
+    @GetMapping("/schedule")
+    public String schedule(){
+        return "schedule";
+    }
 }

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout}">
+
+<head>
+    <!-- Import map 설정 -->
+    <script type='importmap'>
+      {
+        "imports": {
+          "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.14",
+          "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.14"
+        }
+      }
+    </script>
+
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.14/main.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.14/main.min.css" rel="stylesheet">
+</head>
+<div layout:fragment="content" class="w-full my-3 flex justify-center items-center flex-col">
+    <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+        <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+    </div>
+    <!-- FullCalendar 캘린더를 표시할 div 요소 -->
+    <div id='calendar' class="mt-5 h-[500px] w-[550px]"></div>
+
+
+    <script type='module'>
+        import { Calendar } from '@fullcalendar/core';
+        import dayGridPlugin from '@fullcalendar/daygrid';
+
+        let calendarInstance; // 전역 변수로 캘린더 인스턴스를 선언합니다.
+        let selectedDateElement = null; // 선택된 날짜를 저장할 변수
+
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendarInstance = new Calendar(calendarEl, {
+                plugins: [dayGridPlugin],
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
+                selectable: true,
+                dayCellDidMount: function (info) {
+                    info.el.addEventListener('click', function () {
+                        // 클릭한 날짜 요소 가져오기
+                        const clickedDateElement = info.el;
+
+                        // 이전에 선택된 날짜의 배경색 초기화
+                        if (selectedDateElement) {
+                            selectedDateElement.style.backgroundColor = ''; // 이전에 선택된 날짜의 배경색 초기화
+                        }
+
+                        // 선택한 날짜의 배경색 변경
+                        clickedDateElement.style.backgroundColor = 'red'; // 원하는 배경색으로 변경
+
+                        // 선택한 날짜를 변수에 저장
+                        selectedDateElement = clickedDateElement;
+                    });
+                }
+            });
+
+            // 캘린더 렌더링
+            calendarInstance.render();
+        }
+
+        // DOMContentLoaded 이벤트가 발생하면 initializeCalendar 함수를 호출
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeCalendar();
+        });
+    </script>
+
+</div>
+
+</html>
