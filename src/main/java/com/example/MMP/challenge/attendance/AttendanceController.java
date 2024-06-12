@@ -27,7 +27,8 @@ public class AttendanceController {
 
     // 출석 체크 처리
     @PostMapping("/checkin")
-    public ResponseEntity<String> checkIn(Authentication authentication, Principal principal) {
+    public ResponseEntity<String> checkIn(Authentication authentication,
+                                          Principal principal) {
         boolean success = attendanceService.checkIn(authentication, principal);
         if (success) {
             return ResponseEntity.ok("출석 체크 성공");

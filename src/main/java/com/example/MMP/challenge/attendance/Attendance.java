@@ -1,6 +1,5 @@
 package com.example.MMP.challenge.attendance;
 
-
 import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -30,5 +29,4 @@ public class Attendance {
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)
     @JsonBackReference
     private ChallengeActivity challengeActivity;
-
 }
