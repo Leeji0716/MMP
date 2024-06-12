@@ -50,7 +50,8 @@ public class SecurityConfig{
                             new AntPathRequestMatcher("/success"),
                             new AntPathRequestMatcher("/fail"),
                             new AntPathRequestMatcher("/confirm"),
-                            new AntPathRequestMatcher ("/weight/**")
+                            new AntPathRequestMatcher ("/weight/**"),
+                            new AntPathRequestMatcher ("/upload_image/**")
                     ))
             ;
 

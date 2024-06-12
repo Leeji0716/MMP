@@ -190,6 +190,7 @@ public class SiteUserController {
             List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
             List<Challenge> failedChallenges = challengesByStatus.get ("failed");
             int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+
             if(passFilter.equals("pt")) {
                 List<TransPass> MySendPass = transPassService.MySendPass(user);
                 if(MySendPass == null){
@@ -203,6 +204,7 @@ public class SiteUserController {
                 }
                 model.addAttribute("MyAcceptPass",MyAcceptPass);
             }
+
 
             model.addAttribute ("wodList", wodList);
             model.addAttribute ("saveTraining", saveTraining);

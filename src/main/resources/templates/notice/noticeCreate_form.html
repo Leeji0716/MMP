@@ -28,7 +28,32 @@
                 initialEditType: 'markdown', // 초기 모드를 Markdown으로 설정
                 previewStyle: 'vertical',
                 height: '500px', // 에디터의 높이를 500px로 설정
-                minHeight: '500px' // 에디터의 최소 높이도 500px로 설정
+                minHeight: '500px', // 에디터의 최소 높이도 500px로 설정
+                hooks: {
+                    addImageBlobHook: async function (blob, callback) {
+                        const formData = new FormData();
+                        formData.append('file', blob);
+
+                        try {
+                            const response = await fetch('https://upload_image/', {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: 'Client-ID YOUR_IMGUR_CLIENT_ID'
+                                },
+                                body: formData
+                            });
+                            const data = await response.json();
+                            if (data.success) {
+                                callback(data.data.link, 'alt text');
+                            } else {
+                                alert('Image upload failed');
+                            }
+                        } catch (error) {
+                            console.error('Error uploading image:', error);
+                            alert('Image upload failed');
+                        }
+                    }
+                }
             });
         });
 
