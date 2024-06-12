@@ -62,12 +62,19 @@
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-error mt-4"
                                     th:if="${participatedChallengeIds != null and not #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}"
                                     style="color: black;">참여</button>
                             <button type="button" class="btn btn-success mt-4"
                                     th:if="${participatedChallengeIds != null and #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}"
                                     style="color: black;">참여 중</button>
+                            <button type="button" class="btn btn-primary mt-4"
+                                    th:if="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}"
+                                    style="color: black;">달성 완료</button>
                         </form>
-                        <form th:action="@{/challenge/updateWeight}" method="get" style="display:inline;" th:if="${challenge.type == 'weight'}">
+                        <form th:action="@{/challenge/updateWeight}" method="get" style="display:inline;"
+                              th:if="${challenge.type == 'weight'}"
+                              th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-warning mt-4" style="color: black;">몸무게 업데이트</button>
                         </form>

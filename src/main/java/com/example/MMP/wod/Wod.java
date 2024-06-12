@@ -2,6 +2,8 @@ package com.example.MMP.wod;
 
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +21,7 @@ public class Wod {
 
     @ManyToOne
     @JoinColumn(name = "site_user_id") // 외래 키 컬럼 지정
+    @JsonBackReference
     private SiteUser writer;
 
     private String imagePath;
@@ -27,6 +30,7 @@ public class Wod {
     private String content;
 
     @ManyToMany
+    @JsonManagedReference
     private List<SiteUser> likeList;
 
     private Long likeCount = 0L;
@@ -34,6 +38,7 @@ public class Wod {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "wod", cascade = CascadeType.REMOVE)
+    @JsonManagedReference
     private List<Comment> commentList;
 
 }

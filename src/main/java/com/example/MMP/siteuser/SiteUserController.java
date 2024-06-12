@@ -168,36 +168,40 @@ public class SiteUserController {
     @GetMapping("/profile")
     public String getUserProfile(Model model, Principal principal) {
 
-        SiteUser user = this.siteUserService.getUser(principal.getName());
-        List<Wod> wodList = wodService.findByUserWod(user);
-        List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining(user);
-        int points = user.getPoint().getPoints();
+        try {
+            SiteUser user = this.siteUserService.getUser (principal.getName ());
+            List<Wod> wodList = wodService.findByUserWod (user);
+            List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining (user);
+            int points = user.getPoint ().getPoints ();
 
-        List<Comment> commentList;
-        List<Comment> topComment = new ArrayList<>();
-        for (Wod wod : wodList){
-            commentList = commentService.getCommentsByWodOrderByCreateDateDesc(wod);
-            for (Comment comment : commentList){
-                topComment.add(comment);
+            List<Comment> commentList;
+            List<Comment> topComment = new ArrayList<> ();
+            for (Wod wod : wodList) {
+                commentList = commentService.getCommentsByWodOrderByCreateDateDesc (wod);
+                topComment.addAll (commentList);
             }
+
+            Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus (user.getId ());
+            List<Challenge> ongoingChallenges = challengesByStatus.get ("ongoing");
+            List<Challenge> successfulChallenges = challengesByStatus.get ("successful");
+            List<Challenge> failedChallenges = challengesByStatus.get ("failed");
+            int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
+
+            model.addAttribute ("wodList", wodList);
+            model.addAttribute ("saveTraining", saveTraining);
+            model.addAttribute ("user", user);
+            model.addAttribute ("points", points);
+            model.addAttribute ("topSevenComment", commentService.getTop7Comments (topComment));
+            model.addAttribute ("ongoingChallenges", ongoingChallenges);
+            model.addAttribute ("successfulChallenges", successfulChallenges);
+            model.addAttribute ("failedChallenges", failedChallenges);
+            model.addAttribute ("challengeCount", challengeCount);
+
+            return "user/userProfile_form";
+        } catch (Exception e) {
+            model.addAttribute ("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
+            return "error";
         }
-
-        Map<String, List<Challenge>> challengesByStatus = challengeService.getChallengesByStatus(user.getId()); // 참여한 챌린지 목록 가져오기
-        List<Challenge> ongoingChallenges = challengesByStatus.get("ongoing");
-        List<Challenge> successfulChallenges = challengesByStatus.get("successful");
-        List<Challenge> failedChallenges = challengesByStatus.get("failed");
-        int challengeCount = ongoingChallenges.size() + successfulChallenges.size() + failedChallenges.size(); // 총 챌린지 개수
-
-        model.addAttribute("wodList",wodList);
-        model.addAttribute("saveTraining",saveTraining);
-        model.addAttribute("user",user);
-        model.addAttribute("points", points);
-        model.addAttribute("topSevenComment", commentService.getTop7Comments(topComment));
-        model.addAttribute("ongoingChallenges", ongoingChallenges);
-        model.addAttribute("successfulChallenges", successfulChallenges);
-        model.addAttribute("failedChallenges", failedChallenges);
-        model.addAttribute("challengeCount", challengeCount);
-        return "user/userProfile_form" ;
     }
 }
  

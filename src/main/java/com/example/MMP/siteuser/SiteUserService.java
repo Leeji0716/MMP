@@ -38,6 +38,11 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole("admin");
+        // Point 설정
+        Point point = new Point ();
+        point.setSiteUser(siteUser); // Point와 SiteUser 연결
+        siteUser.setPoint(point); // SiteUser에 Point 설정
+
         siteUserRepository.save(siteUser);
         siteUser.setUserId("admin" + siteUser.getId());
         siteUserRepository.save(siteUser);

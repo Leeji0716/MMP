@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -89,6 +87,7 @@ public class ChallengeController {
     public String listChallenges(Model model, Principal principal) {
         List<Long> participatedChallengeIds = new ArrayList<>();
         List<ChallengeUser> challengeUsers = new ArrayList<>();
+        Map<Long, Double> challengeAchievementRates = new HashMap<> ();
 
         if (principal != null) {
             String userId = principal.getName();
@@ -99,6 +98,9 @@ public class ChallengeController {
                 participatedChallengeIds = challengeUsers.stream()
                         .map(cu -> cu.getChallenge().getId())
                         .collect(Collectors.toList());
+                for (ChallengeUser challengeUser : challengeUsers) {
+                    challengeAchievementRates.put(challengeUser.getChallenge().getId(), challengeUser.getAchievementRate());
+                }
             }
         }
 
@@ -106,6 +108,7 @@ public class ChallengeController {
         model.addAttribute("challenges", challenges);
         model.addAttribute("participatedChallengeIds", participatedChallengeIds);
         model.addAttribute("challengeUsers", challengeUsers);
+        model.addAttribute("challengeAchievementRates", challengeAchievementRates);
         return "/challenge/challengeList";
     }
 
