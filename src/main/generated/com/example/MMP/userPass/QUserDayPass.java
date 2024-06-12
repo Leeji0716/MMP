@@ -24,13 +24,13 @@ public class QUserDayPass extends EntityPathBase<UserDayPass> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final DateTimePath<java.time.LocalDateTime> passFinish = createDateTime("passFinish", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> passFinish = createDate("passFinish", java.time.LocalDate.class);
 
     public final StringPath passName = createString("passName");
 
     public final NumberPath<Integer> passPrice = createNumber("passPrice", Integer.class);
 
-    public final DateTimePath<java.time.LocalDateTime> passStart = createDateTime("passStart", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> passStart = createDate("passStart", java.time.LocalDate.class);
 
     public final StringPath passTitle = createString("passTitle");
 

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -21,8 +22,8 @@ public class UserDayPass {
 
     private int passPrice;
 
-    private LocalDateTime passStart;
-    private LocalDateTime passFinish;
+    private LocalDate passStart;
+    private LocalDate passFinish;
 
     @ManyToOne
     private SiteUser siteUser;

@@ -4,6 +4,7 @@ import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,8 +18,8 @@ public class UserPtPassService {
         userPtPass.setPassTitle(title);
         userPtPass.setPassCount(count);
         userPtPass.setPassPrice(price);
-        userPtPass.setPassStart(LocalDateTime.now());
-        LocalDateTime Finish = LocalDateTime.now().plusDays(passDays);
+        userPtPass.setPassStart(LocalDate.now());
+        LocalDate Finish = LocalDate.now().plusDays(passDays);
         userPtPass.setPassFinish(Finish);
         userPtPass.setSiteUser(siteUser);
         return userPtPassRepository.save(userPtPass);

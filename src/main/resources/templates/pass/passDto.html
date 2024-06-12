@@ -5,9 +5,9 @@
         <figure class="h-[60%] w-full"><img src="https://i.imgur.com/kW3S5se.png" alt="PT" class="h-[80%] w-[80%] mx-auto"/></figure>
         <div class="card-body h-[40%] w-full p-2 inline-block">
             <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${pt.passName}"></h2>
-            <p th:text="${pt.passTitle}" class="h-[20%] w-[80%] mx-auto"></p>
             <p th:text="'횟수 : '+${pt.passCount}" class="h-[20%] w-[80%] mx-auto"></p>
-            <p th:text="'가격 : '+${pt.passPrice}" class="h-[20%] w-[80%] mx-auto"></p>
+            <p th:text="'이용시작일 : '+${pt.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
+            <p th:text="'이용종료일 : '+${pt.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
 
         </div>
     </div>
@@ -16,12 +16,9 @@
         <figure class="h-[60%] w-full"><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" class="h-[80%] w-[80%] mx-auto"/></figure>
         <div class="card-body h-[40%] w-full">
             <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${day.passName}"></h2>
-            <p th:text="${day.passTitle}" class="h-[20%] w-[80%] mx-auto"></p>
             <p th:text="${day.passDays}+'일'" class="h-[20%] w-[80%] mx-auto"></p>
-            <p th:text="'가격 : '+${day.passPrice}" class="h-[20%] w-[80%] mx-auto"></p>
-            <div class="card-actions justify-end">
-                <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">양도</a>
-            </div>
+            <p th:text="'이용시작일 : '+${day.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
+            <p th:text="'이용종료일 : '+${day.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
         </div>
     </div>
 </div>

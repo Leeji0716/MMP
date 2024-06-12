@@ -1,11 +1,11 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full my-3">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
     <div class="flex items-center text-black flex flex-wrap">
         <form action="/totalPass/transfer" method="post">
             <label class="input input-bordered flex items-center gap-2">
-                <input type="text" class="grow text-black" placeholder="Number" name="number" />
+                <input type="text" class="grow text-black" placeholder="Number" name="number"/>
             </label>
             <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
@@ -15,14 +15,18 @@
                 </option>
             </select>
         </form>
-        <div id="pass"></div>
+
+        <div>
+            <div class="card-container" id="cardContainer">
+                <!-- AJAX로 데이터를 받아서 이곳에 카드를 추가합니다. -->
+            </div>
+        </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const userId = document.getElementById('userId').value;
-            console.log(userId);
             const passSelect = document.getElementById('passSelect');
-            console.log(passSelect);
 
             passSelect.addEventListener('change', function () {
                 const selectedPassName = passSelect.value;
@@ -35,18 +39,116 @@
                         },
                         body: JSON.stringify({ passName: selectedPassName })
                     })
-                        .then(response => response.json())
-                        .then(data => {
-                            if(data.passCount != null){
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.passCount != null){
+                        const cardContainer = document.getElementById('cardContainer');
+                        cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
 
-                                console.log(data.passCount);
-                            }
-                            console.log(data);
-                        })
-                        .catch(error => console.error('Error:', error));
+                        // 새로운 카드를 생성
+                        const card = document.createElement('div');
+                        card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
+
+                        const figure = document.createElement('figure');
+                        const img = document.createElement('img');
+                        img.src = 'https://i.imgur.com/kW3S5se.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
+                        img.alt = 'PT';
+                        figure.appendChild(img);
+
+                        const cardBody = document.createElement('div');
+                        cardBody.className = 'card-body';
+
+                        const cardTitle = document.createElement('h2');
+                        cardTitle.className = 'card-title';
+                        cardTitle.innerText = data.passName; // 받아온 데이터 사용
+
+                        const cardDescription = document.createElement('p');
+                        cardDescription.innerText = data.passTitle; // 받아온 데이터 사용
+
+                        const cardCount = document.createElement('p');
+                        cardCount.innerText = `횟수 : ${data.passDays}`; // 받아온 데이터 사용
+
+                        const cardPrice = document.createElement('p');
+                        cardPrice.innerText = `가격 : ${data.passPrice}`; // 받아온 데이터 사용
+
+                        const cardActions = document.createElement('div');
+                        cardActions.className = 'card-actions justify-end';
+
+                        const buyNowButton = document.createElement('a');
+                        buyNowButton.href = `/checkout/${data.passName}`; // 구매 링크에 데이터 사용
+                        buyNowButton.className = 'btn btn-primary';
+                        buyNowButton.innerText = 'Buy Now';
+
+                        cardActions.appendChild(buyNowButton);
+
+                        cardBody.appendChild(cardTitle);
+                        cardBody.appendChild(cardDescription);
+                        cardBody.appendChild(cardCount);
+                        cardBody.appendChild(cardPrice);
+                        cardBody.appendChild(cardActions);
+
+                        card.appendChild(figure);
+                        card.appendChild(cardBody);
+
+                        cardContainer.appendChild(card);
+                        }else{
+                            const cardContainer = document.getElementById('cardContainer');
+                cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
+
+                // 새로운 카드를 생성
+                const card = document.createElement('div');
+                card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
+
+                const figure = document.createElement('figure');
+                const img = document.createElement('img');
+                img.src = 'https://i.imgur.com/VFPjR6P.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
+                img.alt = 'Day';
+                figure.appendChild(img);
+
+                const cardBody = document.createElement('div');
+                cardBody.className = 'card-body';
+
+                const cardTitle = document.createElement('h2');
+                cardTitle.className = 'card-title';
+                cardTitle.innerText = data.passName; // 받아온 데이터 사용
+
+                const cardDescription = document.createElement('p');
+                cardDescription.innerText = data.passTitle; // 받아온 데이터 사용
+
+                const cardDays = document.createElement('p');
+                cardDays.innerText = `${data.passDays}일`; // 받아온 데이터 사용
+
+                const cardPrice = document.createElement('p');
+                cardPrice.innerText = `가격 : ${data.passPrice}`; // 받아온 데이터 사용
+
+                const cardActions = document.createElement('div');
+                cardActions.className = 'card-actions justify-end';
+
+                const buyNowButton = document.createElement('a');
+                buyNowButton.href = `/checkout/${data.passName}`; // 구매 링크에 데이터 사용
+                buyNowButton.className = 'btn btn-primary';
+                buyNowButton.innerText = 'Buy Now';
+
+                cardActions.appendChild(buyNowButton);
+
+                cardBody.appendChild(cardTitle);
+                cardBody.appendChild(cardDescription);
+                cardBody.appendChild(cardDays);
+                cardBody.appendChild(cardPrice);
+                cardBody.appendChild(cardActions);
+
+                card.appendChild(figure);
+                card.appendChild(cardBody);
+
+                cardContainer.appendChild(card);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
             });
         });
     </script>
 </div>
 </html>
+
+
