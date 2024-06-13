@@ -60,6 +60,22 @@ public class AttendanceController {
         return ResponseEntity.ok(attendanceList);
     }
 
+    @PostMapping("/enter")
+    public ResponseEntity<String> enter(Authentication authentication, Principal principal) {
+        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+        String userId = principal.getName();
+        String result = attendanceService.handleEntry(userId, "enter");
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/exit")
+    public ResponseEntity<String> exit(Authentication authentication, Principal principal) {
+        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
+        String userId = principal.getName();
+        String result = attendanceService.handleEntry(userId, "exit");
+        return ResponseEntity.ok(result);
+    }
+
     @PostMapping("/bluetooth-entry")
     public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
@@ -72,6 +88,5 @@ public class AttendanceController {
         String result = attendanceService.handleEntry(userId, action);
         return ResponseEntity.ok(result);
     }
-
 
 }

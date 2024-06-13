@@ -29,21 +29,29 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
         }
-        .attendance-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-        }
+        .attendance-button, .enter-button, .exit-button {
+        display: block;
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        text-align: center;
+        font-size: 16px;
+    }
+    .flex {
+        display: flex;
+        justify-content: center; /* 가운데 정렬 */
+        gap: 10px; /* 버튼 사이의 간격 */
+    }
     </style>
 
     <body>
+    <div>
+
+    </div>
     <div style="border: 2px solid white; padding: 40px; width: 1000px; height: 850px; margin: 20px auto 0;">
         <h1 id="monthTitle" style="text-align: center; font-weight: bold; font-size: 30px;">출석 이벤트</h1>
         <br>
@@ -51,7 +59,11 @@
         <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
         <br>
         <div id="calendar" class="calendar"></div>
-        <button id="attendanceButton" class="attendance-button">출석하기</button>
+        <div class="flex">
+            <button id="attendanceButton" class="attendance-button">출석하기</button>
+            <button id="enterButton" class="enter-button">입실하기</button>
+            <button id="exitButton" class="exit-button">퇴실하기</button>
+        </div>
     </div>
 
     <script>
@@ -174,6 +186,52 @@
 
         // 달력 초기 생성
         generateCalendar(currentMonth, currentYear);
+
+        // "입실하기" 버튼 클릭 이벤트 핸들러 추가
+document.getElementById('enterButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch(`/attendance/enter`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+
+        const data = await response.text();
+        console.log('입실 성공:', data);
+
+        // 입실 성공 메시지를 표시하거나 추가 동작 수행
+    } catch (error) {
+        console.error('입실 실패:', error);
+    }
+});
+
+// "퇴실하기" 버튼 클릭 이벤트 핸들러 추가
+document.getElementById('exitButton').addEventListener('click', async () => {
+    try {
+        const response = await fetch(`/attendance/exit`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+        });
+
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(text);
+        }
+
+        const data = await response.text();
+        console.log('퇴실 성공:', data);
+
+        // 퇴실 성공 메시지를 표시하거나 추가 동작 수행
+    } catch (error) {
+        console.error('퇴실 실패:', error);
+    }
+});
     </script>
     </body>
 </div>
