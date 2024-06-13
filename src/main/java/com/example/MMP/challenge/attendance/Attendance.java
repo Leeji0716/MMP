@@ -27,8 +27,10 @@ public class Attendance {
     private LocalDate date;
 
     private boolean present;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+
+    private LocalDateTime startTime;
+
+    private LocalDateTime endTime;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)
     @JsonBackReference

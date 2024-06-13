@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -109,6 +110,9 @@ public class ChallengeController {
         model.addAttribute("participatedChallengeIds", participatedChallengeIds);
         model.addAttribute("challengeUsers", challengeUsers);
         model.addAttribute("challengeAchievementRates", challengeAchievementRates);
+
+        // 현재 날짜를 모델에 추가
+        model.addAttribute("currentDate", LocalDate.now());
         return "/challenge/challengeList";
     }
 

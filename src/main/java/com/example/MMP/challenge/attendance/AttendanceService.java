@@ -24,7 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AttendanceService {
-    private static final Logger logger = LoggerFactory.getLogger(AttendanceService.class);
+    private static final Logger logger = LoggerFactory.getLogger (AttendanceService.class);
 
     private final AttendanceRepository attendanceRepository;
     private final SiteUserRepository siteUserRepository;
@@ -36,69 +36,70 @@ public class AttendanceService {
     private ChallengeUserService challengeUserService;
 
     public boolean checkIn(Authentication authentication, Principal principal) {
-        UserDetail userDetail = (UserDetail) authentication.getPrincipal();
-        LocalDate today = LocalDate.now();
+        UserDetail userDetail = (UserDetail) authentication.getPrincipal ();
+        LocalDate today = LocalDate.now ();
 
-        String userId = principal.getName();
-        Optional<SiteUser> optionalSiteUser = siteUserRepository.findByUserId(userId);
-        if (!optionalSiteUser.isPresent()) {
-            logger.error("User not found with userId: " + userId);
+        String userId = principal.getName ();
+        Optional<SiteUser> optionalSiteUser = siteUserRepository.findByUserId (userId);
+        if (!optionalSiteUser.isPresent ()) {
+            logger.error ("유저를 찾을 수 없습니다. " + userId);
             return false;
         }
-        SiteUser siteUser = optionalSiteUser.get();
+        SiteUser siteUser = optionalSiteUser.get ();
 
-        if (attendanceRepository.existsBySiteUserIdAndDate(siteUser.getId(), today)) {
+        if (attendanceRepository.existsBySiteUserIdAndDate (siteUser.getId (), today)) {
             return false;
         }
 
-        Attendance attendance = new Attendance();
-        attendance.setSiteUser(siteUser);
-        attendance.setDate(today);
-        attendance.setPresent(true);
+        Attendance attendance = new Attendance ();
+        attendance.setSiteUser (siteUser);
+        attendance.setDate (today);
+        attendance.setPresent (true);
+        attendance.setStartTime (LocalDateTime.now ());
 
-        attendanceRepository.save(attendance);
+        attendanceRepository.save (attendance);
 
         // 출석 체크 후 달성률 업데이트
-        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
+        List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser (siteUser);
         for (ChallengeUser challengeUser : challengeUsers) {
-            challengeUserService.updateAchievementRate(challengeUser.getId());
+            challengeUserService.updateAchievementRate (challengeUser.getId ());
         }
 
         return true;
     }
 
     public List<Attendance> getUserAttendance(Long siteUserId) {
-        return attendanceRepository.findBySiteUserId(siteUserId);
+        return attendanceRepository.findBySiteUserId (siteUserId);
     }
 
     public double calculateAttendanceRate(Long siteUserId, LocalDate startDate, LocalDate endDate) {
-        List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween(siteUserId, startDate, endDate);
-        long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1; // 포함된 총 일수 계산
-        return ((double) attendanceList.size() / totalDays) * 100;
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween (siteUserId, startDate, endDate);
+        long totalDays = ChronoUnit.DAYS.between (startDate, endDate) + 1; // 포함된 총 일수 계산
+        return ((double) attendanceList.size () / totalDays) * 100;
     }
 
     public String handleEntry(String userId, String action) {
-        Optional<SiteUser> _siteUser = siteUserRepository.findByUserId(userId);
-        SiteUser siteUser = new SiteUser();
-        if (_siteUser.isEmpty()) {
-            siteUser = _siteUser.get();
+        Optional<SiteUser> _siteUser = siteUserRepository.findByUserId (userId);
+        SiteUser siteUser = new SiteUser ();
+        if (_siteUser.isEmpty ()) {
+            siteUser = _siteUser.get ();
         }
 
-        if ("enter".equals(action)) {
-            Attendance attendance = new Attendance();
-            attendance.setSiteUser(siteUser);
-            attendance.setPresent(true);
-            attendance.setStartDate(LocalDateTime.now());
-            attendanceRepository.save(attendance);
+        if ("enter".equals (action)) {
+            Attendance attendance = new Attendance ();
+            attendance.setSiteUser (siteUser);
+            attendance.setPresent (true);
+            attendance.setStartTime (LocalDateTime.now ());
+            attendanceRepository.save (attendance);
             return "Entry recorded successfully";
-        } else if ("exit".equals(action)) {
-            Attendance attendance = attendanceRepository.findByUserAndPresent(siteUser, true);
+        } else if ("exit".equals (action)) {
+            Attendance attendance = attendanceRepository.findBySiteUserAndPresent (siteUser, true);
             if (attendance == null) {
                 return "User not currently present";
             }
-            attendance.setPresent(false);
-            attendance.setEndDate(LocalDateTime.now());
-            attendanceRepository.save(attendance);
+            attendance.setPresent (false);
+            attendance.setEndTime (LocalDateTime.now ());
+            attendanceRepository.save (attendance);
             return "Exit recorded successfully";
         } else {
             return "Invalid action";
