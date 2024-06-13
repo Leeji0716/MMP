@@ -7,4 +7,6 @@ import java.util.List;
 public interface TransPassCustom {
     List<TransPass> MySendPass(SiteUser siteUser);
     List<TransPass> MyAcceptPass(SiteUser siteUser);
+
+    List<TransPass> MyStandPass(SiteUser siteUser);
 }

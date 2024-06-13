@@ -20,4 +20,16 @@ public class TransPassService {
     public List<TransPass> MyAcceptPass(SiteUser siteUser){
         return transPassRepository.MyAcceptPass(siteUser);
     }
+
+    public TransPass findById(Long id) {
+        return transPassRepository.findById(id).orElseThrow();
+    }
+
+    public void delete(TransPass transPass) {
+        transPassRepository.delete(transPass);
+    }
+
+    public List<TransPass> MyStandPass(SiteUser user) {
+        return transPassRepository.MyStandPass(user);
+    }
 }

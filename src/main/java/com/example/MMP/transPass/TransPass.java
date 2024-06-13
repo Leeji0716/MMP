@@ -3,6 +3,8 @@ package com.example.MMP.transPass;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,19 +22,23 @@ public class TransPass {
     private Long id;
 
     @ManyToOne
+    @JsonBackReference
     private SiteUser sendUser;
 
     @ManyToOne
+    @JsonBackReference
     private SiteUser acceptUser;
 
     private Boolean consent;
 
     @OneToOne
     @JoinColumn(name = "userDayPassId")
+    @JsonManagedReference
     private UserDayPass userDayPass;
 
     @OneToOne
     @JoinColumn(name = "userPtPassId")
+    @JsonManagedReference
     private UserPtPass userPtPass;
 
     @Builder

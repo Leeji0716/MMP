@@ -13,11 +13,14 @@ public class TransPassCustomImpl implements TransPassCustom {
     QTransPass qTransPass = QTransPass.transPass;
 
     public List<TransPass> MySendPass(SiteUser siteUser) {
-        return jpaQueryFactory.select(qTransPass).from(qTransPass).where(qTransPass.sendUser.eq(siteUser)).fetch();
+        return jpaQueryFactory.select(qTransPass).from(qTransPass).where(qTransPass.sendUser.eq(siteUser).and(qTransPass.consent.eq(false))).fetch();
     }
 
     public List<TransPass> MyAcceptPass(SiteUser siteUser) {
-        return jpaQueryFactory.select(qTransPass).from(qTransPass).where(qTransPass.acceptUser.eq(siteUser)).fetch();
+        return jpaQueryFactory.select(qTransPass).from(qTransPass).where(qTransPass.acceptUser.eq(siteUser).and(qTransPass.consent.eq(false))).fetch();
     }
 
+    public List<TransPass> MyStandPass(SiteUser siteUser) {
+        return jpaQueryFactory.select(qTransPass).from(qTransPass).where(qTransPass.sendUser.eq(siteUser).or(qTransPass.acceptUser.eq(siteUser)).and(qTransPass.consent.eq(true))).fetch();
+    }
 }
