@@ -16,11 +16,11 @@ public class AdminDto {
     private String gender;
 
     @NotEmpty(message = "핸드폰번호는 필수입니다.")
-    @Size(max = 11,min = 11,message = "11자리를 입력해주세요.")
+    @Size(max = 11, min = 11, message = "11자리를 입력해주세요.")
     private String number;
 
     @NotEmpty(message = "생일은 필수입니다.")
-    @Size(min = 6,max = 6,message = "생년월일 6자리를 입력해주세요.")
+    @Size(min = 6, max = 6, message = "생년월일 6자리를 입력해주세요.")
     private String birthDate;
 
     @NotEmpty(message = "이메일은 필수입니다.")

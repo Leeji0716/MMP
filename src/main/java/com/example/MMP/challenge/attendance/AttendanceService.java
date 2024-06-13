@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -74,5 +75,33 @@ public class AttendanceService {
         List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween(siteUserId, startDate, endDate);
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate) + 1; // 포함된 총 일수 계산
         return ((double) attendanceList.size() / totalDays) * 100;
+    }
+
+    public String handleEntry(String userId, String action) {
+        Optional<SiteUser> _siteUser = siteUserRepository.findByUserId(userId);
+        SiteUser siteUser = new SiteUser();
+        if (_siteUser.isEmpty()) {
+            siteUser = _siteUser.get();
+        }
+
+        if ("enter".equals(action)) {
+            Attendance attendance = new Attendance();
+            attendance.setSiteUser(siteUser);
+            attendance.setPresent(true);
+            attendance.setStartDate(LocalDateTime.now());
+            attendanceRepository.save(attendance);
+            return "Entry recorded successfully";
+        } else if ("exit".equals(action)) {
+            Attendance attendance = attendanceRepository.findByUserAndPresent(siteUser, true);
+            if (attendance == null) {
+                return "User not currently present";
+            }
+            attendance.setPresent(false);
+            attendance.setEndDate(LocalDateTime.now());
+            attendanceRepository.save(attendance);
+            return "Exit recorded successfully";
+        } else {
+            return "Invalid action";
+        }
     }
 }

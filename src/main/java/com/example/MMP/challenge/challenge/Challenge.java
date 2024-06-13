@@ -37,10 +37,8 @@ public class Challenge {
     private Integer targetExerciseMinutes;
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChallengeActivity> challengeActivities = new ArrayList<> ();
+    private List<ChallengeActivity> challengeActivities = new ArrayList<>();
 
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ChallengeUser> challengeUsers = new ArrayList<> ();
-
-
+    private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }

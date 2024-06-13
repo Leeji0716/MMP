@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,11 +21,14 @@ public class Attendance {
 
     @ManyToOne
     @JsonBackReference
+    @JoinColumn(name = "user_id", nullable = false)
     private SiteUser siteUser;
 
     private LocalDate date;
 
     private boolean present;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)
     @JsonBackReference

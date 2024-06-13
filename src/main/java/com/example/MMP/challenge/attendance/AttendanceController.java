@@ -6,13 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Controller
@@ -36,6 +34,7 @@ public class AttendanceController {
             return ResponseEntity.badRequest().body("이미 오늘 출석 체크를 하셨습니다.");
         }
     }
+
     // 출석 캘린더 페이지를 반환
     @GetMapping("/calendar")
     public String getCalendarPage(Authentication authentication, Model model) {
@@ -60,4 +59,19 @@ public class AttendanceController {
         List<Attendance> attendanceList = attendanceService.getUserAttendance(userId);
         return ResponseEntity.ok(attendanceList);
     }
+
+    @PostMapping("/bluetooth-entry")
+    public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
+        String userId = payload.get("userId");
+        String action = payload.get("action");
+
+        if (userId == null || action == null) {
+            return ResponseEntity.badRequest().body("Invalid request data");
+        }
+
+        String result = attendanceService.handleEntry(userId, action);
+        return ResponseEntity.ok(result);
+    }
+
+
 }
