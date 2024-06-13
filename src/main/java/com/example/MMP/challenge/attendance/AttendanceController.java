@@ -92,7 +92,6 @@ public class AttendanceController {
         String result = attendanceService.handleEntry(userId, "exit");
         return ResponseEntity.ok(result);
     }
-
     @PostMapping("/bluetooth-entry")
     public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
@@ -105,5 +104,4 @@ public class AttendanceController {
         String result = attendanceService.handleEntry(userId, action);
         return ResponseEntity.ok(result);
     }
-
 }

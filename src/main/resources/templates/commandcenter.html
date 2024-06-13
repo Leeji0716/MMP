@@ -1,0 +1,65 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3">
+    <div class="text-black inline-block overflow-y-auto">
+
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+            <div class="card-body">
+                <h2 class="card-title">회원권</h2>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary" onclick="location.href='/pt/add'">생성</button>
+                </div>
+            </div>
+        </div>
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+            <div class="card-body">
+                <h2 class="card-title">챌린지</h2>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary" onclick="location.href='/challenge/create'">생성</button>
+                </div>
+            </div>
+        </div>
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+            <div class="card-body">
+                <h2 class="card-title">공지사항</h2>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary" onclick="location.href='/notice/create'">생성</button>
+                </div>
+            </div>
+        </div>
+        <div class="card w-96 bg-base-100 shadow-xl">
+            <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
+            <div class="card-body">
+                <h2 class="card-title">트레이너</h2>
+                <div class="card-actions justify-end">
+                    <button class="btn btn-primary" onclick="location.href='/trainer/create'">생성</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script th:inline="javascript">
+
+        function getLoggedInUser() {
+
+        const aa = /*[[${#authentication}]]*/ null;
+
+        if(aa.name === "anonymousUser") {
+            return null;
+        }
+        console.log(aa.name);
+        return aa.name;
+
+        }
+
+         document.addEventListener('DOMContentLoaded', function() {
+     // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
+       var name =  getLoggedInUser();
+       console.log(name);
+     });
+
+    </script>
+</div>
+</html>

@@ -2,41 +2,29 @@ package com.example.MMP.siteuser;
 
 
 //import com.example.MMP.mail.MailService;
+
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
-import com.example.MMP.challenge.challengeUser.ChallengeUser;
-import com.example.MMP.daypass.DayPass;
-import com.example.MMP.daypass.DayPassService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
-import com.example.MMP.ptpass.PtPass;
-import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.transPass.TransPassService;
-import com.example.MMP.userPass.UserDayPass;
-import com.example.MMP.userPass.UserDayPassService;
-import com.example.MMP.userPass.UserPtPass;
-import com.example.MMP.userPass.UserPtPassService;
 import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.*;
@@ -79,6 +67,12 @@ public class SiteUserController {
     public String AdminSignup(AdminDto adminDto) {
 
         return "user/adminSignup";
+    }
+
+    @GetMapping("/commandcenter")
+    public String commandcenter() {
+
+        return "/commandcenter";
     }
 
     @PostMapping("/adminSignup")
@@ -221,6 +215,15 @@ public class SiteUserController {
             model.addAttribute ("errorMessage", "프로필 정보를 불러오는 중 오류가 발생했습니다.");
             return "error";
         }
+    }
+
+    @GetMapping("/user/{loginId}")
+    public ResponseEntity<Optional<SiteUser>> getUser(@PathVariable String userId) {
+        Optional<SiteUser> siteUser = siteUserRepository.findByUserId(userId);
+        if (siteUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(siteUser);
     }
 }
  
