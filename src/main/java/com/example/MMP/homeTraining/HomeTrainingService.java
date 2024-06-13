@@ -105,6 +105,9 @@ public class HomeTrainingService {
     }
 
     public String intro(String videoUrl){
+        if (videoUrl.contains("&")) {
+            videoUrl = videoUrl.split("&")[0];
+        }
         String videoId = videoUrl.split("v=")[1];
         String thumbnailUrl = "https://img.youtube.com/vi/" + videoId + "/0.jpg";
         return thumbnailUrl;

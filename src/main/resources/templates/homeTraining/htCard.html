@@ -1,9 +1,9 @@
 <div th:fragment="htCard(${homeTraining})">
     <div class="text-black">
-        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a href="javascript:void(0);" th:data-uri="@{|/homeTraining/delete/${homeTraining.id}|}"
-                class="delete btn btn-error my-2" th:text="삭제"></a>
-            <a th:href="@{|/homeTraining/update/${homeTraining.id}|}" class="btn btn-primary my-2">수정</a>
+                class="delete btn btn-error btn-xs my-2" th:text="삭제"></a>
+            <a th:href="@{|/homeTraining/update/${homeTraining.id}|}" class="btn btn-primary btn-xs my-2">수정</a>
         </div>
         <a th:href="${homeTraining.videoUrl}">
             <img th:src="${homeTraining.thumbnailUrl}" alt="video">

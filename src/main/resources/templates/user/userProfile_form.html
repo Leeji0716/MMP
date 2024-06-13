@@ -183,10 +183,6 @@
                             <a th:href="@{|/wod/detail/${comment.wod.id}|}"
                                class="text-sm text-black font-bold hover:underline"
                                th:text="|${comment.content}|"></a>
-                            <!-- <p class="text-sm text-gray-700" th:text="|답변 : ${comment.content}|"></p> -->
-                            <!-- <p class="text-xs text-gray-500"
-                               th:text="${answer.modifyDate == null ? #temporals.format(answer.modifyDate, 'yyyy-MM-dd HH:mm') : #temporals.format(answer.createDate, 'yyyy-MM-dd HH:mm') }">
-                            </p> -->
                         </div>
                     </div>
                 </div>
@@ -264,7 +260,7 @@
                         <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
                         <div class="flex w-full card-container2 border-gray-300">
                             <!-- ptPassList 요소들 -->
-                            <div class="htCard card bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"
+                            <div class="htCard card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[300px]"
                                  th:each="homeTraining:${saveTraining}">
                                 <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
                             </div>

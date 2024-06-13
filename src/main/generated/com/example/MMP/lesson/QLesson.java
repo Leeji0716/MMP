@@ -22,15 +22,19 @@ public class QLesson extends EntityPathBase<Lesson> {
 
     public static final QLesson lesson = new QLesson("lesson");
 
-    public final DateTimePath<java.time.LocalDateTime> endDateTime = createDateTime("endDateTime", java.time.LocalDateTime.class);
+    public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> attendanceList = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("attendanceList", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
+
+    public final TimePath<java.time.LocalTime> endTime = createTime("endTime", java.time.LocalTime.class);
 
     public final NumberPath<Integer> headCount = createNumber("headCount", Integer.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final DatePath<java.time.LocalDate> lessonDate = createDate("lessonDate", java.time.LocalDate.class);
+
     public final StringPath lessonName = createString("lessonName");
 
-    public final DateTimePath<java.time.LocalDateTime> startDateTime = createDateTime("startDateTime", java.time.LocalDateTime.class);
+    public final TimePath<java.time.LocalTime> startTime = createTime("startTime", java.time.LocalTime.class);
 
     public final com.example.MMP.siteuser.QSiteUser trainer;
 

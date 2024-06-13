@@ -3,6 +3,7 @@ package com.example.MMP.wod;
 import com.example.MMP.Comment.Comment;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Wod {
 
     @ManyToMany
     @JsonManagedReference
+    @JsonIgnore
     private List<SiteUser> likeList;
 
     private Long likeCount = 0L;

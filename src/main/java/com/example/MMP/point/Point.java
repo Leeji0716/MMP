@@ -1,6 +1,7 @@
 package com.example.MMP.point;
 
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,7 @@ public class Point {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "site_user_id")
+    @JsonIgnore
     private SiteUser siteUser;
 
     // 기본 생성자
