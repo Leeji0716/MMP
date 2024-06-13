@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -41,9 +42,25 @@ public class AttendanceController {
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         Long userId = userDetail.getId(); // 사용자 ID를 가져옵니다.
         List<Attendance> attendanceList = attendanceService.getUserAttendance(userId);
+
+        // 시작 시간과 종료 시간 추가
+        LocalDateTime startTime = attendanceService.getStartTime(userId);
+        LocalDateTime endTime = attendanceService.getEndTime(userId);
+
+        // Distinct attendance count 추가
+        Long distinctAttendanceCount = attendanceService.countDistinctAttendanceDates(userId);
+
+        long totalExerciseTime = attendanceService.calculateTotalExerciseTime(userId);
+
         model.addAttribute("attendanceList", attendanceList);
+        model.addAttribute("startTime", startTime);
+        model.addAttribute("endTime", endTime);
+        model.addAttribute("distinctAttendanceCount", distinctAttendanceCount);
+        model.addAttribute("totalExerciseTime", totalExerciseTime);
+
         return "/challenge/attendanceCalendar";
     }
+
 
     // 사용자의 출석 기록을 반환
     @GetMapping("/user/{userId}")

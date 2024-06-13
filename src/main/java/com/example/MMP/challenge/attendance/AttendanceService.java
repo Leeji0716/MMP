@@ -68,8 +68,19 @@ public class AttendanceService {
         return true;
     }
 
+    public LocalDateTime getStartTime(Long userId){
+        return attendanceRepository.findStartTimeByUserId (userId);
+    }
+    public LocalDateTime getEndTime(Long userId){
+        return attendanceRepository.findEndTimeByUserId (userId);
+    }
+
     public List<Attendance> getUserAttendance(Long siteUserId) {
         return attendanceRepository.findBySiteUserId (siteUserId);
+    }
+
+    public Long countDistinctAttendanceDates(Long userId) {
+        return attendanceRepository.countDistinctBySiteUserId(userId);
     }
 
     public double calculateAttendanceRate(Long siteUserId, LocalDate startDate, LocalDate endDate) {
@@ -107,5 +118,18 @@ public class AttendanceService {
         } else {
             return "잘못된 동작입니다.";
         }
+    }
+    public boolean isUserPresent(Long siteUserId) {
+        Optional<Attendance> optionalAttendance = attendanceRepository.findFirstBySiteUserAndPresent(siteUserRepository.findById(siteUserId).orElse(null), true);
+        return optionalAttendance.isPresent();
+    }
+
+    public long calculateTotalExerciseTime(Long userId) {
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserId(userId);
+
+        return attendanceList.stream()
+                .filter(attendance -> attendance.getStartTime() != null && attendance.getEndTime() != null)
+                .mapToLong(attendance -> ChronoUnit.MINUTES.between(attendance.getStartTime(), attendance.getEndTime()))
+                .sum();
     }
 }

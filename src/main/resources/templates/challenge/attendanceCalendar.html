@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <div layout:fragment="content">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>출석 이벤트</title>
     <style>
+        .calendar-container {
+            display: flex;
+            justify-content: center;
+        }
         .calendar {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
+             border-right: 1px solid white; /* 오른쪽 테두리 추가 */
+            border-bottom: 1px solid white; /* 아래쪽 테두리 추가 */
         }
-        .day {
-            border: 1px solid #ddd;
-            padding: 10px;
+        .day, .weekday {
             text-align: center;
             position: relative;
-            border-radius: 50%; /* 동그라미로 변경 */
-            width: 90px; /* 고정된 너비 */
-            height: 90px; /* 고정된 높이 */
-            display: flex; /* 내용물 가운데 정렬 */
-            align-items: center; /* 내용물 가운데 정렬 */
-            justify-content: center; /* 내용물 가운데 정렬 */
+            width: 90px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid white;
+            border-right: 1px solid white; /* 오른쪽 테두리 추가 */
+            border-bottom: 1px solid white; /* 아래쪽 테두리 추가 */
+        }
+        .weekday {
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            padding: 5px 0; /* 위아래 패딩 줄이기 */
+            margin: 0; /* 여백 없애기 */
         }
         .stamp {
             position: absolute;
@@ -30,69 +41,142 @@
             font-size: 24px;
         }
         .attendance-button, .enter-button, .exit-button {
-        display: block;
-        margin: 10px;
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        text-align: center;
-        font-size: 16px;
+            display: block;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: white;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+
+}
+        }
+        .flex {
+            display: flex;
+            justify-content: center; /* 가운데 정렬 */
+            gap: 10px; /* 버튼 사이의 간격 */
+        }
+        .image-container {
+            display: flex; /* Flexbox를 사용하여 가운데 정렬 */
+            justify-content: center; /* 가운데 정렬 */
+            margin-top: 20px;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+        .scrollable-content {
+            max-height: 100vh; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
+            overflow-y: auto; /* 세로 스크롤 활성화 */
+            padding: 20px;
+        }
+          .dropdown {
+        position: relative;
+        display: inline-block;
     }
-    .flex {
-        display: flex;
-        justify-content: center; /* 가운데 정렬 */
-        gap: 10px; /* 버튼 사이의 간격 */
+
+    .dropdown-toggle {
+        cursor: pointer;
+    }
+
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        color:black;
+        min-width: 300px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+
+    .dropdown:hover .dropdown-menu {
+        display: block;
     }
     </style>
-
-    <body>
-    <div>
-
-    </div>
-    <div style="border: 2px solid white; padding: 40px; width: 1000px; height: 850px; margin: 20px auto 0;">
-        <h1 id="monthTitle" style="text-align: center; font-weight: bold; font-size: 30px;">출석 이벤트</h1>
-        <br>
-        <br>
-        <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
-        <br>
-        <div id="calendar" class="calendar"></div>
-        <div class="flex">
-            <button id="attendanceButton" class="attendance-button">출석하기</button>
-            <button id="enterButton" class="enter-button">입실하기</button>
-            <button id="exitButton" class="exit-button">퇴실하기</button>
+    <div class="scrollable-content">
+        <div class="image-container">
+            <img src="https://i.imgur.com/8pIeQ0c.png" alt="출석 이벤트 이미지">
         </div>
-    </div>
+        <br>
+        <br>
+        <div class="flex w-full justify-center">
+            <div class="flex flex-col">
+                <div class="calendar-container">
+                    <div id="calendar" class="calendar"></div>
+                </div>
+            </div>
+            <div class="divider divider-horizontal"></div>
+            <div class="mockup-window border border-base-300">
+                <div class="flex flex-col justify-center px-4 py-16 border-t border-base-300">
+                    <div>
+                        <img src="https://i.imgur.com/SgKEhXW.png">
+                    </div>
+                    <br>
+                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                        <p>출석한 횟수 : <span id="distinctAttendanceCount" th:text="${distinctAttendanceCount}"></span>회</p>
+                    </div>
+                    <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
+                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                        <p>총 운동 시간 : <span id="totalExerciseTime" th:text="${totalExerciseTime}"></span>분</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="attendanceButton" class="attendance-button">출석하기</button>
+                        <button id="enterExitButton" class="enter-button">입실하기</button>
+                    </div>
 
+                    <br>
+                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                        <p>운동 기록</p>
+                    </div>
+                    <div class="times-container" id="timesContainer">
+                        <ul>
+                            <li th:each="attendance, stat : ${attendanceList}">
+                                <!-- 날짜가 변경될 때만 출력 -->
+                                <div th:if="${stat.index == 0} or ${attendanceList[stat.index - 1].date} != ${attendance.date}" class="dropdown">
+                                    <p class="text-black font-bold inline bg-white px-2 dropdown-toggle"> <span th:text="${#temporals.format(attendance.date, 'yyyy-MM-dd')}"></span></p>
+                                    <ul class="dropdown-menu">
+                                        <li th:each="item : ${attendanceList}">
+                                            <div th:if="${item.date} == ${attendance.date}">
+                                                <p>시작 시간 : <span th:text="${#temporals.format(item.startTime, 'HH : mm')}"></span> ~ 종료 시간 : <span th:text="${#temporals.format(item.endTime, 'HH : mm')}"></span></p>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+    </div>
     <script>
-        // 현재 날짜 가져오기
         const today = new Date();
         const currentMonth = today.getMonth();
         const currentYear = today.getFullYear();
 
-        // 월 이름 가져오기
-        const monthNames = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-        document.getElementById('monthTitle').textContent = `MMP ${monthNames[currentMonth]} 출석 이벤트`;
-
-        // 출석 데이터 가져오기
         async function fetchAttendanceData() {
             try {
-                const response = await fetch('/attendance/myAttendance'); // 현재 사용자의 출석 데이터를 가져오는 엔드포인트로 변경
+                const response = await fetch('/attendance/myAttendance');
                 if (!response.ok) {
                     throw new Error('출석 데이터를 불러오는 데 실패했습니다.');
                 }
-                const text = await response.text(); // 우선 텍스트로 읽기
-                console.log('서버 응답:', text); // 서버 응답을 콘솔에 출력
-                return JSON.parse(text); // JSON 파싱
+                const text = await response.text();
+                console.log('서버 응답:', text);
+                return JSON.parse(text);
             } catch (error) {
                 console.error('출석 데이터 가져오기 오류:', error);
                 return [];
             }
         }
 
-        // 달력 생성 함수
         async function generateCalendar(month, year) {
             const attendanceData = await fetchAttendanceData();
             const attendanceDates = attendanceData.map(attendance => new Date(attendance.date));
@@ -101,24 +185,28 @@
             const calendar = document.getElementById('calendar');
             calendar.innerHTML = '';
 
-            // 달의 첫 날과 마지막 날 가져오기
+            const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            weekdays.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'weekday';
+                dayElement.textContent = day;
+                calendar.appendChild(dayElement);
+            });
+
             const firstDay = new Date(year, month).getDay();
             const lastDate = new Date(year, month + 1, 0).getDate();
 
-            // 빈 칸 채우기
             for (let i = 0; i < firstDay; i++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'day';
                 calendar.appendChild(dayElement);
             }
 
-            // 날짜 채우기
             for (let date = 1; date <= lastDate; date++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'day';
                 dayElement.textContent = date;
 
-                // 출석 여부 표시
                 const attendanceDate = new Date(year, month, date);
                 if (attendanceDates.some(d => d.toDateString() === attendanceDate.toDateString())) {
                     markAttendance(dayElement);
@@ -128,7 +216,6 @@
             }
         }
 
-        // 출석 표시 함수
         function markAttendance(dayElement) {
             const existingStamp = dayElement.querySelector('.stamp');
 
@@ -137,23 +224,24 @@
                 stamp.className = 'stamp';
 
                 const img = document.createElement('img');
-                img.src = 'https://i.imgur.com/JjFIfDd.png'; // 이미지 경로를 여기에 입력하세요
+                img.src = 'https://i.imgur.com/JjFIfDd.png';
                 img.alt = 'Attendance Stamp';
-                img.style.width = '140px'; // 이미지 크기를 적절히 조정하세요
-                img.style.height = '60px'; // 이미지 크기를 적절히 조정하세요
+                img.style.width = '140px';
+                img.style.height = '60px';
 
                 stamp.appendChild(img);
                 dayElement.appendChild(stamp);
             }
         }
 
-        // 출석 횟수 업데이트 함수
-        function updateAttendanceRate(attendanceDates) {
-            const attendanceRateElement = document.getElementById('attendanceRate');
-            attendanceRateElement.textContent = `출석한 횟수: ${attendanceDates.length}회`;
-        }
+       function updateAttendanceRate(attendanceDates) {
+    const attendanceRateElement = document.getElementById('attendanceRate');
+    const totalWorkoutSessions = attendanceDates.length; // 운동한 횟수
+    const attendanceCount = parseInt(document.getElementById('distinctAttendanceCount').textContent, 10); // 출석한 횟수
+    const workoutCount = totalWorkoutSessions - attendanceCount; // 운동한 횟수 - 출석한 횟수
+    attendanceRateElement.textContent = `운동한 횟수 : ${workoutCount}회`;
+}
 
-        // "출석하기" 버튼 클릭 이벤트 핸들러 추가
         document.getElementById('attendanceButton').addEventListener('click', async () => {
             const todayElement = Array.from(document.querySelectorAll('.day')).find(dayElement => {
                 return dayElement.textContent == today.getDate();
@@ -164,7 +252,7 @@
                     const response = await fetch(`/attendance/checkin`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+                        body: JSON.stringify({ date: new Date().toISOString().split('T')[0] })
                     });
 
                     if (!response.ok) {
@@ -178,61 +266,71 @@
                     markAttendance(todayElement);
                     const attendanceDates = await fetchAttendanceData();
                     updateAttendanceRate(attendanceDates.map(attendance => new Date(attendance.date)));
+
+                    document.getElementById('enterExitButton').click();
                 } catch (error) {
                     console.error('출석 체크 실패:', error);
                 }
             }
         });
 
-        // 달력 초기 생성
-        generateCalendar(currentMonth, currentYear);
+        document.getElementById('enterExitButton').addEventListener('click', async () => {
+            const button = document.getElementById('enterExitButton');
+            const action = button.textContent === '입실하기' ? 'enter' : 'exit';
 
-        // "입실하기" 버튼 클릭 이벤트 핸들러 추가
-document.getElementById('enterButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch(`/attendance/enter`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+            try {
+                const response = await fetch(`/attendance/${action}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: new Date().toISOString().split('T')[0] })
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+
+                const data = await response.text();
+                console.log(`${action === 'enter' ? '입실' : '퇴실'} 성공:`, data);
+
+                if (action === 'enter') {
+                    button.textContent = '퇴실하기';
+                    button.className = 'exit-button';
+                } else {
+                    button.textContent = '입실하기';
+                    button.className = 'enter-button';
+                }
+            } catch (error) {
+                console.error(`${action === 'enter' ? '입실' : '퇴실'} 실패:`, error);
+            }
         });
 
-        if (!response.ok) {
-            const text = await response.text();
-            throw new Error(text);
+        async function checkUserStatus() {
+            try {
+                const response = await fetch('/attendance/myAttendance');
+                if (!response.ok) {
+                    throw new Error('사용자 상태를 확인하는 데 실패했습니다.');
+                }
+                const attendanceData = await response.json();
+                const latestAttendance = attendanceData.find(attendance => attendance.present);
+
+                const button = document.getElementById('enterExitButton');
+                if (latestAttendance) {
+                    button.textContent = '퇴실하기';
+                    button.className = 'exit-button';
+                } else {
+                    button.textContent = '입실하기';
+                    button.className = 'enter-button';
+                }
+            } catch (error) {
+                console.error('사용자 상태 확인 실패:', error);
+            }
         }
 
-        const data = await response.text();
-        console.log('입실 성공:', data);
-
-        // 입실 성공 메시지를 표시하거나 추가 동작 수행
-    } catch (error) {
-        console.error('입실 실패:', error);
-    }
-});
-
-// "퇴실하기" 버튼 클릭 이벤트 핸들러 추가
-document.getElementById('exitButton').addEventListener('click', async () => {
-    try {
-        const response = await fetch(`/attendance/exit`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: new Date().toISOString().split('T')[0] }) // 현재 날짜를 JSON 바디에 포함
+        document.addEventListener('DOMContentLoaded', () => {
+            generateCalendar(currentMonth, currentYear);
+            checkUserStatus();
         });
-
-        if (!response.ok) {
-            const text = await response.text();
-            throw new Error(text);
-        }
-
-        const data = await response.text();
-        console.log('퇴실 성공:', data);
-
-        // 퇴실 성공 메시지를 표시하거나 추가 동작 수행
-    } catch (error) {
-        console.error('퇴실 실패:', error);
-    }
-});
     </script>
-    </body>
 </div>
 </html>
