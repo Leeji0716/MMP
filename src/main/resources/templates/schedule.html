@@ -36,6 +36,13 @@
         let calendarInstance; // 전역 변수로 캘린더 인스턴스를 선언합니다.
         let selectedDateElement = null; // 선택된 날짜를 저장할 변수
 
+        // 날짜 선택 함수
+        // CSRF 토큰을 가져오는 함수
+        function getCsrfToken() {
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            return csrfTokenInput ? csrfTokenInput.value : '';
+        }
+
         function initializeCalendar() {
             const calendarEl = document.getElementById('calendar');
             calendarInstance = new Calendar(calendarEl, {
@@ -48,75 +55,46 @@
                 selectable: true,
                 dayCellDidMount: function (info) {
                     info.el.addEventListener('click', function () {
-                        // 클릭한 날짜 요소 가져오기
                         const clickedDateElement = info.el;
-                        const clickedDate = calendarInstance.getDate(); // 클릭한 셀의 날짜 가져오기
+                        const clickedDate = calendarInstance.getDate();
 
-                        // 이전에 선택된 날짜의 배경색 초기화
                         if (selectedDateElement) {
-                            selectedDateElement.style.backgroundColor = ''; // 이전에 선택된 날짜의 배경색 초기화
+                            selectedDateElement.style.backgroundColor = '';
                         }
 
-                        // 선택한 날짜의 배경색 변경
-                        clickedDateElement.style.backgroundColor = 'red'; // 원하는 배경색으로 변경
-
-                        // 선택한 날짜를 변수에 저장
+                        clickedDateElement.style.backgroundColor = 'red';
                         selectedDateElement = clickedDateElement;
 
-                        // data-date 속성 값 가져오기
                         const dataDate = clickedDateElement.getAttribute('data-date');
                         sendDateToServer(dataDate);
                     });
                 }
             });
-
-            // 캘린더 렌더링
             calendarInstance.render();
         }
 
-        // 선택한 날짜 데이터를 서버로 전송하는 함수
         function sendDateToServer(date) {
-            // CSRF 토큰 요소를 가져옵니다
-            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
-            const csrfParameterName = csrfTokenInput.getAttribute('name');
+            const csrfToken = getCsrfToken();
 
-            // CSRF 토큰의 값
-            const csrfToken = csrfTokenInput.value;
-
-            // AJAX 요청 설정
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/lessonCalendar/selected-date", true);
             xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-            // CSRF 토큰 추가
             xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
 
-            // 요청 완료 후 처리
             xhr.onload = function () {
                 let lessonList = [];
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    // 성공적으로 요청이 처리됨
-                    console.log('Date successfully sent to server.');
                     try {
-                        // 서버에서 받은 JSON 데이터 처리
                         const responseData = JSON.parse(xhr.responseText);
-                        console.log('Response from server:', responseData);
-
-                        // responseData에 lessons라는 키가 있는 경우에만 lessonList에 할당
                         if (responseData.hasOwnProperty('lessons')) {
                             lessonList = responseData.lessons;
-
-                            // lessonListContainer 초기화
                             const lessonListContainer = document.getElementById('lessonListContainer');
-                            lessonListContainer.innerHTML = ''; // 기존 내용 초기화
+                            lessonListContainer.innerHTML = '';
 
-                            // lessonList 반복 처리
                             lessonList.forEach(function (lesson) {
-                                // 각 lesson에 대한 요소 생성
                                 const lessonDiv = document.createElement('div');
                                 lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[50px]', 'bg-base-100', 'mb-4', 'rounded-lg');
 
-                                // 트레이너 이름
                                 const trainerDiv = document.createElement('div');
                                 trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
                                 const trainerName = document.createElement('div');
@@ -125,10 +103,8 @@
 
                                 lessonDiv.appendChild(trainerDiv);
 
-                                // 레슨 정보 표시 부분
                                 const lessonInfoDiv = document.createElement('div');
                                 lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'justify-center', 'font-bold', 'items-center', 'mx-2');
-
                                 const lessonNameDiv = document.createElement('div');
                                 lessonNameDiv.textContent = lesson.lessonName;
                                 lessonInfoDiv.appendChild(lessonNameDiv);
@@ -143,41 +119,27 @@
 
                                 lessonDiv.appendChild(lessonInfoDiv);
 
-                                // 인원 정보 표시 부분
                                 const attendanceDiv = document.createElement('div');
                                 attendanceDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
                                 const attendanceButton = document.createElement('button');
                                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
                                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
 
-                                // 버튼 클릭 시 동작
+                                // 현재 로그인된 사용자가 attendanceList에 있는지 확인
+                                const isAttending = lesson.attendanceList.some(attendee => attendee.username === currentUser);
+
+                                if (isAttending) {
+                                    attendanceButton.classList.add('bg-green-500', 'text-white');
+                                    attendanceButton.innerHTML = `예약완료 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                } else {
+                                    attendanceButton.classList.add('bg-red-500', 'text-white');
+                                    attendanceButton.innerHTML = `예약하기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                                }
+
                                 attendanceButton.addEventListener('click', function () {
-                                    const xhr = new XMLHttpRequest();
-                                    xhr.open("POST", `/lesson/${lesson.id}/attend`, true);
-                                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-                                    // // CSRF 토큰 추가 (필요 시)
-                                    // const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-                                    
-
-                                    // CSRF 토큰 설정
-                                    const csrfTokenElement = document.getElementById('csrfToken');
-                                    const csrfToken = csrfTokenElement ? csrfTokenElement.value : '';
-                                    const csrfHeader = 'X-CSRF-TOKEN'; // Spring Security의 기본 CSRF 헤더 이름
-                                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-
-                                    xhr.onload = function () {
-                                        if (xhr.status >= 200 && xhr.status < 300) {
-                                            const responseData = JSON.parse(xhr.responseText);
-                                            console.log('Response from server:', responseData);
-                                            // 여기서 attendanceList의 사이즈를 체크하고 동작을 수행할 수 있음
-                                        } else {
-                                            console.error('Failed to attend lesson:', xhr.statusText);
-                                        }
-                                    };
-
-                                    xhr.send();
+                                    window.location.href = `/lesson/detail/${lesson.id}`;
                                 });
+
 
                                 attendanceDiv.appendChild(attendanceButton);
                                 lessonDiv.appendChild(attendanceDiv);
@@ -191,31 +153,21 @@
                         console.error('Error parsing JSON:', error);
                     }
                 } else {
-                    // 요청이 실패한 경우
                     console.error('Failed to send date to server.');
                 }
             };
-            // 네트워크 오류 처리
             xhr.onerror = function () {
                 console.error('Network error occurred.');
             };
 
-            // 요청 보내기
             const requestData = JSON.stringify({ date: date });
             xhr.send(requestData);
         }
 
-        // DOMContentLoaded 이벤트가 발생하면 initializeCalendar 함수를 호출
         document.addEventListener('DOMContentLoaded', function () {
             initializeCalendar();
-
-            // CSRF 토큰 설정
-            const csrfTokenElement = document.getElementById('csrfToken');
-            const csrfToken = csrfTokenElement ? csrfTokenElement.value : '';
-            const csrfHeader = 'X-CSRF-TOKEN'; // Spring Security의 기본 CSRF 헤더 이름
         });
     </script>
-
 </div>
 
 </html>

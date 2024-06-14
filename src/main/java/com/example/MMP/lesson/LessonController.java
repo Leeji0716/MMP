@@ -4,7 +4,9 @@ import com.example.MMP.homeTraining.HomeTrainingForm;
 import com.example.MMP.homeTraining.category.Category;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,6 @@ import java.util.List;
 public class LessonController {
     private final LessonService lessonService;
     private final SiteUserService siteUserService;
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     private String create(LessonForm lessonForm){
@@ -37,8 +38,6 @@ public class LessonController {
 
     @PostMapping("/create")
     private String create(@Valid LessonForm lessonForm, BindingResult bindingResult, Principal principal){
-//        LocalDateTime startDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getStartTime());
-//        LocalDateTime endDateTime = LocalDateTime.of(lessonForm.getLessonDate(), lessonForm.getEndTime());
 
         if(bindingResult.hasErrors()){
             return "lesson/lesson_create";
@@ -47,6 +46,35 @@ public class LessonController {
 
         lessonService.create(lessonForm.getLessonName(), lessonForm.getHeadCount(), lessonForm.getLessonDate(), lessonForm.getStartTime(), lessonForm.getEndTime(), trainer);
 
+        return "redirect:/schedule";
+    }
+
+    @PostMapping("/detail/{id}")
+    public String detail(@PathVariable("id") Long id, Model model, Principal principal){
+        Lesson lesson = lessonService.getLesson(id);
+        String currentUsername = principal.getName();
+
+
+        boolean isUserAttending = lesson.getAttendanceList().stream()
+                .anyMatch(attendant -> attendant.getName().equals(currentUsername));
+
+        System.out.println(lesson.getAttendanceList().size());
+        for(SiteUser siteUser : lesson.getAttendanceList()){
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + siteUser.getName());
+        }
+
+        model.addAttribute("lesson", lesson);
+        model.addAttribute("isUserAttending", isUserAttending);
+        return "lesson/lesson_detail";
+    }
+
+    @GetMapping("/reservation/{id}")
+    public String reservation(@PathVariable("id") Long id, Principal principal){
+        Lesson lesson = lessonService.getLesson(id);
+        SiteUser siteUser = siteUserService.getUser(principal.getName());
+
+        lessonService.reservation(lesson, siteUser);
+//        return "redirect:/lesson/detail/" + id;
         return "redirect:/schedule";
     }
 

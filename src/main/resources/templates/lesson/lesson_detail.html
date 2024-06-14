@@ -1,0 +1,71 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
+    <div class="h-screen flex items-center justify-center bg-black">
+        <div class="w-[300px] max-w-md p-8 bg-white rounded-lg shadow-lg">
+            <div class="text-black">
+                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/delete/${lesson.id}|}"
+                        class="delete btn btn-error btn-xs my-2" th:text="삭제"></a>
+                    <a th:href="@{|/lesson/update/${lesson.id}|}" class="btn btn-primary btn-xs my-2">수정</a>
+                </div>
+            </div>
+            <!-- 레슨명 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">레슨명</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.lessonName}"></p>
+            </div>
+
+            <!-- 트레이너 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">강사</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.trainer.name}">
+                </p>
+            </div>
+
+            <!-- 참여인원 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">참여 인원</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.headCount} + 명">
+                </p>
+            </div>
+
+            <!-- 레슨 날짜 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">레슨 날짜</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.lessonDate}"></p>
+            </div>
+
+            <!-- 레슨 시작 시간 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">시작 시간</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.startTime}"></p>
+            </div>
+
+            <!-- 레슨 끝 시간 -->
+            <div class="mb-3 w-full">
+                <label class="block text-gray-700">끝 시간</label>
+                <p class="w-full max-w-xl text-black font-bold" th:text="${lesson.endTime}"></p>
+            </div>
+
+            <!-- 예약 버튼 -->
+            <div th:if="${isUserAttending}" class="w-[100px]">
+                <a href="#" class="btn btn-success" th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+            </div>
+            <div th:if="${!isUserAttending}" class="w-[100px]">
+                <a th:href="@{|/lesson/reservation/${lesson.id}|}" class="btn btn-error" th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+            </div>
+        </div>
+    </div>
+    <script>
+        const delete_elements = document.getElementsByClassName("delete");
+        Array.from(delete_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+    </script>
+</div>
+
+</html>

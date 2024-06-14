@@ -31,13 +31,13 @@ public class CalendarController {
 
         List<Lesson> lessonList = lessonService.getLessonFromDate(selectedLocalDate);
 
-        for (Lesson lesson : lessonList) {
-            System.out.println("Lesson Name: " + lesson.getLessonName());
-            System.out.println("Lesson Date: " + lesson.getLessonDate());
-            System.out.println("Start Time: " + lesson.getStartTime());
-            System.out.println("End Time: " + lesson.getEndTime());
-            System.out.println("Trainer: " + lesson.getTrainer().getName());
-        }
+//        for (Lesson lesson : lessonList) {
+//            System.out.println("Lesson Name: " + lesson.getLessonName());
+//            System.out.println("Lesson Date: " + lesson.getLessonDate());
+//            System.out.println("Start Time: " + lesson.getStartTime());
+//            System.out.println("End Time: " + lesson.getEndTime());
+//            System.out.println("Trainer: " + lesson.getTrainer().getName());
+//        }
 
         // JSON 형식으로 반환할 Map 생성
         Map<String, Object> response = new HashMap<>();
