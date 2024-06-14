@@ -121,6 +121,7 @@ public class SiteUserController {
             else if (siteUser.getUserRole().equals("trainer")) {
                 PtGroup ptGroup = new PtGroup();
                 siteUser.setPtGroupTrainer(ptGroup);
+                ptGroupRepository.save(ptGroup);
                 siteUserService.save(siteUser);
             }
         } catch (DataIntegrityViolationException e) {

@@ -16,7 +16,7 @@ public class PtGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "ptGroupTrainer")
     private SiteUser trainer;
 
     @OneToMany(mappedBy = "ptGroupUser")

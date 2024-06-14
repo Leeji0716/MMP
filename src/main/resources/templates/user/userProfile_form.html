@@ -156,7 +156,7 @@
                     </form>
                 </div>
 
-                <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2">
+                <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2 text-black">
                     <div class="flex items-center space-x-4 mt-2">
                         <details class="dropdown">
                             <summary class="m-1 btn">
@@ -168,7 +168,7 @@
                                 </svg>
                                 <span>Message</span>
                             </summary>
-                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}">
                                     <div th:each="group : ${user.ptGroupTrainer.members}" class="flex flex-row">
                                         <a href="#" th:text="${group.name}"></a>
@@ -561,85 +561,12 @@
                             icon.classList.add('fa-solid', 'fa-bookmark');
                         }
                     }
-<<<<<<< HEAD
                 }).catch(error => {
                     console.error('Error:', error);
                 });
             }
         </script>
     </div>
-=======
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        function updateInitialIconState() {
-            const bookmarks = document.querySelectorAll('.recommend');
-            bookmarks.forEach(bookmark => {
-                const icon = bookmark.querySelector('i');
-                const hiddenDiv = bookmark.querySelector('.hidden');
-                const htId = hiddenDiv.getAttribute('data-ht-id');
-
-                fetch(`/homeTraining/bookmark/${htId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.bookmarked) {
-                            icon.classList.remove('fa-regular');
-                            icon.classList.add('fa-solid');
-                        } else {
-                            icon.classList.remove('fa-solid');
-                            icon.classList.add('fa-regular');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
-        }
-
-        function toggleBookmark(event) {
-            event.preventDefault(); // 링크의 기본 동작을 방지
-            const icon = event.currentTarget.querySelector('i');
-            const isBookmarked = icon.classList.contains('fa-solid');
-            const hiddenDiv = event.currentTarget.querySelector('.hidden');
-            const htId = hiddenDiv.getAttribute('data-ht-id');
-
-            fetch('/homeTraining/bookmark', {
-                method: isBookmarked ? 'DELETE' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
-                },
-                body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
-            }).then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            }).then(data => {
-                if (data.success) {
-                    if (isBookmarked) {
-                        icon.classList.remove('fa-solid', 'fa-bookmark');
-                        icon.classList.add('fa-regular', 'fa-bookmark');
-                    } else {
-                        icon.classList.remove('fa-regular', 'fa-bookmark');
-                        icon.classList.add('fa-solid', 'fa-bookmark');
-                    }
-                }
-            }).catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        const delete_elements = document.getElementsByClassName("delete");
-        Array.from(delete_elements).forEach(function (element) {
-            element.addEventListener('click', function () {
-                if (confirm("정말로 삭제하시겠습니까?")) {
-                    location.href = this.dataset.uri;
-                };
-            });
-        });
-    </script>
-</div>
->>>>>>> c4f0d25db583fc9703d8cab83621c30724063e6d
 </body>
 
 </html>
