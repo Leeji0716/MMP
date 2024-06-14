@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 public class HomeTraining {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -30,11 +31,10 @@ public class HomeTraining {
 
     private LocalDateTime createDate;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "saveTraining")
     private List<SiteUser> saver;
 
     @ManyToOne
     @JsonBackReference
     private Category category;
-
 }

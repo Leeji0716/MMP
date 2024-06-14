@@ -91,6 +91,10 @@ public class HomeTrainingService {
     }
 
     public void delete(HomeTraining homeTraining) {
+        for (SiteUser user : homeTraining.getSaver()){
+            user.getSaveTraining().remove(homeTraining);
+        }
+        homeTraining.getSaver().clear();
         homeTrainingRepository.delete(homeTraining);
     }
 

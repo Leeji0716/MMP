@@ -6,7 +6,8 @@
                 <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
                     <a href="javascript:void(0);" th:data-uri="@{|/lesson/delete/${lesson.id}|}"
                         class="delete btn btn-error btn-xs my-2" th:text="삭제"></a>
-                    <a th:href="@{|/lesson/update/${lesson.id}|}" class="btn btn-primary btn-xs my-2">수정</a>
+                    <a th:if="${#authentication.principal.username == lesson.trainer.userId}"
+                        th:href="@{|/lesson/update/${lesson.id}|}" class="btn btn-primary btn-xs my-2">수정</a>
                 </div>
             </div>
             <!-- 레슨명 -->
@@ -49,10 +50,14 @@
 
             <!-- 예약 버튼 -->
             <div th:if="${isUserAttending}" class="w-[100px]">
-                <a href="#" class="btn btn-success" th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
+                    class="btn btn-success cancel"
+                    th:text="'예약취소 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
             </div>
             <div th:if="${!isUserAttending}" class="w-[100px]">
-                <a th:href="@{|/lesson/reservation/${lesson.id}|}" class="btn btn-error" th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
+                <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
+                    class="btn btn-error reservation"
+                    th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}"></a>
             </div>
         </div>
     </div>
@@ -61,6 +66,24 @@
         Array.from(delete_elements).forEach(function (element) {
             element.addEventListener('click', function () {
                 if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const reservation_elements = document.getElementsByClassName("reservation");
+        Array.from(reservation_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("예약하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const cancel_elements = document.getElementsByClassName("cancel");
+        Array.from(cancel_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("예약을 취소하시겠습니까?")) {
                     location.href = this.dataset.uri;
                 };
             });

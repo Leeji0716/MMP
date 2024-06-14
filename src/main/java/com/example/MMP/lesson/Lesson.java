@@ -1,6 +1,7 @@
 package com.example.MMP.lesson;
 
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Lesson {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -38,6 +40,7 @@ public class Lesson {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     private LocalTime endTime;
 
-    @ManyToMany(mappedBy = "lessonsAttending")
+    @ManyToMany(mappedBy = "lessonsAttending", cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     private List<SiteUser> attendanceList;
 }

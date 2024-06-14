@@ -18,22 +18,19 @@
                         th:field="*{headCount}" placeholder="참여 인원" />
                 </div>
 
+                <!-- 레슨 날짜 입력 -->
+                <div class="mb-3 w-full">
+                    <input type="date" class="input w-full input-bordered text-black" th:field="*{lessonDate}" placeholder="레슨 날짜">
+                </div>
+                
                 <!-- 레슨 시작 시간 입력 -->
                 <div class="mb-3 w-full">
-                    <input type="date" class="input w-full input-bordered text-black" th:field="*{lessonDate}"
-                        placeholder="레슨 날짜">
+                    <input type="time" class="input w-full input-bordered text-black" th:field="*{startTime}" placeholder="시작 시간">
                 </div>
-
-                <!-- 레슨 시작 시간 입력 -->
-                <div class="mb-3 w-full">
-                    <input type="time" class="input w-full input-bordered text-black" th:field="*{startTime}"
-                        placeholder="시작 시간">
-                </div>
-
+                
                 <!-- 레슨 끝 시간 입력 -->
                 <div class="mb-3 w-full">
-                    <input type="time" class="input w-full input-bordered text-black" th:field="*{endTime}"
-                        placeholder="끝 시간">
+                    <input type="time" class="input w-full input-bordered text-black" th:field="*{endTime}" placeholder="끝 시간">
                 </div>
 
                 <!-- 수정 완료 버튼 -->

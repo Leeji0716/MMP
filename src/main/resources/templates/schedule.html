@@ -29,6 +29,9 @@
         <div class="divider"></div>
         <div id="lessonListContainer"></div>
     </div>
+    <div>
+        <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}" />
+    </div>
     <script type='module'>
         import { Calendar } from '@fullcalendar/core';
         import dayGridPlugin from '@fullcalendar/daygrid';
@@ -75,6 +78,9 @@
 
         function sendDateToServer(date) {
             const csrfToken = getCsrfToken();
+            // 현재 로그인된 사용자의 이름 가져오기
+            const currentUser = document.getElementById('currentUser').value;
+
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/lessonCalendar/selected-date", true);
@@ -86,6 +92,7 @@
                 if (xhr.status >= 200 && xhr.status < 300) {
                     try {
                         const responseData = JSON.parse(xhr.responseText);
+                        console.log(responseData);
                         if (responseData.hasOwnProperty('lessons')) {
                             lessonList = responseData.lessons;
                             const lessonListContainer = document.getElementById('lessonListContainer');
@@ -126,8 +133,7 @@
                                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
 
                                 // 현재 로그인된 사용자가 attendanceList에 있는지 확인
-                                const isAttending = lesson.attendanceList.some(attendee => attendee.username === currentUser);
-
+                                const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
                                 if (isAttending) {
                                     attendanceButton.classList.add('bg-green-500', 'text-white');
                                     attendanceButton.innerHTML = `예약완료 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
@@ -139,7 +145,6 @@
                                 attendanceButton.addEventListener('click', function () {
                                     window.location.href = `/lesson/detail/${lesson.id}`;
                                 });
-
 
                                 attendanceDiv.appendChild(attendanceButton);
                                 lessonDiv.appendChild(attendanceDiv);

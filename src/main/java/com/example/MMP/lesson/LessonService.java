@@ -44,12 +44,30 @@ public class LessonService {
     @Transactional
     public void reservation(Lesson lesson, SiteUser siteUser) {
         lesson.getAttendanceList().add(siteUser);
-        lessonRepository.save(lesson);
-        siteUser.getLessonList().add(lesson);
-        siteUserRepository.save(siteUser);
-        System.out.println("Lesson attendance list size after saving: " + lesson.getAttendanceList().size());
-        for(SiteUser siteUser1 : lesson.getAttendanceList()){
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + siteUser.getName());
+        siteUser.getLessonsAttending().add(lesson);
+    }
+
+    @Transactional
+    public void cancel(Lesson lesson, SiteUser siteUser) {
+        lesson.getAttendanceList().remove(siteUser);
+        siteUser.getLessonsAttending().remove(lesson);
+    }
+
+    public void delete(Lesson lesson) {
+        for (SiteUser user : lesson.getAttendanceList()){
+            user.getLessonsAttending().remove(lesson);
         }
+        lesson.getAttendanceList().clear();
+        lessonRepository.delete(lesson);
+    }
+
+    public void update(Lesson lesson, String lessonName, String headCount, LocalDate lessonDate, LocalTime startTime, LocalTime endTime) {
+        lesson.setLessonName(lessonName);
+        lesson.setHeadCount(Integer.parseInt(headCount));
+        lesson.setLessonDate(lessonDate);
+        lesson.setStartTime(startTime);
+        lesson.setEndTime(endTime);
+
+        lessonRepository.save(lesson);
     }
 }
