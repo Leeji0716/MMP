@@ -8,6 +8,8 @@ import com.example.MMP.challenge.userWeight.UserWeight;
 import com.example.MMP.challenge.userWeight.UserWeightService;
 import com.example.MMP.point.PointService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +23,6 @@ public class ChallengeUserService {
     private final ChallengeUserRepository challengeUserRepository;
     private final UserWeightService userWeightService;
     private final PointService pointService;
-    private final AttendanceService attendanceService;
-    private final ChallengeActivityRepository challengeActivityRepository;
 
 
     @Transactional

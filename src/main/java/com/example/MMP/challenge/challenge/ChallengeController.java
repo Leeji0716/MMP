@@ -127,14 +127,20 @@ public class ChallengeController {
         Optional<Challenge> challengeOptional = challengeRepository.findById(challengeId);
         if (challengeOptional.isPresent()) {
             Challenge challenge = challengeOptional.get();
-            if ("weight".equals(challenge.getType())) {
-                return "redirect:/challenge/enterWeight?challengeId=" + challengeId;
-            } else {
-                challengeService.participateInChallenge(challengeId, principal);
+            switch (challenge.getType()) {
+                case "weight":
+                    return "redirect:/challenge/enterWeight?challengeId=" + challengeId;
+                case "exerciseTime":
+                    return "redirect:/challenge/enterExerciseTime?challengeId=" + challengeId;
+                default:
+                    challengeService.participateInChallenge(challengeId, principal);
+                    break;
             }
         }
         return "redirect:/challenge/challenges";
     }
+
+
 
     @GetMapping("/enterWeight")
     public String enterWeightForm(@RequestParam("challengeId") Long challengeId, Model model) {
@@ -170,4 +176,5 @@ public class ChallengeController {
         challengeService.updateWeight(challengeId, principal, weight);
         return "redirect:/challenge/challenges";
     }
+
 }

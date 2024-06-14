@@ -1,5 +1,6 @@
 package com.example.MMP.challenge.attendance;
 
+import com.example.MMP.challenge.challenge.ChallengeService;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;
@@ -29,6 +30,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final SiteUserRepository siteUserRepository;
     private final ChallengeUserRepository challengeUserRepository;
+
 
     // 순환 참조 해결 용도
     @Lazy
@@ -126,6 +128,16 @@ public class AttendanceService {
 
     public long calculateTotalExerciseTime(Long userId) {
         List<Attendance> attendanceList = attendanceRepository.findBySiteUserId(userId);
+
+        return attendanceList.stream()
+                .filter(attendance -> attendance.getStartTime() != null && attendance.getEndTime() != null)
+                .mapToLong(attendance -> ChronoUnit.MINUTES.between(attendance.getStartTime(), attendance.getEndTime()))
+                .sum();
+    }
+
+    // 사용자의 특정 날짜 범위 내 운동 시간 계산
+    public long calculateTotalExerciseTimeBetweenDates(Long userId, LocalDate startDate, LocalDate endDate) {
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserIdAndDateBetween(userId, startDate, endDate);
 
         return attendanceList.stream()
                 .filter(attendance -> attendance.getStartTime() != null && attendance.getEndTime() != null)

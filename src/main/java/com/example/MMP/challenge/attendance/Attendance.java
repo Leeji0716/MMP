@@ -27,7 +27,9 @@ public class Attendance {
     private LocalDate date;
 
     private boolean present;
+
     private LocalDateTime startTime;
+
     private LocalDateTime endTime;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)

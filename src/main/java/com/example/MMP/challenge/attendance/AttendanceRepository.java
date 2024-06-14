@@ -27,4 +27,5 @@ public interface AttendanceRepository extends JpaRepository<Attendance,Long> {
 
     @Query("SELECT COUNT(DISTINCT a.date) FROM Attendance a WHERE a.siteUser.id = :userId")
     Long countDistinctBySiteUserId(@Param("userId") Long userId);
+
 }

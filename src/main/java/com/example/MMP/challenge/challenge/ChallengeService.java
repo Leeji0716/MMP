@@ -30,6 +30,7 @@ public class ChallengeService {
     private final UserWeightService userWeightService;
     private  final ChallengeActivityRepository challengeActivityRepository;
     private final ChallengeUserService challengeUserService;
+    private final AttendanceService attendanceService;
 
     public Challenge create(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int requiredPoint, String type, Double targetWeightLoss, Integer targetExerciseMinutes) {
         Challenge challenge = new Challenge();
@@ -173,6 +174,51 @@ public class ChallengeService {
         challengesByStatus.put("successful", successfulChallenges);
         challengesByStatus.put("failed", failedChallenges);
         return challengesByStatus;
+    }
+
+    @Transactional
+    public void updateAchievementRate(Long challengeUserId) {
+        ChallengeUser challengeUser = challengeUserRepository.findById(challengeUserId)
+                .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다"));
+
+        Challenge challenge = challengeUser.getChallenge();
+        Long siteUserId = challengeUser.getSiteUser().getId();
+        double achievementRate = 0;
+
+        if ("weight".equals(challenge.getType())) {
+            // 기존 몸무게 기반 달성률 계산 로직
+        } else if ("exerciseTime".equals(challenge.getType())) {
+            long totalExerciseTime = attendanceService.calculateTotalExerciseTimeBetweenDates(
+                    siteUserId,
+                    challenge.getOpenDate().toLocalDate(),
+                    challenge.getCloseDate().toLocalDate()
+            );
+            int targetExerciseMinutes = challenge.getTargetExerciseMinutes();
+            achievementRate = ((double) totalExerciseTime / targetExerciseMinutes) * 100;
+        }
+
+        challengeUser.setAchievementRate(achievementRate);
+        challengeUserRepository.save(challengeUser);
+
+        if (achievementRate >= 100) {
+            challengeUserService.markChallengeAsSuccessful(challengeUserId);
+        }
+    }
+
+    public Challenge createExerciseTimeChallenge(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int requiredPoint, Integer targetExerciseMinutes) {
+        Challenge challenge = new Challenge();
+        challenge.setName(name);
+        challenge.setDescription(description);
+        challenge.setOpenDate(startDate);
+        challenge.setCloseDate(endDate);
+        challenge.setRequiredPoint(requiredPoint);
+        challenge.setType("exerciseTime");
+
+        if (targetExerciseMinutes != null) {
+            challenge.setTargetExerciseMinutes(targetExerciseMinutes);
+        }
+
+        return challengeRepository.save(challenge);
     }
 }
 
