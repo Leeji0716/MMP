@@ -8,14 +8,14 @@ public class Main {
         GymAccessManager gymAccessManager = new GymAccessManager();
 
         String userId = "user123";
-        String deviceAddress = "00:11:22:33:44:55";
+        String deviceAddress = "00-E0-4C-23-99-87";
 
         BluetoothDevice device = bluetoothManager.findDevice(deviceAddress);
         if (device != null) {
             gymAccessManager.checkIn(userId);
 
             try {
-                Thread.sleep(5000); // Simulate time passing
+                Thread.sleep(10000); // Simulate time passing
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

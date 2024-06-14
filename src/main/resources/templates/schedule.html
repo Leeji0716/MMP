@@ -17,6 +17,28 @@
     <link href="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.14/main.min.css" rel="stylesheet"> -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/core/main.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/daygrid/main.min.css" rel="stylesheet">
+
+    <script>
+        attendanceButton.addEventListener('click', function () {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", `/lesson/detail/${lesson.id}`, true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    // 서버 응답에 따른 처리
+                    window.location.reload(); // 예를 들어, 페이지 새로고침 등의 처리
+                } else {
+                    console.error('Failed to send attendance request.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
+            xhr.send();
+        });
+
+    </script>
+
 </head>
 <div layout:fragment="content" class="w-full my-3 flex justify-center items-center flex-col">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
@@ -173,6 +195,7 @@
             initializeCalendar();
         });
     </script>
+
 </div>
 
 </html>
