@@ -34,4 +34,8 @@ public class UserDayPassService {
 
         return userDayPassRepository.findByPassName(passName);
     }
+
+    public void save(UserDayPass userDayPass) {
+        userDayPassRepository.save(userDayPass);
+    }
 }

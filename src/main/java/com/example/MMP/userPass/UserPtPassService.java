@@ -33,4 +33,8 @@ public class UserPtPassService {
 
         return userPtPassRepository.findByPassName(passName);
     }
+
+    public void save(UserPtPass userPtPass) {
+        userPtPassRepository.save(userPtPass);
+    }
 }

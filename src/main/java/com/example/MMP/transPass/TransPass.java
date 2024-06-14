@@ -10,6 +10,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDate;
 
 @Entity
 @Setter
@@ -47,5 +50,8 @@ public class TransPass {
         this.acceptUser = acceptUser;
         this.consent = false;
     }
+
+    @CreatedDate
+    private LocalDate createDate;
 
 }

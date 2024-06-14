@@ -2,8 +2,13 @@ package com.example.MMP.transPass;
 
 import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,5 +36,19 @@ public class TransPassService {
 
     public List<TransPass> MyStandPass(SiteUser user) {
         return transPassRepository.MyStandPass(user);
+    }
+
+    public Page<TransPass> AllPtStandPass(int page){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return transPassRepository.AllPtStandPass(pageable);
+    }
+
+    public Page<TransPass> AllDayStandPass(int page){
+        List<Sort.Order> sorts = new ArrayList<>();
+        sorts.add(Sort.Order.desc("createDate"));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
+        return transPassRepository.AllDayStandPass(pageable);
     }
 }

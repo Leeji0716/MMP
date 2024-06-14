@@ -279,7 +279,7 @@
                         <input type="submit" value="accept" name="passFilter" class="btn">
                         <input type="submit" value="stand" name="passFilter" class="btn">
                     </form>
-                    <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}">
+                    <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}" class="flex">
                         <div th:if="${send.userPtPass != null}" >
                         <span th:text="'양도할 이용권 : '+${send.userPtPass.passName}"></span>
                         <br>
@@ -291,7 +291,7 @@
                             <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
                         </div>
                     </div>
-                    <div th:if="${!#lists.isEmpty(MyAcceptPass)}" th:each="accept : ${MyAcceptPass}" class="text-black">
+                    <div th:if="${!#lists.isEmpty(MyAcceptPass)}" th:each="accept : ${MyAcceptPass}" class="text-black flex">
                         <div th:if="${accept.userPtPass != null}">
                             <span th:text="'양도받을 이용권 : '+${accept.userPtPass.passName}"></span>
                             <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">

@@ -26,6 +26,8 @@ public class QTransPass extends EntityPathBase<TransPass> {
 
     public final BooleanPath consent = createBoolean("consent");
 
+    public final DatePath<java.time.LocalDate> createDate = createDate("createDate", java.time.LocalDate.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.example.MMP.siteuser.QSiteUser sendUser;
