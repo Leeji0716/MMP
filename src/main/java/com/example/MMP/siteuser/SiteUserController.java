@@ -10,6 +10,8 @@ import com.example.MMP.challenge.challenge.ChallengeService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
+import com.example.MMP.ptGroup.PtGroup;
+import com.example.MMP.ptGroup.PtGroupRepository;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.transPass.TransPassService;
@@ -21,6 +23,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +44,7 @@ public class SiteUserController {
     private final CommentService commentService;
     private final ChallengeService challengeService;
     private final TransPassService transPassService;
+    private final PtGroupRepository ptGroupRepository;
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -111,8 +115,14 @@ public class SiteUserController {
         }
         try {
             SiteUser siteUser = siteUserService.userSignup(userDto.getName(), userDto.getNumber(), userDto.getGender(), userDto.getBirthDate(), userDto.getEmail(), userDto.getUserRole());
-            if (siteUser.getUserRole().equals("user"))
+            if (siteUser.getUserRole().equals("user")) {
                 mailService.mailSend(siteUser.getEmail(), " [MMP] 회원가입을 환영합니다!", "MMP의 회원이 되어주셔서 감사합니다!! 아이디는 전화번호, 비밀번호는 생년월일입니다..! 당신의 건강한 득근을 기원합니다 :)");
+            }
+            else if (siteUser.getUserRole().equals("trainer")) {
+                PtGroup ptGroup = new PtGroup();
+                siteUser.setPtGroupTrainer(ptGroup);
+                siteUserService.save(siteUser);
+            }
         } catch (DataIntegrityViolationException e) {
             bindingResult.reject("signupFailed", "이미 등록된 사용자입니다.");
             return "user/userSignup";

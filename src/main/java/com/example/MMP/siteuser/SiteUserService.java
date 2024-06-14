@@ -103,6 +103,9 @@ public class SiteUserService {
         return siteUserRepository.findById(id).orElseThrow();
     }
 
+    public void save(SiteUser member) {
+        siteUserRepository.save(member);
+    }
 }
 
 

@@ -41,6 +41,7 @@
             cursor: pointer;
             z-index: 1;
         }
+
         .scroll-button3 {
             position: absolute;
             top: 50%;
@@ -109,383 +110,465 @@
             margin-right: 20px;
         }
 
- .card-actions {
-    z-index:1;
-}
+        .card-actions {
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body>
-<nav th:replace="~{navbar :: navbarFragment}"></nav>
-<div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-y-auto">
-    <div class="h-full bg-black p-8">
-        <div class="bg-white rounded-lg shadow-xl pb-8">
-            <div class="w-full h-[250px]">
-                <img src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
-                     class="w-full h-full rounded-tl-lg rounded-tr-lg">
-            </div>
-            <div class="flex flex-col items-center -mt-20">
-                <img alt="Tailwind CSS Navbar component" class="w-40 border-4 border-white rounded-full"
-                     th:src="${url != null ? url : '/1715046707.gif'}" loop="infinite" id="profile_img"/>
-                <div class="flex items-center space-x-2 mt-2">
-                    <li class="flex border-y py-2">
-                        <span class="font-bold w-auto text-black inline-block">Name : </span>
-                        <span class="text-gray-700" sec:authorize="isAuthenticated()"
-                              th:text="${#authentication.principal.username}"></span>
-                    </li>
+    <nav th:replace="~{navbar :: navbarFragment}"></nav>
+    <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-y-auto">
+        <div class="h-full bg-black p-8">
+            <div class="bg-white rounded-lg shadow-xl pb-8">
+                <div class="w-full h-[250px]">
+                    <img src="https://vojislavd.com/ta-template-demo/assets/img/profile-background.jpg"
+                        class="w-full h-full rounded-tl-lg rounded-tr-lg">
                 </div>
-                <div class="flex items-center space-x-2 mt-2">
-                    <li class="flex border-y py-2">
-                        <span class="font-bold w-auto text-black inline-block">Points: </span>
-                        <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${points}"></span>
-                    </li>
-                    <div class="border-l border-gray-300 h-6"></div> <!-- Vertical line -->
-                    <li class="flex border-y py-2">
-                        <span class="font-bold w-auto text-black inline-block">challenges : </span>
-                        <span class="text-gray-700" sec:authorize="isAuthenticated()"
-                              th:text="${challengeCount}"></span>
-                    </li>
-                </div>
-                <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
-                    <input id="file" type="file" name="file" value="이미지 등록" style="display: none;">
-                </form>
-                <form id="image_save_form" th:action="@{|/user/imagesaveform|}" method="post">
-                    <input type="hidden" name="url" th:value="${url}">
-                    <input type="submit" value="이미지 저장">
-                </form>
-            </div>
-
-            <div class="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-                <div class="flex items-center space-x-4 mt-2">
-                    <button
-                            class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
-                             fill="currentColor">
-                            <path fill-rule="evenodd"
-                                  d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
-                                  clip-rule="evenodd"></path>
-                        </svg>
-                        <span>Message</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">내 게시물 최근 댓글</h4>
-                    <div th:each="comment: ${topSevenComment}" class="flex items-center w-full my-6 -ml-1.5">
-                        <div class="w-1/12 z-10">
-                            <div class="w-3.5 h-3.5 bg-red-600 rounded-full"></div>
-                        </div>
-                        <div class="w-11/12">
-                            <a th:href="@{|/wod/detail/${comment.wod.id}|}"
-                               class="text-sm text-black font-bold hover:underline"
-                               th:text="|${comment.content}|"></a>
-                        </div>
+                <div class="flex flex-col items-center -mt-20">
+                    <img alt="Tailwind CSS Navbar component" class="w-40 border-4 border-white rounded-full"
+                        th:src="${url != null ? url : '/1715046707.gif'}" loop="infinite" id="profile_img" />
+                    <div class="flex items-center space-x-2 mt-2">
+                        <li class="flex border-y py-2">
+                            <span class="font-bold w-auto text-black inline-block">Name : </span>
+                            <span class="text-gray-700" sec:authorize="isAuthenticated()"
+                                th:text="${#authentication.principal.username}"></span>
+                        </li>
                     </div>
-                </div>
-            </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">Activity log</h4>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
-                        <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
-                        <div class="flex w-full card-container border-gray-300">
-                            <!-- ptPassList 요소들 -->
-                            <div class="wodCard card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]"
-                                 th:each="wod:${wodList}">
-                                <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
-                            </div>
-                        </div>
+                    <div class="flex items-center space-x-2 mt-2">
+                        <li class="flex border-y py-2">
+                            <span class="font-bold w-auto text-black inline-block">Points: </span>
+                            <span class="text-gray-700" sec:authorize="isAuthenticated()" th:text="${points}"></span>
+                        </li>
+                        <div class="border-l border-gray-300 h-6"></div> <!-- Vertical line -->
+                        <li class="flex border-y py-2">
+                            <span class="font-bold w-auto text-black inline-block">challenges : </span>
+                            <span class="text-gray-700" sec:authorize="isAuthenticated()"
+                                th:text="${challengeCount}"></span>
+                        </li>
                     </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">내가 참여한 챌린지 목록</h4>
-                    <div class="relative px-4">
-                        <br>
-                        <h1 class="text-black font-bold inline bg-yellow-300 px-2">진행 중인 챌린지</h1>
-                        <br>
-                        <div class="relative px-4" style="max-height: 100px; overflow-y: auto;">
-                            <div th:each="challenge : ${ongoingChallenges}"
-                                 class="flex items-center w-full my-6 -ml-1.5">
-                                <div class="w-11/12">
-                                    <a th:href="@{|/challenge/detail/${challenge.id}|}"
-                                       class="text-sm text-black font-bold hover:underline"
-                                       th:text="${challenge.name}"></a>
-                                    <p class="text-sm text-gray-700" th:text="${challenge.description}"></p>
-                                    <p class="text-xs text-gray-500"
-                                       th:text="${#temporals.format(challenge.openDate, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(challenge.closeDate, 'yyyy-MM-dd HH:mm')}"></p>
-                                </div>
-                            </div>
-                        </div>
-                        <br>
-                        <h1 class="text-black font-bold inline bg-yellow-300 px-2">성공한 챌린지</h1>
-                        <div class="relative px-4" style="max-height: 600px; overflow: auto;">
-                            <div class="flex space-x-4">
-                                <div th:each="challenge : ${successfulChallenges}" class="flex-shrink-0 my-6 -ml-1.5">
-                                    <a th:href="@{|/challenge/detail/${challenge.id}|}"
-                                       class="relative block w-24 h-24">
-                                          <span class="absolute inset-0 flex flex-col items-center justify-center border-4 border-red-500 text-red-500 rounded-full"
-                                                style="box-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;">
-                                                   <span id="challengeNameSpan-${challenge.id}"
-                                                         th:data-name="${challenge.name}"
-                                                         class="text-sm font-bold text-center challenge-name-span"
-                                                         style="color: red; font-weight: 900; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;"></span>
-                                         </span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button2 " id="ptScrollLeftButton2">&#8249;</button>
-                        <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
-                        <div class="flex w-full card-container2 border-gray-300">
-                            <!-- ptPassList 요소들 -->
-                            <div class="htCard card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[300px]"
-                                 th:each="homeTraining:${saveTraining}">
-                                <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px] text-black">
-            <div class="w-full flex flex-col 2xl:w-1/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
-                    <h2 class="text-black">양도 List</h2>
-                    <form action="/user/profile">
-                        <input type="submit" value="send" name="passFilter" class="btn">
-                        <input type="submit" value="accept" name="passFilter" class="btn">
-                        <input type="submit" value="stand" name="passFilter" class="btn">
+                    <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
+                        <input id="file" type="file" name="file" value="이미지 등록" style="display: none;">
                     </form>
-                    <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}" class="flex">
-                        <div th:if="${send.userPtPass != null}" >
-                        <span th:text="'양도할 이용권 : '+${send.userPtPass.passName}"></span>
-                        <br>
-                        <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
-                        </div>
-                        <div th:if="${send.userDayPass != null}">
-                            <span th:text="'양도할 이용권 : '+${send.userDayPass.passName}"></span>
-                            <br>
-                            <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
-                        </div>
-                    </div>
-                    <div th:if="${!#lists.isEmpty(MyAcceptPass)}" th:each="accept : ${MyAcceptPass}" class="text-black flex">
-                        <div th:if="${accept.userPtPass != null}">
-                            <span th:text="'양도받을 이용권 : '+${accept.userPtPass.passName}"></span>
-                            <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
-                                <input type="submit" value="accept" name="change" class="btn">
-                                <input type="submit" value="reject" name="change" class="btn">
-                            </form>
-                        </div>
-                        <div th:if="${accept.userDayPass != null}" th:each="accept : ${MyAcceptPass}">
-                            <span th:text="'양도받을 이용권 : '+${accept.userDayPass.passName}"></span>
-                            <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
-                                <input type="submit" value="accept" name="change" class="btn">
-                                <input type="submit" value="reject" name="change" class="btn">
-                            </form>
-                        </div>
-                    </div>
-                    <div th:if="${!#lists.isEmpty(MyStandPass)}" th:each="stand : ${MyStandPass}">
-                        <span th:if="${stand.userPtPass != null}" th:text="'대기중인 이용권 :'+${stand.userPtPass.passName}"></span>
-                        <span th:if="${stand.userDayPass != null}" th:text="'대기중인 이용권 :'+${stand.userDayPass.passName}"></span>
+                    <form id="image_save_form" th:action="@{|/user/imagesaveform|}" method="post">
+                        <input type="hidden" name="url" th:value="${url}">
+                        <input type="submit" value="이미지 저장">
+                    </form>
+                </div>
+
+                <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2">
+                    <div class="flex items-center space-x-4 mt-2">
+                        <details class="dropdown">
+                            <summary class="m-1 btn">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
+                                    fill="currentColor">
+                                    <path fill-rule="evenodd"
+                                        d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z"
+                                        clip-rule="evenodd"></path>
+                                </svg>
+                                <span>Message</span>
+                            </summary>
+                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
+                                <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}">
+                                    <div th:each="group : ${user.ptGroupTrainer.members}" class="flex flex-row">
+                                        <a href="#" th:text="${group.name}"></a>
+                                    </div>
+                                </div>
+                                <div th:if="${#authorization.expression('hasRole(''USER'')')}">
+                                    <div class="flex flex-row">
+                                        <a href="#" th:text="${user.ptGroupUser.trainer.name}"></a>
+                                    </div>
+                                </div>
+                            </ul>
+                        </details>
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col w-full 2xl:w-2/3">
-                <div class="flex-1 bg-white rounded-lg shadow-xl p-8 ">
-                    <div class="flex items-center space-x-4 mt-2">
-                        <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
-                        <a th:href="@{|/totalPass/transfer/${user.id}|}"
-                           class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span>양도해볼까</span>
-                        </a>
+
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">내 게시물 최근 댓글</h4>
+                        <div th:each="comment: ${topSevenComment}" class="flex items-center w-full my-6 -ml-1.5">
+                            <div class="w-1/12 z-10">
+                                <div class="w-3.5 h-3.5 bg-red-600 rounded-full"></div>
+                            </div>
+                            <div class="w-11/12">
+                                <a th:href="@{|/wod/detail/${comment.wod.id}|}"
+                                    class="text-sm text-black font-bold hover:underline"
+                                    th:text="|${comment.content}|"></a>
+                            </div>
+                        </div>
                     </div>
-                    <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                    <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
-                        <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
-                        <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
-                        <div class="flex w-full card-container3 border-gray-300">
-                            <!-- ptPassList 요소들 -->
-                            <div th:replace="pass/passDto :: passDto(${user})"
-                                 class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"></div>
+                </div>
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">Activity log</h4>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button " id="ptScrollLeftButton">&#8249;</button>
+                            <button class="scroll-button " id="ptScrollRightButton">&#8250;</button>
+                            <div class="flex w-full card-container border-gray-300">
+                                <!-- ptPassList 요소들 -->
+                                <div class="wodCard card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[250px]"
+                                    th:each="wod:${wodList}">
+                                    <div th:replace="wod/wodCard :: wodCard(${wod})"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px]">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">내가 참여한 챌린지 목록</h4>
+                        <div class="relative px-4">
+                            <br>
+                            <h1 class="text-black font-bold inline bg-yellow-300 px-2">진행 중인 챌린지</h1>
+                            <br>
+                            <div class="relative px-4" style="max-height: 100px; overflow-y: auto;">
+                                <div th:each="challenge : ${ongoingChallenges}"
+                                    class="flex items-center w-full my-6 -ml-1.5">
+                                    <div class="w-11/12">
+                                        <a th:href="@{|/challenge/detail/${challenge.id}|}"
+                                            class="text-sm text-black font-bold hover:underline"
+                                            th:text="${challenge.name}"></a>
+                                        <p class="text-sm text-gray-700" th:text="${challenge.description}"></p>
+                                        <p class="text-xs text-gray-500"
+                                            th:text="${#temporals.format(challenge.openDate, 'yyyy-MM-dd HH:mm')} + ' ~ ' + ${#temporals.format(challenge.closeDate, 'yyyy-MM-dd HH:mm')}">
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <h1 class="text-black font-bold inline bg-yellow-300 px-2">성공한 챌린지</h1>
+                            <div class="relative px-4" style="max-height: 600px; overflow: auto;">
+                                <div class="flex space-x-4">
+                                    <div th:each="challenge : ${successfulChallenges}"
+                                        class="flex-shrink-0 my-6 -ml-1.5">
+                                        <a th:href="@{|/challenge/detail/${challenge.id}|}"
+                                            class="relative block w-24 h-24">
+                                            <span
+                                                class="absolute inset-0 flex flex-col items-center justify-center border-4 border-red-500 text-red-500 rounded-full"
+                                                style="box-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;">
+                                                <span id="challengeNameSpan-${challenge.id}"
+                                                    th:data-name="${challenge.name}"
+                                                    class="text-sm font-bold text-center challenge-name-span"
+                                                    style="color: red; font-weight: 900; text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000;"></span>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h4 class="text-xl text-gray-900 font-bold">Save log</h4>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button2 " id="ptScrollLeftButton2">&#8249;</button>
+                            <button class="scroll-button2 " id="ptScrollRightButton2">&#8250;</button>
+                            <div class="flex w-full card-container2 border-gray-300">
+                                <!-- ptPassList 요소들 -->
+                                <div class="htCard card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[300px]"
+                                    th:each="homeTraining:${saveTraining}">
+                                    <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px] text-black">
+                <div class="w-full flex flex-col 2xl:w-1/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8">
+                        <h2 class="text-black">양도 List</h2>
+                        <form action="/user/profile">
+                            <input type="submit" value="send" name="passFilter" class="btn">
+                            <input type="submit" value="accept" name="passFilter" class="btn">
+                            <input type="submit" value="stand" name="passFilter" class="btn">
+                        </form>
+                        <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}" class="flex">
+                            <div th:if="${send.userPtPass != null}">
+                                <span th:text="'양도할 이용권 : '+${send.userPtPass.passName}"></span>
+                                <br>
+                                <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
+                            </div>
+                            <div th:if="${send.userDayPass != null}">
+                                <span th:text="'양도할 이용권 : '+${send.userDayPass.passName}"></span>
+                                <br>
+                                <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
+                            </div>
+                        </div>
+                        <div th:if="${!#lists.isEmpty(MyAcceptPass)}" th:each="accept : ${MyAcceptPass}"
+                            class="text-black flex">
+                            <div th:if="${accept.userPtPass != null}">
+                                <span th:text="'양도받을 이용권 : '+${accept.userPtPass.passName}"></span>
+                                <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
+                                    <input type="submit" value="accept" name="change" class="btn">
+                                    <input type="submit" value="reject" name="change" class="btn">
+                                </form>
+                            </div>
+                            <div th:if="${accept.userDayPass != null}" th:each="accept : ${MyAcceptPass}">
+                                <span th:text="'양도받을 이용권 : '+${accept.userDayPass.passName}"></span>
+                                <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
+                                    <input type="submit" value="accept" name="change" class="btn">
+                                    <input type="submit" value="reject" name="change" class="btn">
+                                </form>
+                            </div>
+                        </div>
+                        <div th:if="${!#lists.isEmpty(MyStandPass)}" th:each="stand : ${MyStandPass}">
+                            <span th:if="${stand.userPtPass != null}"
+                                th:text="'대기중인 이용권 :'+${stand.userPtPass.passName}"></span>
+                            <span th:if="${stand.userDayPass != null}"
+                                th:text="'대기중인 이용권 :'+${stand.userDayPass.passName}"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex flex-col w-full 2xl:w-2/3">
+                    <div class="flex-1 bg-white rounded-lg shadow-xl p-8 ">
+                        <div class="flex items-center space-x-4 mt-2">
+                            <h4 class="text-xl text-gray-900 font-bold">My Pass</h4>
+                            <a th:href="@{|/totalPass/transfer/${user.id}|}"
+                                class="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>양도해볼까</span>
+                            </a>
+                        </div>
+                        <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
+                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                            <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
+                            <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
+                            <div class="flex w-full card-container3 border-gray-300">
+                                <!-- ptPassList 요소들 -->
+                                <div th:replace="pass/passDto :: passDto(${user})"
+                                    class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // 성공한 챌린지 이름을 잘라서 표시하는 함수 호출
-            splitChallengeNames();
-        });
-
-        function splitChallengeNames() {
-            const challengeNameSpans = document.querySelectorAll('.challenge-name-span');
-            challengeNameSpans.forEach(span => {
-                const challengeName = span.dataset.name;
-                const lines = splitText(challengeName, 6);
-                span.innerHTML = lines.join('<br>');
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // 성공한 챌린지 이름을 잘라서 표시하는 함수 호출
+                splitChallengeNames();
             });
-        }
 
-        function splitText(text, chunkSize) {
-            const chunks = [];
-            for (let i = 0; i < text.length; i += chunkSize) {
-                chunks.push(text.substring(i, i + chunkSize));
+            function splitChallengeNames() {
+                const challengeNameSpans = document.querySelectorAll('.challenge-name-span');
+                challengeNameSpans.forEach(span => {
+                    const challengeName = span.dataset.name;
+                    const lines = splitText(challengeName, 6);
+                    span.innerHTML = lines.join('<br>');
+                });
             }
-            return chunks;
-        }
-    </script>
 
-    <script>
-        const profile_img = document.getElementById('profile_img');
-        profile_img.addEventListener('click', () => {
-            document.getElementById('file').click();
+            function splitText(text, chunkSize) {
+                const chunks = [];
+                for (let i = 0; i < text.length; i += chunkSize) {
+                    chunks.push(text.substring(i, i + chunkSize));
+                }
+                return chunks;
+            }
+        </script>
 
-        });
-        const file = document.getElementById('file');
-        file.addEventListener('change', () => {
-            document.getElementById('image_form').submit();
-        });
-    </script>
-    <script>
-        // PT Pass 스크롤링 함수
-        function ptScrollLeft() {
-            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
-                left: -200,
-                behavior: 'smooth'
+        <script>
+            const profile_img = document.getElementById('profile_img');
+            profile_img.addEventListener('click', () => {
+                document.getElementById('file').click();
+
             });
-        }
-        function ptScrollRight() {
-            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
-                left: 200,
-                behavior: 'smooth'
+            const file = document.getElementById('file');
+            file.addEventListener('change', () => {
+                document.getElementById('image_form').submit();
             });
-        }
-        function ptScrollLeft2() {
-            document.querySelector('.card-container2').scrollBy({
-                left: -200,
-                behavior: 'smooth'
+        </script>
+        <script>
+            // PT Pass 스크롤링 함수
+            function ptScrollLeft() {
+                document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                    left: -200,
+                    behavior: 'smooth'
+                });
+            }
+            function ptScrollRight() {
+                document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                    left: 200,
+                    behavior: 'smooth'
+                });
+            }
+            function ptScrollLeft2() {
+                document.querySelector('.card-container2').scrollBy({
+                    left: -200,
+                    behavior: 'smooth'
+                });
+            }
+            function ptScrollRight2() {
+                document.querySelector('.card-container2').scrollBy({
+                    left: 200,
+                    behavior: 'smooth'
+                });
+            }
+            function ptScrollLeft3() {
+                document.querySelector('.card-container3').scrollBy({
+                    left: -200,
+                    behavior: 'smooth'
+                });
+            }
+            function ptScrollRight3() {
+                document.querySelector('.card-container3').scrollBy({
+                    left: 200,
+                    behavior: 'smooth'
+                });
+            }
+
+            // 이벤트 리스너 추가
+            document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
+            document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
+            document.getElementById('ptScrollLeftButton2').addEventListener('click', ptScrollLeft2);
+            document.getElementById('ptScrollRightButton2').addEventListener('click', ptScrollRight2);
+            document.getElementById('ptScrollLeftButton3').addEventListener('click', ptScrollLeft3);
+            document.getElementById('ptScrollRightButton3').addEventListener('click', ptScrollRight3);
+
+        </script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                updateInitialIconState();
+                updateIconState();
             });
-        }
-        function ptScrollRight2() {
-            document.querySelector('.card-container2').scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        }
-        function ptScrollLeft3() {
-            document.querySelector('.card-container3').scrollBy({
-                left: -200,
-                behavior: 'smooth'
-            });
-        }
-        function ptScrollRight3() {
-            document.querySelector('.card-container3').scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        }
 
-        // 이벤트 리스너 추가
-        document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
-        document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
-        document.getElementById('ptScrollLeftButton2').addEventListener('click', ptScrollLeft2);
-        document.getElementById('ptScrollRightButton2').addEventListener('click', ptScrollRight2);
-        document.getElementById('ptScrollLeftButton3').addEventListener('click', ptScrollLeft3);
-        document.getElementById('ptScrollRightButton3').addEventListener('click', ptScrollRight3);
+            function updateIconState() {
+                const wodCards = document.querySelectorAll('.wodCard');
 
-    </script>
+                wodCards.forEach(wod => {
+                    const hiddenDiv = wod.querySelector('.hidden');
+                    const wodId = hiddenDiv.getAttribute('data-wod-id');
+                    const heartIcon = document.getElementById(`heartIcon-${wodId}`);
+                    const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            updateInitialIconState();
-            updateIconState();
-        });
+                    // 페이지 로드 시 초기 아이콘 상태 설정
+                    fetch(`/wod/like-status?wodId=${wodId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.liked) {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            } else {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            }
+                            likeCountSpan.innerText = data.likeCount;
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            }
 
-        function updateIconState() {
-            const wodCards = document.querySelectorAll('.wodCard');
+            function toggleIcon(event, wodId) {
+                event.preventDefault(); // 링크의 기본 동작을 방지
 
-            wodCards.forEach(wod => {
-                const hiddenDiv = wod.querySelector('.hidden');
-                const wodId = hiddenDiv.getAttribute('data-wod-id');
                 const heartIcon = document.getElementById(`heartIcon-${wodId}`);
                 const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
+                const isLiked = heartIcon.classList.contains('fa-solid');
 
-                // 페이지 로드 시 초기 아이콘 상태 설정
-                fetch(`/wod/like-status?wodId=${wodId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.liked) {
-                            heartIcon.classList.remove('fa-regular');
-                            heartIcon.classList.add('fa-solid');
-                        } else {
-                            heartIcon.classList.remove('fa-solid');
-                            heartIcon.classList.add('fa-regular');
+                fetch('/wod/like', {
+                    method: isLiked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                    },
+                    body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
                         }
-                        likeCountSpan.innerText = data.likeCount;
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            if (isLiked) {
+                                heartIcon.classList.remove('fa-solid');
+                                heartIcon.classList.add('fa-regular');
+                            } else {
+                                heartIcon.classList.remove('fa-regular');
+                                heartIcon.classList.add('fa-solid');
+                            }
+                            likeCountSpan.innerText = data.likeCount;
+                        }
                     })
                     .catch(error => console.error('Error:', error));
-            });
-        }
+            }
 
-        function toggleIcon(event, wodId) {
-            event.preventDefault(); // 링크의 기본 동작을 방지
+            function updateInitialIconState() {
+                const bookmarks = document.querySelectorAll('.recommend');
+                bookmarks.forEach(bookmark => {
+                    const icon = bookmark.querySelector('i');
+                    const hiddenDiv = bookmark.querySelector('.hidden');
+                    const htId = hiddenDiv.getAttribute('data-ht-id');
 
-            const heartIcon = document.getElementById(`heartIcon-${wodId}`);
-            const likeCountSpan = document.getElementById(`likeCountSpan-${wodId}`);
-            const isLiked = heartIcon.classList.contains('fa-solid');
+                    fetch(`/homeTraining/bookmark/${htId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.bookmarked) {
+                                icon.classList.remove('fa-regular');
+                                icon.classList.add('fa-solid');
+                            } else {
+                                icon.classList.remove('fa-solid');
+                                icon.classList.add('fa-regular');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            }
 
-            fetch('/wod/like', {
-                method: isLiked ? 'DELETE' : 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
-                },
-                body: JSON.stringify({ wodId: wodId }) // `wodId`를 JSON으로 전달
-            })
-                .then(response => {
+            function toggleBookmark(event) {
+                event.preventDefault(); // 링크의 기본 동작을 방지
+                const icon = event.currentTarget.querySelector('i');
+                const isBookmarked = icon.classList.contains('fa-solid');
+                const hiddenDiv = event.currentTarget.querySelector('.hidden');
+                const htId = hiddenDiv.getAttribute('data-ht-id');
+
+                fetch('/homeTraining/bookmark', {
+                    method: isBookmarked ? 'DELETE' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
+                    },
+                    body: JSON.stringify({ htId: htId }) // `htId`를 JSON으로 전달
+                }).then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
                     }
                     return response.json();
-                })
-                .then(data => {
+                }).then(data => {
                     if (data.success) {
-                        if (isLiked) {
-                            heartIcon.classList.remove('fa-solid');
-                            heartIcon.classList.add('fa-regular');
+                        if (isBookmarked) {
+                            icon.classList.remove('fa-solid', 'fa-bookmark');
+                            icon.classList.add('fa-regular', 'fa-bookmark');
                         } else {
-                            heartIcon.classList.remove('fa-regular');
-                            heartIcon.classList.add('fa-solid');
+                            icon.classList.remove('fa-regular', 'fa-bookmark');
+                            icon.classList.add('fa-solid', 'fa-bookmark');
                         }
-                        likeCountSpan.innerText = data.likeCount;
                     }
+<<<<<<< HEAD
+                }).catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        </script>
+    </div>
+=======
                 })
                 .catch(error => console.error('Error:', error));
         }
@@ -556,6 +639,7 @@
         });
     </script>
 </div>
+>>>>>>> c4f0d25db583fc9703d8cab83621c30724063e6d
 </body>
 
 </html>
