@@ -127,7 +127,7 @@
 
             function showChat(chatMessageDto) {
                 const sender = [[${me.name}]];
-                if (chatMessageDto.sender != sender) {
+                if (chatMessageDto.name == sender) {
                     $("#greetings").append(
                         "<div class = 'chat chat-end  flex flex-col items-end'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble mr-2'>" + chatMessageDto.message + "</div></div>"
                     );
