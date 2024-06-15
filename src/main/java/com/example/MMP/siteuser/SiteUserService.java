@@ -106,6 +106,10 @@ public class SiteUserService {
     public void save(SiteUser member) {
         siteUserRepository.save(member);
     }
+
+    public SiteUser findByNumber(String number){
+        return siteUserRepository.findByNumber(number);
+    }
 }
 
 

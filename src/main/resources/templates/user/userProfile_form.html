@@ -171,12 +171,12 @@
                             <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}">
                                     <div th:each="group : ${user.ptGroupTrainer.members}" class="flex flex-row">
-                                        <a href="#" th:text="${group.name}"></a>
+                                        <a th:href="@{|/user/chat/${group.id}|}" th:text="${group.name}"></a>
                                     </div>
                                 </div>
                                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
                                     <div class="flex flex-row">
-                                        <a href="#" th:text="${user.ptGroupUser.trainer.name}"></a>
+                                        <a th:href="@{|/user/chat/${user.ptGroupUser.trainer.id}|}" th:text="${user.ptGroupUser.trainer.name}"></a>
                                     </div>
                                 </div>
                             </ul>

@@ -7,6 +7,8 @@ import com.example.MMP.Comment.Comment;
 import com.example.MMP.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.homeTraining.HomeTrainingService;
 import com.example.MMP.mail.MailService;
@@ -23,6 +25,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +48,7 @@ public class SiteUserController {
     private final ChallengeService challengeService;
     private final TransPassService transPassService;
     private final PtGroupRepository ptGroupRepository;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -241,6 +245,18 @@ public class SiteUserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
         return ResponseEntity.ok(siteUser);
+    }
+
+    @GetMapping("/chat/{id}")
+    public String chat(@PathVariable("id")Long id, @AuthenticationPrincipal UserDetail userDetail,Model model){
+        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
+        SiteUser siteUser1 = siteUserService.findById(id);
+        ChatRoom chatRoom = chatRoomService.findChatroom(siteUser,siteUser1);
+        model.addAttribute("chatRoom",chatRoom);
+        model.addAttribute("me",siteUser);
+        model.addAttribute("you",siteUser1);
+
+        return "chat/chatroom";
     }
 }
  

@@ -2,6 +2,7 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challenge.Challenge;
+import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
@@ -100,5 +101,8 @@ public class SiteUser {
     @ManyToMany
     @JsonManagedReference
     private List<TransPass> transPassList = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    private List<ChatRoom> chatRoomList = new ArrayList<>();
 
 }

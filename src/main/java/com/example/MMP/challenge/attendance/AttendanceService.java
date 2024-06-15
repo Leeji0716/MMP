@@ -144,4 +144,10 @@ public class AttendanceService {
                 .mapToLong(attendance -> ChronoUnit.MINUTES.between(attendance.getStartTime(), attendance.getEndTime()))
                 .sum();
     }
+
+    public void recordAttendance() {
+        Attendance attendance = new Attendance();
+        attendance.setStartTime(LocalDateTime.now());
+        attendanceRepository.save(attendance);
+    }
 }
