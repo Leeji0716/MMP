@@ -70,4 +70,10 @@ public class LessonService {
 
         lessonRepository.save(lesson);
     }
+
+    public List<Lesson> getLessonsAttendingByUsername(String username) {
+        SiteUser siteUser = siteUserRepository.findByUserId(username).get();
+        List<Lesson> lessonList = siteUser.getLessonsAttending();
+        return lessonList;
+    }
 }
