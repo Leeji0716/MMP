@@ -113,6 +113,12 @@
         .card-actions {
             z-index: 1;
         }
+
+        .gotalk:hover {
+            background-color: #D8D8D8;
+            cursor: pointer;
+
+        }
     </style>
 </head>
 
@@ -173,9 +179,9 @@
                                         th:each="chatroom : ${user.chatRoomList}" class="gotalk">
                                         <div th:each="talkuser : ${chatroom.userList}">
                                             <div class="flex gap-10">
-                                                <a th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                <a th:if="${talkuser.name != user.name}"
                                                     th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
-                                                    class="font-bold justify-start"></a>
+                                                    class="talk-url font-bold justify-start"></a>
                                                 <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
                                                     th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
                                                     th:text="${formattedDate}" class="font-bold justify-end"></p>
@@ -191,9 +197,9 @@
                                         th:each="chatroom : ${user.chatRoomList}" class="gotalk">
                                         <div th:each="talkuser : ${chatroom.userList}">
                                             <div class="flex gap-10">
-                                                <a th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                <a th:if="${talkuser.name != user.name}"
                                                     th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
-                                                    class="font-bold justify-start"></a>
+                                                    class="talk-url font-bold justify-start"></a>
                                                 <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
                                                     th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
                                                     th:text="${formattedDate}" class="font-bold justify-end"></p>
@@ -591,10 +597,17 @@
             }
         </script>
         <script>
-            const go = document.getElementsByClassName('gotalk');
-            go.addEventListener('hover',()=>{
-                go.style.backgroundColor = '#cccccc'; // 회색 배경색으로 변경
-            });
+            const gotalkList = document.querySelectorAll('.gotalk');
+            console.log(gotalkList);
+            gotalkList.forEach((gotalk) => {
+                gotalk.addEventListener('click', () => {
+                    console.log(gotalk);
+                    const talkUrl = gotalk.querySelector('.talk-url');
+                    console.log(talkUrl);
+                    window.location.href = talkUrl;
+                });
+            })
+
         </script>
     </div>
 </body>
