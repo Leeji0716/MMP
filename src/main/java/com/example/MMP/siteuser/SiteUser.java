@@ -18,6 +18,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -105,4 +106,5 @@ public class SiteUser {
     @ManyToMany(cascade = CascadeType.REMOVE)
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    private LocalDate createDate;
 }

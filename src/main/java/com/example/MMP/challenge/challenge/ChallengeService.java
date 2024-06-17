@@ -1,5 +1,6 @@
 package com.example.MMP.challenge.challenge;
 
+import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
 import com.example.MMP.challenge.attendance.AttendanceService;
 import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
@@ -33,6 +34,7 @@ public class ChallengeService {
     private  final ChallengeActivityRepository challengeActivityRepository;
     private final ChallengeUserService challengeUserService;
     private final AttendanceService attendanceService;
+    private final AttendanceRepository attendanceRepository;
 
     public Challenge create(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int requiredPoint, String type, Double targetWeightLoss, Integer targetExerciseMinutes) {
         Challenge challenge = new Challenge();
@@ -207,20 +209,48 @@ public class ChallengeService {
         }
     }
 
-    public Challenge createExerciseTimeChallenge(String name, String description, LocalDateTime startDate, LocalDateTime endDate, int requiredPoint, Integer targetExerciseMinutes) {
-        Challenge challenge = new Challenge();
-        challenge.setName(name);
-        challenge.setDescription(description);
-        challenge.setOpenDate(startDate);
-        challenge.setCloseDate(endDate);
-        challenge.setRequiredPoint(requiredPoint);
-        challenge.setType("exerciseTime");
+    public void participateInChallengeWithExerciseTime(Long challengeId, Principal principal, int exerciseTime) {
+        String userId = principal.getName();
+        SiteUser siteUser = siteUserRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
 
-        if (targetExerciseMinutes != null) {
-            challenge.setTargetExerciseMinutes(targetExerciseMinutes);
+        Optional<ChallengeUser> optionalChallengeUser = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser);
+
+        ChallengeUser challengeUser;
+        if (optionalChallengeUser.isEmpty()) {
+            // ChallengeUser 생성
+            challengeUser = new ChallengeUser();
+            challengeUser.setChallenge(challenge);
+            challengeUser.setSiteUser(siteUser);
+            challengeUser.setStartDate(LocalDateTime.now());
+            challengeUser.setEndDate(challenge.getCloseDate());
+            challengeUser.setAchievementRate(0);
+            challengeUser.setSuccess(false);
+            challengeUserRepository.save(challengeUser);
+            System.out.println("참여 성공: " + challengeUser.getId());
+        } else {
+            // 이미 참여한 경우, 해당 ChallengeUser 가져오기
+            challengeUser = optionalChallengeUser.get();
+            System.out.println("이미 참여 중: " + challengeUser.getId());
         }
 
-        return challengeRepository.save(challenge);
+        // 초기 또는 최신 운동 시간 기록
+        Attendance attendance = new Attendance();
+        attendance.setSiteUser(siteUser);
+        attendance.setDate(LocalDate.now());
+        attendance.setPresent(true);
+        attendance.setStartTime(LocalDateTime.now());
+        attendance.setEndTime(LocalDateTime.now().plusMinutes(exerciseTime)); // 입력받은 운동 시간을 종료 시간으로 설정
+        attendanceRepository.save(attendance);
+
+        // ChallengeActivity 생성
+        ChallengeActivity challengeActivity = new ChallengeActivity();
+        challengeActivity.setActiveDate(LocalDateTime.now());
+        challengeActivity.setChallenge(challenge);
+        challengeActivityRepository.save(challengeActivity);
+
+        // 운동 시간에 따른 달성률 업데이트
+        updateAchievementRate(challengeUser.getId());
     }
 
 }

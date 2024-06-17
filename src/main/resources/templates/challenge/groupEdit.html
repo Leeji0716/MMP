@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${group.name} + ' 그룹 편집'">그룹 편집</title>
+</head>
+<body>
+<h1 th:text="${group.name} + ' 그룹 편집'"></h1>
+
+<form th:action="@{/groupChallenge/edit/{id}(id=${group.id})}" method="post">
+    <div>
+        <label for="name">그룹 이름:</label>
+        <input type="text" id="name" name="name" th:value="${group.name}" required>
+    </div>
+    <div>
+        <label for="goal">그룹 목표:</label>
+        <textarea id="goal" name="goal" required th:text="${group.goal}"></textarea>
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary">저장</button>
+    </div>
+</form>
+
+<a class="btn btn-secondary" th:href="@{/group/detail/{id}(id=${group.id})}">취소</a>
+
+</body>
+</html>

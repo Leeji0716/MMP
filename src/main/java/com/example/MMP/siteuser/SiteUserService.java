@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole("admin");
+        siteUser.setCreateDate(LocalDate.now());
         // Point 설정
         Point point = new Point ();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
@@ -58,6 +60,7 @@ public class SiteUserService {
         siteUser.setGender(gender);
         siteUser.setEmail(email);
         siteUser.setUserRole(userRole);
+        siteUser.setCreateDate(LocalDate.now());
 
 
         // Point 설정
@@ -74,7 +77,8 @@ public class SiteUserService {
     }
 
     public SiteUser getUserByUsername(String username) {
-        Optional<SiteUser> siteUser = this.siteUserRepository.findByName (username);
+        String name = getNumberByName(username);
+        Optional<SiteUser> siteUser = this.siteUserRepository.findByName (name);
         if (siteUser.isPresent()) {
             return siteUser.get();
         } else {
@@ -109,6 +113,11 @@ public class SiteUserService {
 
     public SiteUser findByNumber(String number){
         return siteUserRepository.findByNumber(number);
+    }
+
+    public String getNumberByName(String number) {
+        SiteUser siteUser = this.siteUserRepository.findByNumber(number);
+        return siteUser.getName();
     }
 }
 

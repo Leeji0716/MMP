@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${group.name} + ' 그룹'">그룹 디테일</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .container {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        .btn {
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 8px;
+        }
+        .modal-action .btn {
+            background-color: #f44336;
+        }
+        .modal-action .btn:hover {
+            background-color: #d32f2f;
+        }
+          header {
+            margin-bottom: 8px; /* 필요한 만큼의 여백 값을 설정합니다 */
+        }
+    </style>
+</head>
+<header>
+    <nav th:replace="~{navbar :: navbarFragment}"></nav>
+</header>
+<body>
+
+
+<main class="container mx-auto p-4">
+    <div class = "mt-10 mb-4">
+        <a href="/groupChallenge/list">< 그룹 리스트로 돌아가기</a></div>
+    <div class="flex items-center mt-10 mb-4">
+        <h1 class="text-3xl font-bold mr-2" th:text="${group.name} + ' 그룹 상세보기'"></h1>
+        <a th:if="${isLeader}" th:href="@{/group/edit/{groupId}(groupId=${group.id})}"
+           style="padding: 0; margin: 0;">
+            <img src="https://i.imgur.com/coalo37.png" style="width: 30px; height: 30px; display: block;"/>
+        </a>
+    </div>
+
+    <div class="flex w-full">
+        <div class="flex flex-col w-full">
+            <h2 class="text-2xl font-semibold mb-2">그룹 소개</h2>
+            <p class="mb-4" th:text="${group.goal}">그룹 소개 내용</p>
+
+            <!--  박스  -->
+
+            <div class="stats shadow">
+                <div class="stat">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             class="inline-block w-8 h-8 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-title">멤버수</div>
+                    <div class="stat-value" th:text="${group.members.size()}">멤버수</div>
+                    <div class="stat-desc" th:text="${group.leader.userNickname}"></div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             class="inline-block w-8 h-8 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-title">그룹 시작일</div>
+                    <div class="stat-value" id="dDay"></div>
+                    <div class="stat-desc" th:text="${group.createDate}">↗︎ 400 (22%)</div>
+                </div>
+
+                <div class="stat">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             class="inline-block w-8 h-8 stroke-current">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-title">오늘의 그룹순위</div>
+                    <div class="stat-value">1,200</div>
+                    <div class="stat-desc">↘︎ 90 (14%)</div>
+                </div>
+            </div>
+            <p>*오늘의 그룹순위는 그룹 회원들의 공부 평균 시간으로 따집니다</p>
+            </br>
+            <h2 class="text-2xl font-semibold mb-2">태그 목록</h2>
+            <ul class="list-none pl-5 flex flex-row flex-wrap">
+                <li th:each="groupTag : ${group.groupTagList}" class="mr-4 mb-2">
+                    <span class="badge badge-ghost badge-lm">#<span th:text="${groupTag.tag.name}"></span></span>
+                    <form th:action="@{/groupChallenge/{groupId}/tags/{groupTagId}/delete(groupId=${group.id}, groupTagId=${groupTag.id})}"
+                          method="post" class="inline">
+                        <button type="submit" class="btn btn-error btn-xs">삭제</button>
+                    </form>
+                </li>
+            </ul>
+            <a href="#my_modal_8" class="btn">태그추가</a>
+
+            <!-- Put this part before </body> tag -->
+            <div class="modal" role="dialog" id="my_modal_8">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg">태그 추가</h3>
+                    <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
+                        <input type="text" id="tagInput" name="name" class="input input-bordered w-full mb-2" placeholder="태그 이름">
+                        <button type="submit" class="btn btn-primary w-full">태그 추가</button>
+                    </form>
+                    <h3 class="font-bold text-lg mt-4">태그 목록</h3>
+                    <ul class="list-disc pl-5 mt-10">
+                        <li th:each="tag : ${tags}">
+                            <span th:text="${tag.name}" th:attr="data-tag-name=${tag.name}"></span>
+                        </li>
+                    </ul>
+                    <div class="modal-action">
+                        <a href="#" class="btn">닫기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider divider-horizontal">OR</div>
+
+        <div class="flex flex-col w-full">
+            <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
+            <table class="table table-zebra w-full">
+                <thead>
+                <tr>
+                    <th>멤버 이름</th>
+                    <th>멤버 프로필</th>
+                    <th>멤버 가입일</th>
+                    <th>오늘의 공부 시간</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${sortedMembers}">
+                    <td th:text="${member.userNickname}"></td>
+                    <td>
+                        <a class="btn btn-info btn-xs" th:href="@{/user/profile/{userNickname}(userNickname=${member.userNickname})}">Details</a>
+                    </td>
+                    <td th:text="${member.createDate}"></td>
+                    <td th:text="${#numbers.formatInteger((member.personalSchedules != null ? member.personalSchedules.stream().mapToInt(schedule -> schedule.totalTime).sum() : 0) / 3600, 2)} + ' 시간'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+</br>
+
+<footer>
+    <footer th:replace="~{footer :: footerFragment}"></footer>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function calculateDday(createDate) {
+            const currentDate = new Date();
+            const groupCreateDate = new Date(createDate);
+            const timeDiff = groupCreateDate - currentDate;
+            const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)}`;
+        }
+
+        const groupCreateDate = /*[[${group.createDate}]]*/ '2024-06-01'; // 실제 그룹 시작일 데이터를 넣어야 합니다.
+        document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
+    });
+</script>
+
+<script th:inline="javascript">
+    function setTagName(tagName) {
+        document.getElementById('tagInput').value = tagName;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.badge[data-tag-name]').forEach(function(element) {
+            element.addEventListener('click', function() {
+                setTagName(this.getAttribute('data-tag-name'));
+            });
+        });
+    });
+</script>
+</body>
+</html>

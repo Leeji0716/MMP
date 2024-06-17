@@ -95,6 +95,7 @@ public class ChallengeController {
             Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);
             if (siteUserOptional.isPresent()) {
                 SiteUser siteUser = siteUserOptional.get();
+
                 challengeUsers = challengeUserRepository.findBySiteUser(siteUser);
                 participatedChallengeIds = challengeUsers.stream()
                         .map(cu -> cu.getChallenge().getId())
@@ -176,5 +177,25 @@ public class ChallengeController {
         challengeService.updateWeight(challengeId, principal, weight);
         return "redirect:/challenge/challenges";
     }
+
+
+    // 운동 시간 입력 폼 반환
+    @GetMapping("/enterExerciseTime")
+    public String enterExerciseTimeForm(@RequestParam("challengeId") Long challengeId, Model model) {
+        model.addAttribute("challengeId", challengeId);
+        return "challenge/enterExerciseTime";
+    }
+
+    // 운동 시간 입력 처리
+    @PostMapping("/enterExerciseTime")
+    public String enterExerciseTime(@RequestParam("challengeId") Long challengeId, @RequestParam("exerciseTime") int exerciseTime, Principal principal) {
+        if (principal == null) {
+            return "redirect:/user/login";
+        }
+
+        challengeService.participateInChallengeWithExerciseTime(challengeId, principal, exerciseTime);
+        return "redirect:/challenge/challenges";
+    }
+
 
 }

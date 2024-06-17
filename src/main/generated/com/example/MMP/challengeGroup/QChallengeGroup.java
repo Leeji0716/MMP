@@ -26,6 +26,8 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public final StringPath goal = createString("goal");
 
+    public final ListPath<com.example.MMP.challengeGroup.GroupTag.GroupTag, com.example.MMP.challengeGroup.GroupTag.QGroupTag> groupTagList = this.<com.example.MMP.challengeGroup.GroupTag.GroupTag, com.example.MMP.challengeGroup.GroupTag.QGroupTag>createList("groupTagList", com.example.MMP.challengeGroup.GroupTag.GroupTag.class, com.example.MMP.challengeGroup.GroupTag.QGroupTag.class, PathInits.DIRECT2);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final com.example.MMP.siteuser.QSiteUser leader;
