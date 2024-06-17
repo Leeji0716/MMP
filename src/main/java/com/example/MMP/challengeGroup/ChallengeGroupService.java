@@ -2,6 +2,7 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
+import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class ChallengeGroupService {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserRepository userRepository;
+    private final SiteUserService userService;
 
     // GroupService에 추가
     public boolean isLeader(Long groupId, String username) {
@@ -25,7 +27,8 @@ public class ChallengeGroupService {
 
     public ChallengeGroup createGroup(String name, Principal principal) {
         String username = principal.getName();
-        SiteUser leader = userRepository.findByName(username)
+        String nameChange = userService.getNumberByName (username);
+        SiteUser leader = userRepository.findByName(nameChange)
                 .orElseThrow(() -> new IllegalArgumentException("찾을 수 없는 유저입니다."));
 
         ChallengeGroup group = new ChallengeGroup();

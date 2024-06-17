@@ -1,50 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
+
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full text-white">
     <title th:text="${group.name} + ' 그룹'">그룹 디테일</title>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f0f4f8;
-        }
-        .container {
-            background: #ffffff;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 2rem;
-        }
-        .btn {
-            transition: background-color 0.3s ease;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .modal-box {
-            background: #ffffff;
-            border-radius: 8px;
-        }
-        .modal-action .btn {
-            background-color: #f44336;
-        }
-        .modal-action .btn:hover {
-            background-color: #d32f2f;
-        }
-          header {
-            margin-bottom: 8px; /* 필요한 만큼의 여백 값을 설정합니다 */
-        }
-    </style>
-</head>
-<header>
-    <nav th:replace="~{navbar :: navbarFragment}"></nav>
-</header>
-<body>
-
-
-<main class="container mx-auto p-4">
-    <div class = "mt-10 mb-4">
+    <main class="container mx-auto p-4 text-white">
+    <div class="mt-10 mb-4">
         <a href="/groupChallenge/list">< 그룹 리스트로 돌아가기</a></div>
     <div class="flex items-center mt-10 mb-4">
         <h1 class="text-3xl font-bold mr-2" th:text="${group.name} + ' 그룹 상세보기'"></h1>
@@ -72,7 +31,7 @@
                     </div>
                     <div class="stat-title">멤버수</div>
                     <div class="stat-value" th:text="${group.members.size()}">멤버수</div>
-                    <div class="stat-desc" th:text="${group.leader.userNickname}"></div>
+                    <div class="stat-desc" th:text="${group.leader.name}"></div>
                 </div>
 
                 <div class="stat">
@@ -120,7 +79,8 @@
                 <div class="modal-box">
                     <h3 class="font-bold text-lg">태그 추가</h3>
                     <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
-                        <input type="text" id="tagInput" name="name" class="input input-bordered w-full mb-2" placeholder="태그 이름">
+                        <input type="text" id="tagInput" name="name" class="input input-bordered w-full mb-2"
+                               placeholder="태그 이름">
                         <button type="submit" class="btn btn-primary w-full">태그 추가</button>
                     </form>
                     <h3 class="font-bold text-lg mt-4">태그 목록</h3>
@@ -139,21 +99,22 @@
         <div class="divider divider-horizontal">OR</div>
 
         <div class="flex flex-col w-full">
-            <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
+            <h2 class="text-2xl font-semibold mb-2" style="color: white;">멤버 구성</h2>
             <table class="table table-zebra w-full">
                 <thead>
                 <tr>
-                    <th>멤버 이름</th>
-                    <th>멤버 프로필</th>
-                    <th>멤버 가입일</th>
-                    <th>오늘의 공부 시간</th>
+                    <th class="text-white">멤버 이름</th>
+                    <th class="text-white">멤버 프로필</th>
+                    <th class="text-white">멤버 가입일</th>
+                    <th class="text-white">오늘의 운동 시간</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="member : ${sortedMembers}">
-                    <td th:text="${member.userNickname}"></td>
+                    <td th:text="${member.name}"></td>
                     <td>
-                        <a class="btn btn-info btn-xs" th:href="@{/user/profile/{userNickname}(userNickname=${member.userNickname})}">Details</a>
+                        <a class="btn btn-info btn-xs"
+                           th:href="@{/user/profile/{name}(name=${member.name})}">Details</a>
                     </td>
                     <td th:text="${member.createDate}"></td>
                     <td th:text="${#numbers.formatInteger((member.personalSchedules != null ? member.personalSchedules.stream().mapToInt(schedule -> schedule.totalTime).sum() : 0) / 3600, 2)} + ' 시간'"></td>
@@ -198,4 +159,5 @@
     });
 </script>
 </body>
+</div>
 </html>
