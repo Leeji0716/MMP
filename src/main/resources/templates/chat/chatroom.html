@@ -48,40 +48,14 @@
                                 </div>
                             </div>
                         </div>
-                    <div id="greetings">
-                        <div id="images"></div>
-                    </div>
+                    <div id="greetings"></div>
             </div>
             <input id="message" type="text" class="border border-gray-300 rounded-lg p-2 w-full mb-4"
                 placeholder="Type your message..." />
-            <div class="flex gap-5">
-                <button id="sendButton" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg"
-                    onclick="sendChat()">Send</button>
-                <i class="fa-regular fa-image fa-xl" id="img">
-                    <input type="file" id="file" style="display: none;">
-                </i>
-                <!-- Open the modal using ID.showModal() method -->
-                <button class="btn" onclick="my_modal_5.showModal()">사진첩</button>
-                <dialog id="my_modal_5" class="modal modal-bottom sm:modal-middle">
-                    <div class="modal-box h-[600px] w-[600px]">
-                        <div class="flex flex-wrap overflow-auto h-[85%] gap-5">
-                            <div th:each="img : ${imgList}" class="h-[120px] w-[120px]">
-                                <img th:src="@{|${img.url}|}" alt="사진" class="w-[100%] h-[100%]">
-                            </div>
-                        </div>
-                        <div class="modal-action">
-                            <form method="dialog">
-                                <!-- if there is a button in form, it will close the modal -->
-                                <button class="btn">Close</button>
-                            </form>
-                        </div>
-                    </div>
-                </dialog>
-            </div>
         </div>
         <div>
             <button class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg">
-                <a th:href="@{/user/main}">나가기</a>
+                <a th:href="@{/user/profile}">나가기</a>
             </button>
         </div>
         <!--    <div>-->
