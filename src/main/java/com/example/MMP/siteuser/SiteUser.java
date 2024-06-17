@@ -60,11 +60,6 @@ public class SiteUser {
     @JsonManagedReference
     private List<Attendance> attendanceList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "writer", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    @JsonIgnore
-    private List<Wod> wodList;
-
     @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonManagedReference
     @JsonIgnore

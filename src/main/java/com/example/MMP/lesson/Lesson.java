@@ -24,7 +24,7 @@ public class Lesson {
     private Long id;
 
     @ManyToOne
-    @JsonManagedReference
+    @JoinColumn(name = "trainer_id")
     private SiteUser trainer;
 
     private String lessonName;

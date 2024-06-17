@@ -23,6 +23,7 @@ public class MapController {
 
     @GetMapping("/schedule")
     public String schedule(){
+
         return "schedule";
     }
 }

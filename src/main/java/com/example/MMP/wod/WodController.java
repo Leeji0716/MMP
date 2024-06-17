@@ -51,11 +51,10 @@ public class WodController {
         // 이미지 파일의 경로가 비어있지 않으면 업로드를 시도합니다.
         if (image != null && !image.isEmpty()) {
             String fileName = StringUtils.cleanPath(image.getOriginalFilename());
-            String uploadDir = fileUploadUtil.getUploadDirPath();
 
             try {
                 wodForm.setImagePath(fileName);
-                this.fileUploadUtil.saveFile(uploadDir, fileName, image);
+                this.fileUploadUtil.saveFile(fileName, image);
 
             } catch (Exception e) {
                 e.printStackTrace();

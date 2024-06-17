@@ -21,8 +21,7 @@ public class Wod {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "site_user_id") // 외래 키 컬럼 지정
-    @JsonBackReference
+    @JoinColumn(name = "writer_id")
     private SiteUser writer;
 
     private String imagePath;
@@ -31,8 +30,6 @@ public class Wod {
     private String content;
 
     @ManyToMany
-    @JsonManagedReference
-    @JsonIgnore
     private List<SiteUser> likeList;
 
     private Long likeCount = 0L;
@@ -40,7 +37,5 @@ public class Wod {
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "wod", cascade = CascadeType.REMOVE)
-    @JsonManagedReference
     private List<Comment> commentList;
-
 }
