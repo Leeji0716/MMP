@@ -1,22 +1,26 @@
-
 <div th:fragment="passDto(${user})" class="text-black flex flex-wrap space-x-4">
-    <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"
-         th:each="pt:${user.userPtPassList}">
-        <figure class="h-[60%] w-full"><img src="https://i.imgur.com/kW3S5se.png" alt="PT" class="h-[80%] w-[80%] mx-auto"/></figure>
-        <div class="card-body h-[40%] w-full p-2 inline-block">
-            <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${pt.passName}"></h2>
-            <p th:text="'횟수 : '+${pt.passCount}" class="h-[20%] w-[80%] mx-auto"></p>
-            <p th:text="'이용시작일 : '+${pt.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
-            <p th:text="'이용종료일 : '+${pt.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
+    <div th:if="${!#lists.isEmpty(user.userPtPassList)}">
+        <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]" th:each="pt:${user.userPtPassList}">
+            <figure class="h-[60%] w-full"><img src="https://i.imgur.com/kW3S5se.png" alt="PT"
+                    class="h-[80%] w-[80%] mx-auto" /></figure>
+            <div class="card-body h-[40%] w-full p-2 inline-block">
+                <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${pt.passName}"></h2>
+                <p th:text="'횟수 : '+${pt.passCount}" class="h-[20%] w-[80%] mx-auto"></p>
+                <p th:text="'이용시작일 : '+${pt.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
+                <p th:text="'이용종료일 : '+${pt.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
+            </div>
         </div>
     </div>
-    <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"
-         th:each="day:${user.userDayPassList}">
-        <figure class="h-[60%] w-full"><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" class="h-[80%] w-[80%] mx-auto"/></figure>
-        <div class="card-body h-[40%] w-full p-2 inline-block">
-            <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${day.passName}"></h2>
-            <p th:text="'이용시작일 : '+${day.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
-            <p th:text="'이용종료일 : '+${day.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
+    <div th:if="${!#lists.isEmpty(user.userDayPassList)}">
+        <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"
+            th:each="day:${user.userDayPassList}">
+            <figure class="h-[60%] w-full"><img src="https://i.imgur.com/VFPjR6P.png" alt="Day"
+                    class="h-[80%] w-[80%] mx-auto" /></figure>
+            <div class="card-body h-[40%] w-full p-2 inline-block">
+                <h2 class="card-title h-[20%] w-[80%] mx-auto" th:text="${day.passName}"></h2>
+                <p th:text="'이용시작일 : '+${day.passStart}" class="h-[20%] w-[80%] mx-auto"></p>
+                <p th:text="'이용종료일 : '+${day.passFinish}" class="h-[20%] w-[80%] mx-auto"></p>
+            </div>
         </div>
     </div>
 </div>

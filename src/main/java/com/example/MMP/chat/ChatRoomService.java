@@ -4,6 +4,7 @@ import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,12 +23,19 @@ public class ChatRoomService {
     }
 
     public ChatRoom create(SiteUser siteUser,SiteUser siteUser1){
-        ChatRoom chatRoom = ChatRoom.builder().trainer(siteUser).user(siteUser1).build();
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoom.getUserList().add(siteUser);
+        chatRoom.getUserList().add(siteUser1);
         chatRoomRepository.save(chatRoom);
         return chatRoom;
     }
 
     public ChatRoom findById(Long id) {
         return chatRoomRepository.findById(id).orElseThrow();
+    }
+
+
+    public void save(ChatRoom chatRoom) {
+        chatRoomRepository.save(chatRoom);
     }
 }

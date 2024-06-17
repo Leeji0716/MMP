@@ -1,5 +1,7 @@
 package com.example.MMP.ptGroup;
 
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class PtGroupController {
     private final SiteUserService siteUserService;
     private final PtGroupService ptGroupService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/join")
     public String joinUser(@AuthenticationPrincipal UserDetail userDetail){
@@ -41,6 +44,14 @@ public class PtGroupController {
         ptGroup.getMembers().add(member);
         ptGroupService.save(ptGroup);
         member.setPtGroupUser(ptGroup);
+
+        ChatRoom chatRoom = new ChatRoom();
+        chatRoomService.save(chatRoom);
+        chatRoom.getUserList().add(siteUser);
+        chatRoom.getUserList().add(member);
+
+        siteUser.getChatRoomList().add(chatRoom);
+        member.getChatRoomList().add(chatRoom);
 
         siteUserService.save(member);
         return "redirect:/";

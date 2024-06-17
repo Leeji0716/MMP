@@ -43,4 +43,70 @@
             </div>
         </div>
     </div>
+
+    <script th:inline="javascript">
+
+        // 쿠키에서 로그인 정보 가져오기
+     function getLoggedInUser() {
+    
+        const aa = /*[[${#authentication}]]*/ null;
+    
+        if(aa.name === "anonymousUser") {
+            return null;
+        }
+    
+        return aa.name;
+    
+     }
+    
+     // 현재 로그인된 사용자 확인 및 웹소켓 연결
+     function connectIfLoggedIn() {
+         var loggedInUser = getLoggedInUser();
+         if (loggedInUser != null) {
+             console.log('로그인된 아이디는' + loggedInUser);
+    
+             connectWebSocket(loggedInUser);
+         } else {
+             console.log('로그인되지 않은 상태입니다.');
+         }
+     }
+    
+     // 웹소켓 연결
+     function connectWebSocket(loggedInUser) {
+         var socket = new SockJS("http://localhost:8088/ws-stomp");
+         var stompClient = Stomp.over(socket);
+         stompClient.connect({}, function (frame) {
+             console.log('웹소켓 연결 성공:', frame);
+             var user = getLoggedInUser();
+             // 연결 후 추가 작업 수행
+             stompClient.subscribe('/sub/alarm/' + user , function (alarmDto) {
+                showAlarm(JSON.parse(alarmDto.body));
+             });
+         }, function (error) {
+             console.error('웹소켓 연결 실패:', error);
+         });
+     }
+    
+    
+         function showAlarm(alarmDto) {
+                    $("#alarm").append(
+                      "<li>" +
+            "<a href='/user/alarmCheck/" + alarmDto.chatRoomId + "'>" +
+            alarmDto.sendUsername + "님의 메세지 : " + alarmDto.message +
+            "</a>" +
+        "</li>"
+                    );
+                    $("#toast").append(
+                    toastr.info(alarmDto.sendUsername + '님의 메세지 : ' + alarmDto.message)
+                    );
+    
+            }
+    
+     // 페이지 로드 후 실행되는 부분
+     document.addEventListener('DOMContentLoaded', function() {
+     // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
+         connectIfLoggedIn();
+     });
+    
+    </script>
 </nav>

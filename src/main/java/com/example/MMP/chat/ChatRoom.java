@@ -21,10 +21,8 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private SiteUser trainer;
-    @ManyToOne
-    private SiteUser user;
+    @ManyToMany(mappedBy = "chatRoomList", cascade = CascadeType.REMOVE)
+    List<SiteUser> userList = new ArrayList<>();
 
     @OneToMany(mappedBy = "chatRoom")
     private List<ChatMessage> chatMessageList = new ArrayList<>();
@@ -32,9 +30,5 @@ public class ChatRoom {
     @CreatedDate
     private LocalDateTime createDate;
 
-    @Builder
-   private ChatRoom(SiteUser trainer,SiteUser user){
-        this.trainer = trainer;
-        this.user = user;
-    }
+
 }

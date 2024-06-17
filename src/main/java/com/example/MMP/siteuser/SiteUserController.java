@@ -21,6 +21,7 @@ import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -49,6 +51,7 @@ public class SiteUserController {
     private final TransPassService transPassService;
     private final PtGroupRepository ptGroupRepository;
     private final ChatRoomService chatRoomService;
+
 
     @GetMapping("/resetPassword")
     public String resetPasswordForm(Model model) {
@@ -220,7 +223,9 @@ public class SiteUserController {
                 model.addAttribute("MyStandPass",MyStandPass);
             }
 
+            LocalDateTime nowTime = LocalDateTime.now();
 
+            model.addAttribute("nowTime",nowTime);
             model.addAttribute("wodList", wodList);
             model.addAttribute("saveTraining", saveTraining);
             model.addAttribute("user", user);

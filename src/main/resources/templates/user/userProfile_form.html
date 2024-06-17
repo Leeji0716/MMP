@@ -155,7 +155,6 @@
                         <input type="submit" value="이미지 저장">
                     </form>
                 </div>
-
                 <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2 text-black">
                     <div class="flex items-center space-x-4 mt-2">
                         <details class="dropdown">
@@ -169,18 +168,39 @@
                                 <span>Message</span>
                             </summary>
                             <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
-                                <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}">
-                                    <div th:if="${user.ptGroupTrainer.members != null}">
-                                        <div th:each="group : ${user.ptGroupTrainer.members}" class="flex flex-row">
-                                            <a th:href="@{|/user/chat/${group.id}|}" th:text="${group.name}"></a>
+                                <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
+                                    <div th:if="${!#lists.isEmpty(user.chatRoomList)}"
+                                        th:each="chatroom : ${user.chatRoomList}" class="gotalk">
+                                        <div th:each="talkuser : ${chatroom.userList}">
+                                            <div class="flex gap-10">
+                                                <a th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
+                                                    class="font-bold justify-start"></a>
+                                                <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
+                                                    th:text="${formattedDate}" class="font-bold justify-end"></p>
+                                            </div>
+                                            <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                th:text="${chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].message}"
+                                                class="text-gray-500"></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
-                                    <div th:if="${user.ptGroupUser != null}">
-                                        <div class="flex flex-row">
-                                            <a th:href="@{|/user/chat/${user.ptGroupUser.trainer.id}|}"
-                                                th:text="${user.ptGroupUser.trainer.name}"></a>
+                                    <div th:if="${!#lists.isEmpty(user.chatRoomList)}"
+                                        th:each="chatroom : ${user.chatRoomList}" class="gotalk">
+                                        <div th:each="talkuser : ${chatroom.userList}">
+                                            <div class="flex gap-10">
+                                                <a th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:href="@{|/user/chat/${talkuser.id}|}" th:text="${talkuser.name}"
+                                                    class="font-bold justify-start"></a>
+                                                <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                    th:with="formattedDate=${#temporals.format(chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].sendTime, 'a HH:mm')}"
+                                                    th:text="${formattedDate}" class="font-bold justify-end"></p>
+                                            </div>
+                                            <p th:if="${!#lists.isEmpty(chatroom.chatMessageList) && talkuser.name != user.name}"
+                                                th:text="${chatroom.chatMessageList[chatroom.chatMessageList.size() - 1].message}"
+                                                class="text-gray-500"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -354,7 +374,7 @@
                             <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
                             <div class="flex w-full card-container3 border-gray-300">
                                 <!-- ptPassList 요소들 -->
-                                <div th:replace="pass/passDto :: passDto(${user})"
+                                <div th:replace="~{pass/passDto :: passDto(${user})}"
                                     class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"></div>
                             </div>
                         </div>
@@ -570,6 +590,12 @@
                     console.error('Error:', error);
                 });
             }
+        </script>
+        <script>
+            const go = document.getElementsByClassName('gotalk');
+            go.addEventListener('hover',()=>{
+                go.style.backgroundColor = '#cccccc'; // 회색 배경색으로 변경
+            });
         </script>
     </div>
 </body>
