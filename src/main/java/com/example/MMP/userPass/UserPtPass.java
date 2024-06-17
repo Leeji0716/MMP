@@ -1,12 +1,12 @@
 package com.example.MMP.userPass;
 
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Setter
@@ -30,5 +30,6 @@ public class UserPtPass {
     private LocalDate passFinish;
 
     @ManyToOne
+    @JsonIgnore
     private SiteUser siteUser;
 }

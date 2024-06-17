@@ -2,6 +2,7 @@ package com.example.MMP.challenge.attendance;
 
 import com.example.MMP.security.UserDetail;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -92,6 +93,7 @@ public class AttendanceController {
         String result = attendanceService.handleEntry(userId, "exit");
         return ResponseEntity.ok(result);
     }
+
     @PostMapping("/bluetooth-entry")
     public ResponseEntity<String> bluetoothEntry(@RequestBody Map<String, String> payload) {
         String userId = payload.get("userId");
@@ -103,5 +105,15 @@ public class AttendanceController {
 
         String result = attendanceService.handleEntry(userId, action);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<String> checkAttendance(@RequestParam String macAddress) {
+        try {
+            attendanceService.markAttendance(macAddress);
+            return ResponseEntity.ok("Attendance checked successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to check attendance.");
+        }
     }
 }

@@ -2,7 +2,6 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.alarm.Alarm;
 import com.example.MMP.challenge.attendance.Attendance;
-import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
@@ -11,7 +10,6 @@ import com.example.MMP.ptGroup.PtGroup;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
-import com.example.MMP.wod.Wod;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -107,9 +105,10 @@ public class SiteUser {
     )
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
+    private String macAddress; // MAC 주소
+
     @OneToMany(mappedBy = "acceptUser")
     private List<Alarm> alarmList = new ArrayList<>();
 
     private LocalDate createDate;
-
 }

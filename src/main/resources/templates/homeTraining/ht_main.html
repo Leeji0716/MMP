@@ -22,7 +22,7 @@
     <div class="h-[85%] overflow-y-auto">
         <div class="flex w-full justify-center flex-wrap">
             <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">
-                <div th:replace="homeTraining/htCard :: htCard(${homeTraining})"></div>
+                <div th:replace="~{homeTraining/htCard :: htCard(${homeTraining})}"></div>
             </div>
         </div>
     </div>

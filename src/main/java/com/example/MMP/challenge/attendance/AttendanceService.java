@@ -1,6 +1,5 @@
 package com.example.MMP.challenge.attendance;
 
-import com.example.MMP.challenge.challenge.ChallengeService;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;
@@ -149,5 +148,21 @@ public class AttendanceService {
         Attendance attendance = new Attendance();
         attendance.setStartTime(LocalDateTime.now());
         attendanceRepository.save(attendance);
+    }
+
+    public void markAttendance(String macAddress) {
+        SiteUser user = siteUserRepository.findByMacAddress(macAddress);
+        if (user != null) {
+            Attendance attendance = new Attendance();
+            attendance.setSiteUser(user);
+            attendance.setDate(LocalDate.now());
+            attendance.setPresent(true);
+            attendance.setStartTime(LocalDateTime.now());
+
+            attendanceRepository.save(attendance);
+            System.out.println("Attendance marked for user: " + user.getUserId());
+        } else {
+            System.out.println("User not found for MAC address: " + macAddress);
+        }
     }
 }
