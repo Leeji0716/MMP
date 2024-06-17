@@ -76,13 +76,12 @@ public class SiteUserService {
         return siteUser;
     }
 
-    public SiteUser getUserByUsername(String username) {
-        String name = getNumberByName(username);
-        Optional<SiteUser> siteUser = this.siteUserRepository.findByName (name);
-        if (siteUser.isPresent()) {
-            return siteUser.get();
+    public SiteUser getUserByUserNumber(String username) {
+        SiteUser siteUser = this.siteUserRepository.findByNumber(username);
+        if (siteUser != null) {
+            return siteUser;
         } else {
-            throw new DataNotFoundException ("사용자를 찾을 수 없습니다.");
+            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
         }
     }
 
@@ -119,6 +118,7 @@ public class SiteUserService {
         SiteUser siteUser = this.siteUserRepository.findByNumber(number);
         return siteUser.getName();
     }
+
 }
 
 
