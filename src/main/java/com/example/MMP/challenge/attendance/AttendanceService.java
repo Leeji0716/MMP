@@ -3,6 +3,8 @@ package com.example.MMP.challenge.attendance;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;
+import com.example.MMP.challengeGroup.ChallengeGroup;
+import com.example.MMP.challengeGroup.ChallengeGroupRepository;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
@@ -29,6 +31,7 @@ public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
     private final SiteUserRepository siteUserRepository;
     private final ChallengeUserRepository challengeUserRepository;
+    private final ChallengeGroupRepository challengeGroupRepository;
 
 
     // 순환 참조 해결 용도
@@ -51,14 +54,6 @@ public class AttendanceService {
         if (attendanceRepository.existsBySiteUserIdAndDate (siteUser.getId (), today)) {
             return false;
         }
-
-        Attendance attendance = new Attendance ();
-        attendance.setSiteUser (siteUser);
-        attendance.setDate (today);
-        attendance.setPresent (true);
-        attendance.setStartTime (LocalDateTime.now ());
-
-        attendanceRepository.save (attendance);
 
         // 출석 체크 후 달성률 업데이트
         List<ChallengeUser> challengeUsers = challengeUserRepository.findBySiteUser (siteUser);
@@ -93,7 +88,7 @@ public class AttendanceService {
     public String handleEntry(String userId, String action) {
         Optional<SiteUser> _siteUser = siteUserRepository.findByUserId(userId);
         if (_siteUser.isEmpty()) {
-            return "User not found";
+            return "유저를 찾을 수 없습니다.";
         }
         SiteUser siteUser = _siteUser.get();
 
@@ -103,6 +98,13 @@ public class AttendanceService {
             attendance.setPresent(true);
             attendance.setStartTime(LocalDateTime.now());
             attendance.setDate(LocalDate.now());
+
+            // ChallengeGroup을 조회하고 존재하면 설정
+            List<ChallengeGroup> challengeGroups = challengeGroupRepository.findByMembersContaining(siteUser);
+            if (!challengeGroups.isEmpty()) {
+                attendance.setChallengeGroup(challengeGroups.get(0)); // 첫 번째 ChallengeGroup을 설정
+            }
+
             attendanceRepository.save(attendance);
             return "입장 완료 되었습니다.";
         } else if ("exit".equals(action)) {
@@ -120,6 +122,7 @@ public class AttendanceService {
             return "잘못된 동작입니다.";
         }
     }
+
     public boolean isUserPresent(Long siteUserId) {
         Optional<Attendance> optionalAttendance = attendanceRepository.findFirstBySiteUserAndPresent(siteUserRepository.findById(siteUserId).orElse(null), true);
         return optionalAttendance.isPresent();

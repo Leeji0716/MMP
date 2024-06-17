@@ -26,7 +26,7 @@
                         <input type="checkbox" class="checkbox"/>
                     </label>
                 </th>
-                <th>그룹이름</th>
+                <th>그룹 이름</th>
                 <th>그룹 소개</th>
                 <th>그룹 태그</th>
                 <th>회원수</th>
@@ -69,16 +69,16 @@
 <!-- Modal -->
 <div id="createGroupModal"
      class="modal modal-open fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center hidden">
-    <div class="modal-box">
-        <h2 class="text-lg font-bold">Create Group</h2>
+    <div class="modal-box" style="color: black;">
+        <h2 class="text-lg font-bold" style="color: black;">Create Group</h2>
         <form id="createGroupForm" th:action="@{/group/create}" method="post" th:csrf="true">
             <div class="mb-4">
-                <label for="name" class="block text-sm font-medium">Group Name</label>
-                <input type="text" id="name" name="name" class="input input-bordered w-full" required>
+                <label for="name" class="block text-sm font-medium" style="color: black;">Group Name</label>
+                <input type="text" id="name" name="name" class="input text-black input-bordered w-full">
             </div>
             <div class="flex justify-end">
-                <button type="button" class="btn btn-secondary mr-2" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="button" class="btn btn-secondary mr-2" onclick="closeModal()" style="color: black;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="color: black;">Create</button>
             </div>
         </form>
     </div>

@@ -238,7 +238,7 @@
     const attendanceRateElement = document.getElementById('attendanceRate');
     const totalWorkoutSessions = attendanceDates.length; // 운동한 횟수
     const attendanceCount = parseInt(document.getElementById('distinctAttendanceCount').textContent, 10); // 출석한 횟수
-    const workoutCount = totalWorkoutSessions - attendanceCount; // 운동한 횟수 - 출석한 횟수
+    const workoutCount = totalWorkoutSessions; // 
     attendanceRateElement.textContent = `운동한 횟수 : ${workoutCount}회`;
 }
 

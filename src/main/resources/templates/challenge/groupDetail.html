@@ -6,7 +6,7 @@
     <div class="mt-10 mb-4">
         <a href="/groupChallenge/list">< 그룹 리스트로 돌아가기</a></div>
     <div class="flex items-center mt-10 mb-4">
-        <h1 class="text-3xl font-bold mr-2" th:text="${group.name} + ' 그룹 상세보기'"></h1>
+        <h1 class="flex justify-center text-3xl font-bold mr-2" th:text="${group.name} + ' 그룹'"></h1>
         <a th:if="${isLeader}" th:href="@{/group/edit/{groupId}(groupId=${group.id})}"
            style="padding: 0; margin: 0;">
             <img src="https://i.imgur.com/coalo37.png" style="width: 30px; height: 30px; display: block;"/>
@@ -20,47 +20,31 @@
 
             <!--  박스  -->
 
-            <div class="stats shadow">
-                <div class="stat">
-                    <div class="stat-figure text-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             class="inline-block w-8 h-8 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div class="stat-title">멤버수</div>
+            <div class="stats shadow flex justify-center">
+                <div class="stat flex flex-col items-center text-center">
+                    <div class="stat-title font-semibold mb-2">멤버수</div>
                     <div class="stat-value" th:text="${group.members.size()}">멤버수</div>
                     <div class="stat-desc" th:text="${group.leader.name}"></div>
                 </div>
 
-                <div class="stat">
+                <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
                     <div class="stat-figure text-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             class="inline-block w-8 h-8 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-                        </svg>
                     </div>
-                    <div class="stat-title">그룹 시작일</div>
+                    <div class="stat-title font-semibold mb-2">그룹 시작일</div>
                     <div class="stat-value" id="dDay"></div>
                     <div class="stat-desc" th:text="${group.createDate}">↗︎ 400 (22%)</div>
                 </div>
 
-                <div class="stat">
+                <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
                     <div class="stat-figure text-secondary">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                             class="inline-block w-8 h-8 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                        </svg>
                     </div>
-                    <div class="stat-title">오늘의 그룹순위</div>
+                    <div class="stat-title font-semibold mb-2">오늘의 그룹순위</div>
                     <div class="stat-value">1,200</div>
                     <div class="stat-desc">↘︎ 90 (14%)</div>
                 </div>
             </div>
-            <p>*오늘의 그룹순위는 그룹 회원들의 공부 평균 시간으로 따집니다</p>
+            <p>*오늘의 그룹순위는 그룹 회원들의 운동 평균 시간으로 따집니다</p>
+            </br>
             </br>
             <h2 class="text-2xl font-semibold mb-2">태그 목록</h2>
             <ul class="list-none pl-5 flex flex-row flex-wrap">
@@ -79,9 +63,9 @@
                 <div class="modal-box">
                     <h3 class="font-bold text-lg">태그 추가</h3>
                     <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
-                        <input type="text" id="tagInput" name="name" class="input input-bordered w-full mb-2"
+                        <input type="text" id="tagInput" name="name" class="input text-black input-bordered w-full mb-2"
                                placeholder="태그 이름">
-                        <button type="submit" class="btn btn-primary w-full">태그 추가</button>
+                        <button type="submit" class="btn btn-primary w-full text-black">태그 추가</button>
                     </form>
                     <h3 class="font-bold text-lg mt-4">태그 목록</h3>
                     <ul class="list-disc pl-5 mt-10">
@@ -96,28 +80,27 @@
             </div>
         </div>
 
-        <div class="divider divider-horizontal">OR</div>
+        <div class="divider divider-horizontal"></div>
 
         <div class="flex flex-col w-full">
-            <h2 class="text-2xl font-semibold mb-2" style="color: white;">멤버 구성</h2>
-            <table class="table table-zebra w-full">
+            <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
+            <table class="table w-full">
                 <thead>
                 <tr>
                     <th class="text-white">멤버 이름</th>
-                    <th class="text-white">멤버 프로필</th>
                     <th class="text-white">멤버 가입일</th>
                     <th class="text-white">오늘의 운동 시간</th>
+                    <th class="text-white">채팅하기</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="member : ${sortedMembers}">
                     <td th:text="${member.name}"></td>
-                    <td>
-                        <a class="btn btn-info btn-xs"
-                           th:href="@{/user/profile/{name}(name=${member.name})}">Details</a>
-                    </td>
                     <td th:text="${member.createDate}"></td>
-                    <td th:text="${#numbers.formatInteger((member.personalSchedules != null ? member.personalSchedules.stream().mapToInt(schedule -> schedule.totalTime).sum() : 0) / 3600, 2)} + ' 시간'"></td>
+                    <td th:text="${memberAttendanceFormattedMap[member.id]}"></td>
+                    <td>
+                        <a class="btn btn-info btn-xs" th:href="@{/user/profile/{name}(name=${member.name})}">Details</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -126,23 +109,19 @@
 </main>
 </br>
 
-<footer>
-    <footer th:replace="~{footer :: footerFragment}"></footer>
-</footer>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        function calculateDday(createDate) {
-            const currentDate = new Date();
-            const groupCreateDate = new Date(createDate);
-            const timeDiff = groupCreateDate - currentDate;
-            const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)}`;
-        }
+         function calculateDday(createDate) {
+             const currentDate = new Date();
+             const groupCreateDate = new Date(createDate);
+             const timeDiff = groupCreateDate - currentDate;
+             const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+             return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)+1}`;
+         }
 
-        const groupCreateDate = /*[[${group.createDate}]]*/ '2024-06-01'; // 실제 그룹 시작일 데이터를 넣어야 합니다.
-        document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
-    });
+         const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]'; // Thymeleaf 문법으로 서버 데이터를 삽입합니다.
+         document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
+     });
 </script>
 
 <script th:inline="javascript">
