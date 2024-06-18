@@ -4,12 +4,12 @@
 <head>
     <!-- Import map 설정 -->
     <script type='importmap'>
-      {
-        "imports": {
-          "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.14",
-          "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.14"
+        {
+          "imports": {
+            "@fullcalendar/core": "https://cdn.skypack.dev/@fullcalendar/core@6.1.14",
+            "@fullcalendar/daygrid": "https://cdn.skypack.dev/@fullcalendar/daygrid@6.1.14"
+          }
         }
-      }
     </script>
 
     <!-- FullCalendar CSS -->
@@ -18,97 +18,253 @@
 </head>
 
 <body>
-    <div layout:fragment="content"
-        class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
-            <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
-            
+<div layout:fragment="content"
+     class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+        <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+
+    </div>
+    <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+        <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
+        <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
+    </div>
+    <!-- 각 날짜에 해당하는 레슨 리스트 -->
+    <div class="w-[80%]">
+        <div style="display: inline-block; vertical-align: top;" class="w-[50%]">
+            <div id='calendar' class="mt-5 h-[700px] w-[700px]"></div>
         </div>
-        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-            <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
-        </div>
-        <!-- FullCalendar 캘린더를 표시할 div 요소 -->
-        <div id='calendar' class="mt-5 h-[550px] w-[550px]"></div>
-        <!-- 각 날짜에 해당하는 레슨 리스트 -->
-        <div class="flex flex-col justify-center w-[80%] p-2">
-            <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
-            <a href="#" class="btn w-[15%]" id="myScheduleButton">My Schedule</a>
+        <div style="display: inline-block; vertical-align: top;" class="w-[40%]">
+            <a href="#" class="btn w-[20%]" id="myScheduleButton">My Schedule</a>
             <div class="divider"></div>
-            <div id="lessonListContainer"></div>
+            <div id="lessonListContainer" class="mt-5 h-[600px] w-[900px]"></div>
         </div>
-        <!-- 이미지 지도를 표시할 div 입니다 -->
-        <div class="flex flex-col items-center justify-center h-screen">
-            <div id="staticMap" style="width:600px;height:350px;"></div>
-            <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
-                target="_blank" class="mt-4 text-white">업체 위치</a>
-        </div>
-        <div>
-            <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}" />
-        </div>
-        <script type="text/javascript"
+    </div>
+
+    <!-- 이미지 지도를 표시할 div 입니다 -->
+    <div class="flex flex-col items-center justify-center h-screen">
+        <div id="staticMap" style="width:400px;height:350px;"></div>
+        <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
+           target="_blank" class="mt-4 text-white">업체 위치</a>
+    </div>
+    <div>
+        <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}"/>
+    </div>
+    <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
-        <script>
-            // 이미지 지도에 표시할 마커입니다
-            var marker = {
-                position: new kakao.maps.LatLng(33.450701, 126.570667),
-                text: '미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다.' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+    <script>
+        // 이미지 지도에 표시할 마커입니다
+        var marker = {
+            position: new kakao.maps.LatLng(33.450701, 126.570667),
+            text: '미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다.' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+        };
+
+        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+            staticMapOption = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
+                level: 3, // 이미지 지도의 확대 레벨
+                marker: marker // 이미지 지도에 표시할 마커
             };
 
-            var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
-                staticMapOption = {
-                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
-                    level: 3, // 이미지 지도의 확대 레벨
-                    marker: marker // 이미지 지도에 표시할 마커
-                };
+        // 이미지 지도를 생성합니다
+        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+    </script>
+    <script type='module'>
+        import { Calendar } from '@fullcalendar/core';
+        import dayGridPlugin from '@fullcalendar/daygrid';
 
-            // 이미지 지도를 생성합니다
-            var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
-        </script>
-        <script type='module'>
-            import { Calendar } from '@fullcalendar/core';
-            import dayGridPlugin from '@fullcalendar/daygrid';
+        let calendarInstance; // 전역 변수로 캘린더 인스턴스를 선언합니다.
+        let selectedDateElement = null; // 선택된 날짜를 저장할 변수
 
-            let calendarInstance; // 전역 변수로 캘린더 인스턴스를 선언합니다.
-            let selectedDateElement = null; // 선택된 날짜를 저장할 변수
+        function initializeCalendar() {
+            const calendarEl = document.getElementById('calendar');
+            calendarInstance = new Calendar(calendarEl, {
+                plugins: [dayGridPlugin],
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth'
+                },
+                selectable: true,
+                dayCellDidMount: function (info) {
+                    info.el.addEventListener('click', function () {
+                        const clickedDateElement = info.el;
+                        const clickedDate = calendarInstance.getDate();
 
-            function initializeCalendar() {
-                const calendarEl = document.getElementById('calendar');
-                calendarInstance = new Calendar(calendarEl, {
-                    plugins: [dayGridPlugin],
-                    headerToolbar: {
-                        left: 'prev,next today',
-                        center: 'title',
-                        right: 'dayGridMonth'
-                    },
-                    selectable: true,
-                    dayCellDidMount: function (info) {
-                        info.el.addEventListener('click', function () {
-                            const clickedDateElement = info.el;
-                            const clickedDate = calendarInstance.getDate();
+                        if (selectedDateElement) {
+                            selectedDateElement.style.backgroundColor = '';
+                        }
 
-                            if (selectedDateElement) {
-                                selectedDateElement.style.backgroundColor = '';
-                            }
+                        clickedDateElement.style.backgroundColor = 'red';
+                        selectedDateElement = clickedDateElement;
 
-                            clickedDateElement.style.backgroundColor = 'red';
-                            selectedDateElement = clickedDateElement;
+                        const dataDate = clickedDateElement.getAttribute('data-date');
+                        sendDateToServer(dataDate);
+                    });
+                }
+            });
+            calendarInstance.render();
+        }
 
-                            const dataDate = clickedDateElement.getAttribute('data-date');
-                            sendDateToServer(dataDate);
-                        });
+        function sendDateToServer(date) {
+            const csrfToken = getCsrfToken();
+            const currentUser = document.getElementById('currentUser').value;
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/lessonCalendar/selected-date", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
+
+            xhr.onload = function () {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    try {
+                        const responseData = JSON.parse(xhr.responseText);
+                        console.log(responseData);
+                        if (responseData.hasOwnProperty('lessons')) {
+                            renderLessons(responseData.lessons, currentUser);
+                        } else {
+                            console.error('Invalid response format: lessons not found');
+                        }
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error);
                     }
-                });
-                calendarInstance.render();
-            }
+                } else {
+                    console.error('Failed to send date to server.');
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Network error occurred.');
+            };
 
-            function sendDateToServer(date) {
+            const requestData = JSON.stringify({ date: date });
+            xhr.send(requestData);
+        }
+
+        function renderLessons(lessons, currentUser) {
+            const lessonListContainer = document.getElementById('lessonListContainer');
+            lessonListContainer.innerHTML = '';
+
+            lessons.forEach(function (lesson) {
+                const endTime = new Date(lesson.lessonDate + 'T' + lesson.endTime);
+                const currentTime = new Date();
+
+                const lessonDiv = document.createElement('div');
+                lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[65px]', 'bg-base-100', 'mb-4', 'rounded-lg');
+
+                const trainerDiv = document.createElement('div');
+                trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
+                const trainerName = document.createElement('div');
+                trainerName.textContent = `${lesson.trainer.name}`;
+                trainerDiv.appendChild(trainerName);
+                lessonDiv.appendChild(trainerDiv);
+
+                const lessonInfoDiv = document.createElement('div');
+                lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'items-center', 'mx-2');
+
+                // Lesson 이름
+                const lessonNameDivWrapper = document.createElement('div');
+                lessonNameDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'justify-center', 'items-center', 'mx-2');
+
+                const lessonNameDiv = document.createElement('div');
+                lessonNameDiv.textContent = lesson.lessonName;
+                lessonNameDivWrapper.appendChild(lessonNameDiv);
+
+                lessonInfoDiv.appendChild(lessonNameDivWrapper);
+
+                // 날짜, 시작 시간, 종료 시간을 묶을 div
+                const lessonTimeDivWrapper = document.createElement('div');
+                lessonTimeDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[20%]', 'text-black', 'font-bold', 'mx-2');
+
+                // Lesson 날짜
+                const lessonDateDiv = document.createElement('div');
+                lessonDateDiv.textContent = `date: ${lesson.lessonDate}`;
+                lessonDateDiv.classList.add('text-sm');
+                lessonTimeDivWrapper.appendChild(lessonDateDiv);
+
+                // 시작 시간
+                const startTimeDiv = document.createElement('div');
+                startTimeDiv.textContent = `start: ${lesson.startTime}`;
+                startTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
+                lessonTimeDivWrapper.appendChild(startTimeDiv);
+
+                // 종료 시간
+                const endTimeDiv = document.createElement('div');
+                endTimeDiv.textContent = `end: ${lesson.endTime}`;
+                endTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
+                lessonTimeDivWrapper.appendChild(endTimeDiv);
+
+                lessonInfoDiv.appendChild(lessonTimeDivWrapper);
+
+                lessonDiv.appendChild(lessonInfoDiv);
+
+                const attendanceDiv = document.createElement('div');
+                attendanceDiv.classList.add('h-full', 'bg-white', 'text-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
+                const attendanceButton = document.createElement('button');
+                attendanceButton.classList.add('btn', 'w-full', 'h-full');
+                attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
+
+                // 종료 시간이 지났으면 버튼을 비활성화합니다.
+                if (endTime < currentTime) {
+                    attendanceButton.setAttribute('disabled', 'disabled');
+                }
+
+                // 이벤트 핸들러 등록
+                attendanceButton.addEventListener('click', function () {
+                    window.location.href = `/lesson/detail/${lesson.id}`;
+                });
+
+                // 현재 로그인된 사용자가 attendanceList에 있는지 확인
+                const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
+                // console.log(isAttending);
+                if (currentUser != lesson.trainer.userId) {
+                    if (isAttending) {
+                        const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
+                        // console.log("index : " + currentUserIndex);
+                        if ((currentUserIndex + 1) <= lesson.headCount) {
+                            attendanceButton.classList.add('bg-green-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        } else {
+                            attendanceButton.classList.add('bg-gray-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        }
+                    } else {
+                        if (lesson.attendanceList.length < lesson.headCount) {
+                            attendanceButton.classList.add('bg-blue-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        } else {
+                            attendanceButton.classList.add('bg-red-500', 'text-white', 'text-xs');
+                            attendanceButton.innerHTML = `대기하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                        }
+                    }
+                } else {
+                    attendanceButton.classList.add('bg-blue-500', 'text-white');
+                    attendanceButton.innerHTML = `상세보기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
+                }
+
+                attendanceButton.addEventListener('click', function () {
+                    window.location.href = `/lesson/detail/${lesson.id}`;
+                });
+
+                attendanceDiv.appendChild(attendanceButton);
+                lessonDiv.appendChild(attendanceDiv);
+
+                lessonListContainer.appendChild(lessonDiv);
+            });
+        }
+
+        function getCsrfToken() {
+            const csrfTokenInput = document.querySelector('input[name="_csrf"]');
+            return csrfTokenInput ? csrfTokenInput.value : '';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeCalendar();
+
+            document.getElementById('myScheduleButton').addEventListener('click', function () {
                 const csrfToken = getCsrfToken();
-                const currentUser = document.getElementById('currentUser').value;
 
                 const xhr = new XMLHttpRequest();
-                xhr.open("POST", "/lessonCalendar/selected-date", true);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.open("GET", "/lesson/my-schedule", true);
                 xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
 
                 xhr.onload = function () {
@@ -116,175 +272,23 @@
                         try {
                             const responseData = JSON.parse(xhr.responseText);
                             console.log(responseData);
-                            if (responseData.hasOwnProperty('lessons')) {
-                                renderLessons(responseData.lessons, currentUser);
-                            } else {
-                                console.error('Invalid response format: lessons not found');
-                            }
+                            renderLessons(responseData, document.getElementById('currentUser').value);
                         } catch (error) {
                             console.error('Error parsing JSON:', error);
                         }
                     } else {
-                        console.error('Failed to send date to server.');
+                        console.error('Failed to fetch my schedule.');
                     }
                 };
                 xhr.onerror = function () {
                     console.error('Network error occurred.');
                 };
 
-                const requestData = JSON.stringify({ date: date });
-                xhr.send(requestData);
-            }
-
-            function renderLessons(lessons, currentUser) {
-                const lessonListContainer = document.getElementById('lessonListContainer');
-                lessonListContainer.innerHTML = '';
-
-                lessons.forEach(function (lesson) {
-                    const endTime = new Date(lesson.lessonDate + 'T' + lesson.endTime);
-                    const currentTime = new Date();
-
-                    const lessonDiv = document.createElement('div');
-                    lessonDiv.classList.add('flex', 'justify-center', 'items-center', 'h-[65px]', 'bg-base-100', 'mb-4', 'rounded-lg');
-
-                    const trainerDiv = document.createElement('div');
-                    trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
-                    const trainerName = document.createElement('div');
-                    trainerName.textContent = `${lesson.trainer.name}`;
-                    trainerDiv.appendChild(trainerName);
-                    lessonDiv.appendChild(trainerDiv);
-
-                    const lessonInfoDiv = document.createElement('div');
-                    lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'items-center', 'mx-2');
-
-                    // Lesson 이름
-                    const lessonNameDivWrapper = document.createElement('div');
-                    lessonNameDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'justify-center', 'items-center', 'mx-2');
-
-                    const lessonNameDiv = document.createElement('div');
-                    lessonNameDiv.textContent = lesson.lessonName;
-                    lessonNameDivWrapper.appendChild(lessonNameDiv);
-
-                    lessonInfoDiv.appendChild(lessonNameDivWrapper);
-
-                    // 날짜, 시작 시간, 종료 시간을 묶을 div
-                    const lessonTimeDivWrapper = document.createElement('div');
-                    lessonTimeDivWrapper.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[20%]', 'text-black', 'font-bold', 'mx-2');
-
-                    // Lesson 날짜
-                    const lessonDateDiv = document.createElement('div');
-                    lessonDateDiv.textContent = `date: ${lesson.lessonDate}`;
-                    lessonDateDiv.classList.add('text-sm');
-                    lessonTimeDivWrapper.appendChild(lessonDateDiv);
-
-                    // 시작 시간
-                    const startTimeDiv = document.createElement('div');
-                    startTimeDiv.textContent = `start: ${lesson.startTime}`;
-                    startTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
-                    lessonTimeDivWrapper.appendChild(startTimeDiv);
-
-                    // 종료 시간
-                    const endTimeDiv = document.createElement('div');
-                    endTimeDiv.textContent = `end: ${lesson.endTime}`;
-                    endTimeDiv.classList.add('text-sm'); // 작은 텍스트로 표시
-                    lessonTimeDivWrapper.appendChild(endTimeDiv);
-
-                    lessonInfoDiv.appendChild(lessonTimeDivWrapper);
-
-                    lessonDiv.appendChild(lessonInfoDiv);
-
-                    const attendanceDiv = document.createElement('div');
-                    attendanceDiv.classList.add('h-full', 'bg-white', 'text-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
-                    const attendanceButton = document.createElement('button');
-                    attendanceButton.classList.add('btn', 'w-full', 'h-full');
-                    attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
-
-                    // 종료 시간이 지났으면 버튼을 비활성화합니다.
-                    if (endTime < currentTime) {
-                        attendanceButton.setAttribute('disabled', 'disabled');
-                    }
-
-                    // 이벤트 핸들러 등록
-                    attendanceButton.addEventListener('click', function () {
-                        window.location.href = `/lesson/detail/${lesson.id}`;
-                    });
-
-                    // 현재 로그인된 사용자가 attendanceList에 있는지 확인
-                    const isAttending = lesson.attendanceList.some(attendee => attendee.userId == currentUser);
-                    // console.log(isAttending);
-                    if (currentUser != lesson.trainer.userId) {
-                        if (isAttending) {
-                            const currentUserIndex = lesson.attendanceList.findIndex(attendee => attendee.userId == currentUser);
-                            // console.log("index : " + currentUserIndex);
-                            if ((currentUserIndex + 1) <= lesson.headCount) {
-                                attendanceButton.classList.add('bg-green-500', 'text-white');
-                                attendanceButton.innerHTML = `예약완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                            } else {
-                                attendanceButton.classList.add('bg-gray-500', 'text-white');
-                                attendanceButton.innerHTML = `대기완료<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                            }
-                        } else {
-                            if (lesson.attendanceList.length < lesson.headCount) {
-                                attendanceButton.classList.add('bg-blue-500', 'text-white');
-                                attendanceButton.innerHTML = `예약하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                            } else {
-                                attendanceButton.classList.add('bg-red-500', 'text-white');
-                                attendanceButton.innerHTML = `대기하기<br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                            }
-                        }
-                    } else {
-                        attendanceButton.classList.add('bg-blue-500', 'text-white');
-                        attendanceButton.innerHTML = `상세보기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
-                    }
-
-                    attendanceButton.addEventListener('click', function () {
-                        window.location.href = `/lesson/detail/${lesson.id}`;
-                    });
-
-                    attendanceDiv.appendChild(attendanceButton);
-                    lessonDiv.appendChild(attendanceDiv);
-
-                    lessonListContainer.appendChild(lessonDiv);
-                });
-            }
-
-            function getCsrfToken() {
-                const csrfTokenInput = document.querySelector('input[name="_csrf"]');
-                return csrfTokenInput ? csrfTokenInput.value : '';
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                initializeCalendar();
-
-                document.getElementById('myScheduleButton').addEventListener('click', function () {
-                    const csrfToken = getCsrfToken();
-
-                    const xhr = new XMLHttpRequest();
-                    xhr.open("GET", "/lesson/my-schedule", true);
-                    xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-
-                    xhr.onload = function () {
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            try {
-                                const responseData = JSON.parse(xhr.responseText);
-                                console.log(responseData);
-                                renderLessons(responseData, document.getElementById('currentUser').value);
-                            } catch (error) {
-                                console.error('Error parsing JSON:', error);
-                            }
-                        } else {
-                            console.error('Failed to fetch my schedule.');
-                        }
-                    };
-                    xhr.onerror = function () {
-                        console.error('Network error occurred.');
-                    };
-
-                    xhr.send();
-                });
+                xhr.send();
             });
-        </script>
-    </div>
+        });
+    </script>
+</div>
 </body>
 
 </html>

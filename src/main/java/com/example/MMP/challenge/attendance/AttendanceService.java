@@ -155,28 +155,6 @@ public class AttendanceService {
                 .sum();
     }
 
-    public void recordAttendance() {
-        Attendance attendance = new Attendance();
-        attendance.setStartTime(LocalDateTime.now());
-        attendanceRepository.save(attendance);
-    }
-
-    public void markAttendance(String macAddress) {
-        SiteUser user = siteUserRepository.findByMacAddress(macAddress);
-        if (user != null) {
-            Attendance attendance = new Attendance();
-            attendance.setSiteUser(user);
-            attendance.setDate(LocalDate.now());
-            attendance.setPresent(true);
-            attendance.setStartTime(LocalDateTime.now());
-
-            attendanceRepository.save(attendance);
-            System.out.println("Attendance marked for user: " + user.getUserId());
-        } else {
-            System.out.println("User not found for MAC address: " + macAddress);
-        }
-    }
-
     public List<Attendance> getAttendanceByUserIdAndStartDate(Long userId, LocalDateTime startDate) {
         return attendanceRepository.findBySiteUserIdAndDateAfter(userId, startDate.toLocalDate());
     }
