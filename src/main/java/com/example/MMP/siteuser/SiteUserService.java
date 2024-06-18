@@ -1,7 +1,15 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.DataNotFoundException;
+<<<<<<< HEAD
+import com.example.MMP.alarm.Alarm;
+import com.example.MMP.alarm.AlarmDto;
+import com.example.MMP.chat.ChatMessage;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomDto;
+=======
 import com.example.MMP.lesson.Lesson;
+>>>>>>> 4565b81506a6f513dfad4902714162607aaa7224
 import com.example.MMP.mail.MailService;
 import com.example.MMP.point.Point;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+<<<<<<< HEAD
+import java.util.ArrayList;
+=======
+>>>>>>> 4565b81506a6f513dfad4902714162607aaa7224
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,7 +55,7 @@ public class SiteUserService {
         siteUser.setUserRole("admin");
         siteUser.setCreateDate(LocalDate.now());
         // Point 설정
-        Point point = new Point ();
+        Point point = new Point();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
         siteUser.setPoint(point); // SiteUser에 Point 설정
 
@@ -52,7 +64,7 @@ public class SiteUserService {
         siteUserRepository.save(siteUser);
     }
 
-    public SiteUser userSignup(String name,String number,String gender, String birthDay, String email, String userRole){
+    public SiteUser userSignup(String name, String number, String gender, String birthDay, String email, String userRole) {
         SiteUser siteUser = new SiteUser();
         siteUser.setUserId(number);
         siteUser.setPassword(passwordEncoder.encode(birthDay));
@@ -66,7 +78,7 @@ public class SiteUserService {
 
 
         // Point 설정
-        Point point = new Point ();
+        Point point = new Point();
         point.setSiteUser(siteUser); // Point와 SiteUser 연결
         siteUser.setPoint(point); // SiteUser에 Point 설정
 
@@ -100,11 +112,11 @@ public class SiteUserService {
     }
 
 
-    public SiteUser findByUserName(String username){
+    public SiteUser findByUserName(String username) {
         return siteUserRepository.findByUserId(username).orElseThrow();
     }
 
-    public SiteUser findById(Long id){
+    public SiteUser findById(Long id) {
         return siteUserRepository.findById(id).orElseThrow();
     }
 
@@ -112,7 +124,7 @@ public class SiteUserService {
         siteUserRepository.save(member);
     }
 
-    public SiteUser findByNumber(String number){
+    public SiteUser findByNumber(String number) {
         return siteUserRepository.findByNumber(number);
     }
 

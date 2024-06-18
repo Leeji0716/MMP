@@ -68,10 +68,14 @@
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
                     const aa = [[${chatRoom.id }]];
+                    const number = [[${you.number}]];
 
                     //구독
                     stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
                         showChat(JSON.parse(chatMessageDto.body));
+                    });
+
+                    stompClient.subscribe('/sub/alarm/' + number , function (alarmDto) {
                     });
                 });
             }
@@ -79,9 +83,10 @@
 
             //html 에서 입력값, roomId 를 받아서 Controller 로 전달
             function sendChat() {
-                const aa = /*[[${chatRoom.id}]]*/;
+                const aa = [[${chatRoom.id}]];
                 const sender = /*[[${me.number}]]*/;
                 const name = [[${me.name}]];
+                const number = [[${you.number}]];
 
                 var currentDate = new Date();
                 currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
@@ -94,6 +99,15 @@
                             'name' : name,
                             'message': $("#message").val(),
                             'sendTime': formattedDate
+                        }));
+
+                    stompClient.send("/pub/alarm/"+number,{},
+                        JSON.stringify({
+                            'sender' : sender,
+                            'acceptUser' : number,
+                            'message' : $("#message").val(),
+                            'sendTime': formattedDate,
+                            'chatroomId' : aa
                         }));
                 }
                 $("#message").val('');
@@ -115,7 +129,6 @@
             }
 
             $(function () {
-
                 $("#message").keyup(function (event) {
                     if (event.keyCode === 13) {
                         sendChat();

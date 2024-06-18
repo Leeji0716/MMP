@@ -1,5 +1,6 @@
 package com.example.MMP.chat;
 
+import com.example.MMP.alarm.Alarm;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -31,6 +32,11 @@ public class ChatRoom {
 
     @CreatedDate
     private LocalDateTime createDate;
+
+    @OneToMany(mappedBy = "chatRoom")
+    List<Alarm> alarmList = new ArrayList<>();
+
+
 
 
 }

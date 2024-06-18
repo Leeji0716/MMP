@@ -1,5 +1,8 @@
 package com.example.MMP.websocket;
 
+import com.example.MMP.alarm.Alarm;
+import com.example.MMP.alarm.AlarmDto;
+import com.example.MMP.alarm.AlarmService;
 import com.example.MMP.chat.*;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
@@ -15,6 +18,7 @@ public class WebsocketController {
     private final SiteUserService siteUserService;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    private final AlarmService alarmService;
 
     @MessageMapping("/talk/{id}")
     @SendTo("/sub/talk/{id}")
@@ -25,5 +29,15 @@ public class WebsocketController {
         chatMessageService.save(chatMessage);
 
         return chatMessageDto;
+    }
+
+    @MessageMapping("/alarm/{number}")
+    @SendTo("/sub/alarm/{number}")
+    public AlarmDto alarm(@DestinationVariable("number") String number,AlarmDto alarmDto){
+        SiteUser siteUser = siteUserService.findByNumber(alarmDto.getAcceptUser());
+        ChatRoom chatRoom = chatRoomService.findById(alarmDto.getChatroomId());
+        Alarm alarm = Alarm.builder().sender(alarmDto.getSender()).acceptUser(siteUser).message(alarmDto.getMessage()).sendTime(alarmDto.getSendTime()).chatRoom(chatRoom).build();
+        alarmService.save(alarm);
+        return alarmDto;
     }
 }
