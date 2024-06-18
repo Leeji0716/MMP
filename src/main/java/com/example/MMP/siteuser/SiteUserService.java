@@ -1,27 +1,16 @@
 package com.example.MMP.siteuser;
 
 import com.example.MMP.DataNotFoundException;
-<<<<<<< HEAD
-import com.example.MMP.alarm.Alarm;
-import com.example.MMP.alarm.AlarmDto;
-import com.example.MMP.chat.ChatMessage;
-import com.example.MMP.chat.ChatRoom;
-import com.example.MMP.chat.ChatRoomDto;
-=======
+
 import com.example.MMP.lesson.Lesson;
->>>>>>> 4565b81506a6f513dfad4902714162607aaa7224
+
 import com.example.MMP.mail.MailService;
 import com.example.MMP.point.Point;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
-<<<<<<< HEAD
-import java.util.ArrayList;
-=======
->>>>>>> 4565b81506a6f513dfad4902714162607aaa7224
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
