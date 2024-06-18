@@ -64,8 +64,8 @@ public class PtGroupController {
         member.getChatRoomList().add(chatRoom);
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setMessage("상대방과 대화를 시작해보세요..!");
-        chatMessage.setSender(null);
+        chatMessage.setSender(siteUser);
+        chatMessage.setMessage(chatMessage.getSender().getName()+"의 PT그룹에 참여한걸 환영합니다...!");
         chatMessage.setSendTime(LocalDateTime.now());
         chatMessage.setChatRoom(chatRoom);
         chatMessageService.save(chatMessage);

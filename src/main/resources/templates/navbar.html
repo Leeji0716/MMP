@@ -105,10 +105,9 @@
                     console.log('dkdkdkdkdkdkdk: '+url);
                     console.log(alarmDto.sender);
                     if(url === alarmDto.sender){            
-                        const alarmMessage = alarm.querySelector(".alarmMessage")
+                        const alarmMessage = alarm.querySelector(".alarmMessage");
                         alarmMessage.innerText = alarmDto.message;
-
-                        const alarmCnt = alarm.querySelector(".alarmCnt")
+                        const alarmCnt = alarm.querySelector(".alarmCnt");
                         alarmCnt.innerText = alarmDto.alarmCnt;
                     }
                 });
