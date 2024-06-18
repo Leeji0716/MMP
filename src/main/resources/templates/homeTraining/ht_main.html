@@ -1,7 +1,6 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full h-screen my-3 flex justify-center items-center flex-col">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <span th:text="${#authentication.principal.authorities.iterator().next().authority}"></span>
     <div class="flex my-3 h-[10%]">
         <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
         <div th:each="category : ${categoryList}">

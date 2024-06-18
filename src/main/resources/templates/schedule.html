@@ -18,22 +18,53 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
+    <div layout:fragment="content"
+        class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+            
+        </div>
+        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+            <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
         </div>
         <!-- FullCalendar 캘린더를 표시할 div 요소 -->
-        <div id='calendar' class="mt-5 h-[500px] w-[550px]"></div>
+        <div id='calendar' class="mt-5 h-[550px] w-[550px]"></div>
         <!-- 각 날짜에 해당하는 레슨 리스트 -->
         <div class="flex flex-col justify-center w-[80%] p-2">
+            <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
             <a href="#" class="btn w-[15%]" id="myScheduleButton">My Schedule</a>
             <div class="divider"></div>
             <div id="lessonListContainer"></div>
         </div>
+        <!-- 이미지 지도를 표시할 div 입니다 -->
+        <div class="flex flex-col items-center justify-center h-screen">
+            <div id="staticMap" style="width:600px;height:350px;"></div>
+            <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
+                target="_blank" class="mt-4 text-white">업체 위치</a>
+        </div>
         <div>
             <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}" />
         </div>
+        <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
+        <script>
+            // 이미지 지도에 표시할 마커입니다
+            var marker = {
+                position: new kakao.maps.LatLng(33.450701, 126.570667),
+                text: '미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다.' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+            };
+
+            var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+                staticMapOption = {
+                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
+                    level: 3, // 이미지 지도의 확대 레벨
+                    marker: marker // 이미지 지도에 표시할 마커
+                };
+
+            // 이미지 지도를 생성합니다
+            var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        </script>
         <script type='module'>
             import { Calendar } from '@fullcalendar/core';
             import dayGridPlugin from '@fullcalendar/daygrid';
@@ -226,7 +257,6 @@
                 initializeCalendar();
 
                 document.getElementById('myScheduleButton').addEventListener('click', function () {
-                    console.log("good");
                     const csrfToken = getCsrfToken();
 
                     const xhr = new XMLHttpRequest();

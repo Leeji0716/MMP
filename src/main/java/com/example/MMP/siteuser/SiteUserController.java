@@ -84,7 +84,7 @@ public class SiteUserController {
     @GetMapping("/commandcenter")
     public String commandcenter() {
 
-        return "/commandcenter";
+        return "commandcenter";
     }
 
     @PostMapping("/adminSignup")
@@ -139,9 +139,7 @@ public class SiteUserController {
             bindingResult.reject("signupFailed", e.getMessage());
             return "user/userSignup";
         }
-
         return "redirect:/";
-
     }
 
     @GetMapping("/getUserID")

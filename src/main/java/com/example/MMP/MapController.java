@@ -21,9 +21,8 @@ public class MapController {
         return "game";
     }
 
-    @GetMapping("/schedule")
+    @GetMapping("/main")
     public String schedule(){
-
-        return "schedule";
+        return "main";
     }
 }

@@ -1,7 +1,8 @@
 <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
 <script src="https://cdn.tailwindcss.com"></script>
 <title>로그인</title>
-<div class="hero min-h-screen" style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg);">
+<div class="hero min-h-screen"
+    style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg);">
     <div class="hero-overlay bg-opacity-60"></div>
     <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
@@ -14,13 +15,15 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="input input-bordered flex items-center gap-2" for="username">사용자ID
-                        <input type="text" class="grow" name="username" id="username" placeholder="ID를 입력하세요" />
+                        <label class="input input-bordered flex items-center gap-2" for="username">ID
+                            <input type="text" class="grow text-gray-500" name="username" id="username"
+                                placeholder="ID를 입력하세요" />
                         </label>
                     </div>
                     <div class="mb-3">
-                        <label class="input input-bordered flex items-center gap-2" for="password">비밀번호
-                        <input type="password" class="grow" name="password" id="password" placeholder="비밀번호를 입력하세요" />
+                        <label class="input input-bordered flex items-center gap-2" for="password">PW
+                            <input type="password" class="grow text-gray-500" name="password" id="password"
+                                placeholder="비밀번호를 입력하세요" />
                         </label>
                     </div>
                     <div>
@@ -33,7 +36,7 @@
                     <a href="/user/changePassword">비밀번호 변경</a>
                     <br>
                     <br>
-                    <button  type="submit" class="btn glass">로그인</button>
+                    <button type="submit" class="btn glass">로그인</button>
                 </form>
             </div>
         </div>
