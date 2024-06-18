@@ -103,6 +103,7 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_room_id")
     )
+    @JsonIgnore
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     private String macAddress; // MAC 주소

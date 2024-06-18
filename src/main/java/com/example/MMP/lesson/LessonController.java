@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -47,6 +48,7 @@ public class LessonController {
 
         return "redirect:/schedule";
     }
+
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model, Principal principal){
         Lesson lesson = lessonService.getLesson(id);
@@ -55,8 +57,36 @@ public class LessonController {
         boolean isUserAttending = lesson.getAttendanceList().stream()
                 .anyMatch(attendant -> attendant.getUserId().equals(currentUsername));
 
+        boolean isLessonAttended;
+
+        if(isUserAttending){//예약신청이 된 상태,
+            if (lesson.getAttendanceList().size() <= lesson.getHeadCount()){ //예약리스트길이가 인원수와 같거나 작을 때. --> 예약 완료
+                isLessonAttended = true;
+            }else { //예약리스트길이가 인원수보다 클 때. --> 대기 완료
+                isLessonAttended = false;
+            }
+        }else {//예약신청이 안된 상태,
+            if (!(lesson.getAttendanceList().size() < lesson.getHeadCount())){//예약리스트길이가 인원수와 같거나 클 때. --> 대기 하기
+                isLessonAttended = false;
+            }else { //예약리스트길이가 인원수보다 작을 때 --> 예약 하기
+                isLessonAttended = true;
+            }
+        }
+        List<SiteUser> reservationList = new ArrayList<>();
+        List<SiteUser> waitingList = new ArrayList<>();
+        for(int i = 0; i < lesson.getAttendanceList().size(); i++){
+            if (i < lesson.getHeadCount()){
+                reservationList.add(lesson.getAttendanceList().get(i));
+            }else {
+                waitingList.add(lesson.getAttendanceList().get(i));
+            }
+        }
+
         model.addAttribute("lesson", lesson);
         model.addAttribute("isUserAttending", isUserAttending);
+        model.addAttribute("isLessonAttended", isLessonAttended);
+        model.addAttribute("reservationList", reservationList);
+        model.addAttribute("waitingList", waitingList);
         return "lesson/lesson_detail";
     }
 
@@ -111,8 +141,13 @@ public class LessonController {
     public List<Lesson> getMySchedule() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-
-        // 현재 사용자가 참석 중인 수업 목록을 가져옵니다.
-        return lessonService.getLessonsAttendingByUsername(username);
+        SiteUser siteUser = siteUserService.findByUserName(username);
+        List<Lesson> lessonList;
+        if (siteUser.getUserRole().equals("user")){
+            lessonList = lessonService.getLessonsAttendingByUsername(username);
+        }else {
+            lessonList = siteUserService.getLessonList(siteUser);
+        }
+        return lessonService.sortLessonsByDateDesc(lessonList);
     }
 }

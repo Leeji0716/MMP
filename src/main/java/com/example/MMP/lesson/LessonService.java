@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -74,6 +76,16 @@ public class LessonService {
     public List<Lesson> getLessonsAttendingByUsername(String username) {
         SiteUser siteUser = siteUserRepository.findByUserId(username).get();
         List<Lesson> lessonList = siteUser.getLessonsAttending();
+        return lessonList;
+    }
+
+    public List<Lesson> sortLessonsByDateDesc(List<Lesson> lessonList) {
+        // lessonDate를 기준으로 내림차순 정렬하는 Comparator 생성
+        Comparator<Lesson> byDateDesc = (lesson1, lesson2) -> lesson2.getLessonDate().compareTo(lesson1.getLessonDate());
+
+        // lessonList를 lessonDate 기준으로 정렬
+        Collections.sort(lessonList, byDateDesc);
+
         return lessonList;
     }
 }

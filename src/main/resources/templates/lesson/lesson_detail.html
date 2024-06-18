@@ -3,7 +3,7 @@
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="w-[300px] max-w-md p-8 bg-white rounded-lg shadow-lg">
             <div class="text-black">
-                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+                <div th:if="${#authentication.principal.username == lesson.trainer.userId}">
                     <a href="javascript:void(0);" th:data-uri="@{|/lesson/delete/${lesson.id}|}"
                         class="delete btn btn-error btn-xs my-2" th:text="삭제"></a>
                     <a th:if="${#authentication.principal.username == lesson.trainer.userId}"
@@ -49,44 +49,46 @@
             </div>
 
             <!-- 예약 버튼 -->
-            <div th:if="${isUserAttending}" class="w-[100px]">
-                <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}" class="btn cancel"
-<<<<<<< HEAD
-                   th:classappend="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}"
-                   th:text="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? '대기완료' : '예약완료'} + ' ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
-=======
-                    th:classappend="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? 'bg-red-500 text-white' : 'bg-green-500 text-white'}"
-                    th:text="${lesson.attendanceList.size() > 0 && lesson.headCount < lesson.attendanceList.size() && #authentication.principal.username == lesson.attendanceList[lesson.headCount].userId ? '대기완료' : '예약완료'} + ' ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
->>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
-                </a>
-            </div>
-            <div th:if="${!isUserAttending}" class="w-[100px]">
-                <div th:if="${lesson.attendanceList.size() > lesson.headCount}">
+            <div th:if="${#authentication.principal.username != lesson.trainer.userId}" class="w-[100px]">
+                <div th:if="${isUserAttending && isLessonAttended}"> <!-- true : true -->
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
+                        class="btn bg-green-500 cancel text-white"
+                        th:text="'예약완료 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+                    </a>
+                </div>
+                <div th:if="${isUserAttending && !isLessonAttended}"> <!-- true : false -->
+                    <a href="javascript:void(0);" th:data-uri="@{|/lesson/cancel/${lesson.id}|}"
+                        class="btn bg-gray-500 waitcancel text-white"
+                        th:text="'대기완료 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
+                    </a>
+                </div>
+                <div th:if="${!isUserAttending && isLessonAttended}"> <!-- false : true -->
                     <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
-<<<<<<< HEAD
-                       class="btn bg-blue-500 reservation"
-                       th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
-=======
                         class="btn bg-blue-500 reservation text-white"
                         th:text="'예약하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
->>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
                     </a>
                 </div>
-                <div th:if="${lesson.attendanceList.size() <= lesson.headCount}">
+                <div th:if="${!isUserAttending && !isLessonAttended}"> <!-- false : false -->
                     <a href="javascript:void(0);" th:data-uri="@{|/lesson/reservation/${lesson.id}|}"
-<<<<<<< HEAD
-                       class="btn btn-error reservation"
-                       th:text="'대기하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
-=======
-                        class="btn btn-error reservation text-white"
+                        class="btn btn-error wait text-white"
                         th:text="'대기하기 ' + ${lesson.attendanceList.size()} + '/' + ${lesson.headCount}">
->>>>>>> 41d0ae93811e519eae8be0fbb6f85a6e85a0c24c
                     </a>
                 </div>
             </div>
-
-
-
+            <div th:if="${#authentication.principal.username == lesson.trainer.userId}">
+                <div class="mb-3 w-full">
+                    <label class="block text-gray-700">예약자</label>
+                    <div th:each="reservation : ${reservationList}">
+                        <p class="w-full max-w-xl text-black font-bold" th:text="${reservation.name}"></p>
+                    </div>
+                </div>
+                <div class="mb-3 w-full">
+                    <label class="block text-gray-700">대기자</label>
+                    <div th:each="wait : ${waitingList}">
+                        <p class="w-full max-w-xl text-black font-bold" th:text="${wait.name}"></p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -121,6 +123,15 @@
         Array.from(cancel_elements).forEach(function (element) {
             element.addEventListener('click', function () {
                 if (confirm("예약을 취소하시겠습니까?")) {
+                    location.href = this.dataset.uri;
+                };
+            });
+        });
+
+        const waitCancel_elements = document.getElementsByClassName("waitcancel");
+        Array.from(waitCancel_elements).forEach(function (element) {
+            element.addEventListener('click', function () {
+                if (confirm("대기를 취소하시겠습니까? 취소하시면 순위가 밀려납니다.")) {
                     location.href = this.dataset.uri;
                 };
             });
