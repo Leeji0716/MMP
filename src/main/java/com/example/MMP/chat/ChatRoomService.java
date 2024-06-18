@@ -6,6 +6,7 @@ import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,16 +18,16 @@ public class ChatRoomService {
     private final AlarmService alarmService;
 
     public ChatRoom findChatroom(SiteUser siteUser, SiteUser siteUser1) {
-        Optional<ChatRoom> _chatRoom = chatRoomRepository.findChatroom(siteUser,siteUser1);
-        if(_chatRoom.isEmpty()){
-            return create(siteUser,siteUser1);
-        }else{
+        Optional<ChatRoom> _chatRoom = chatRoomRepository.findChatroom(siteUser, siteUser1);
+        if (_chatRoom.isEmpty()) {
+            return create(siteUser, siteUser1);
+        } else {
             ChatRoom chatRoom = _chatRoom.get();
             return chatRoom;
         }
     }
 
-    public ChatRoom create(SiteUser siteUser,SiteUser siteUser1){
+    public ChatRoom create(SiteUser siteUser, SiteUser siteUser1) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.getUserList().add(siteUser);
         chatRoom.getUserList().add(siteUser1);
@@ -54,6 +55,7 @@ public class ChatRoomService {
             ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
             chatRoomDto.setLastMessage(chatMessage.getMessage());
             chatRoomDto.setSendDate(chatMessage.getSendTime());
+
             for (SiteUser siteUser1 : chatRoom.getUserList()) {
                 if (siteUser1.getId() != siteUser.getId()) {
                     chatRoomDto.setYou(siteUser1.getName());
@@ -72,10 +74,10 @@ public class ChatRoomService {
         return chatRoomDtoList;
     }
 
-    public void deleteAlarm(SiteUser siteUser,ChatRoom chatRoom){
-        for(Alarm alarm : chatRoom.getAlarmList()){
-            for(Alarm alarm1 : siteUser.getAlarmList()){
-                if(alarm.getId() == alarm1.getId()){
+    public void deleteAlarm(SiteUser siteUser, ChatRoom chatRoom) {
+        for (Alarm alarm : chatRoom.getAlarmList()) {
+            for (Alarm alarm1 : siteUser.getAlarmList()) {
+                if (alarm.getId() == alarm1.getId()) {
                     alarmService.delete(alarm);
                 }
             }

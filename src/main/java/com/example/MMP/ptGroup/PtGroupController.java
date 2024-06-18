@@ -1,5 +1,7 @@
 package com.example.MMP.ptGroup;
 
+import com.example.MMP.chat.ChatMessage;
+import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/ptGroup")
@@ -20,6 +24,12 @@ public class PtGroupController {
     private final SiteUserService siteUserService;
     private final PtGroupService ptGroupService;
     private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 
     @GetMapping("/join")
     public String joinUser(@AuthenticationPrincipal UserDetail userDetail){
@@ -52,6 +62,13 @@ public class PtGroupController {
 
         siteUser.getChatRoomList().add(chatRoom);
         member.getChatRoomList().add(chatRoom);
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setMessage("상대방과 대화를 시작해보세요..!");
+        chatMessage.setSender(null);
+        chatMessage.setSendTime(LocalDateTime.now());
+        chatMessage.setChatRoom(chatRoom);
+        chatMessageService.save(chatMessage);
 
         siteUserService.save(member);
         return "redirect:/";
