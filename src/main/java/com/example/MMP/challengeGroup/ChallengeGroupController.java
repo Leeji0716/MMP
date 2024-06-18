@@ -12,6 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -98,11 +101,11 @@ public class ChallengeGroupController {
         }
 
 
-        Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
-        if (groupOpt.isPresent()) {
-            ChallengeGroup group = groupOpt.get();
-            String username = principal.getName();
-            boolean isLeader = groupService.isLeader(groupId, username);
+        Optional<ChallengeGroup> groupOpt = groupRepository.findById (groupId);
+        if (groupOpt.isPresent ()) {
+            ChallengeGroup group = groupOpt.get ();
+            String username = principal.getName ();
+            boolean isLeader = groupService.isLeader (groupId, username);
 
             // 멤버들을 가입 날짜와 이름으로 정렬 (null 값을 처리)
             List<SiteUser> sortedMembers = group.getMembers ().stream ()
@@ -112,31 +115,31 @@ public class ChallengeGroupController {
 
             // 해당 그룹의 출석 기록 조회
 
-            List<Attendance> attendances = attendanceRepository.findByChallengeGroupId(groupId);
+            List<Attendance> attendances = attendanceRepository.findByChallengeGroupId (groupId);
 
             // 각 멤버별 총 출석 시간 계산 및 포맷팅
-            Map<Long, String> memberAttendanceFormattedMap = new HashMap<>();
-            Map<Long, Long> memberAttendanceTimeMap = attendances.stream()
-                    .collect(Collectors.groupingBy(att -> att.getSiteUser().getId(),
-                            Collectors.summingLong(Attendance::getTotalTime)));
+            Map<Long, String> memberAttendanceFormattedMap = new HashMap<> ();
+            Map<Long, Long> memberAttendanceTimeMap = attendances.stream ()
+                    .collect (Collectors.groupingBy (att -> att.getSiteUser ().getId (),
+                            Collectors.summingLong (Attendance::getTotalTime)));
 
-            memberAttendanceTimeMap.forEach((memberId, totalSeconds) -> {
+            memberAttendanceTimeMap.forEach ((memberId, totalSeconds) -> {
                 long hours = totalSeconds / 3600;
                 long minutes = (totalSeconds % 3600) / 60;
                 long seconds = totalSeconds % 60;
-                String formattedTime = String.format("%d 시간 %d 분 %d 초", hours, minutes, seconds);
-                memberAttendanceFormattedMap.put(memberId, formattedTime);
+                String formattedTime = String.format ("%d 시간 %d 분 %d 초", hours, minutes, seconds);
+                memberAttendanceFormattedMap.put (memberId, formattedTime);
             });
 
             // 모든 그룹의 총 운동 시간과 순위를 계산
-            Map<Long, Integer> groupRanks = groupService.getGroupRanks(memberAttendanceTimeMap);
-            int groupRank = groupRanks.get(group.getId());
+            Map<Long, Integer> groupRanks = groupService.getGroupRanks (memberAttendanceTimeMap);
+            int groupRank = groupRanks.get (group.getId ());
 
-            model.addAttribute("group", group);
-            model.addAttribute("isLeader", isLeader);
-            model.addAttribute("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
-            model.addAttribute("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
-            model.addAttribute("groupRank", groupRank); // 그룹 순위 추가
+            model.addAttribute ("group", group);
+            model.addAttribute ("isLeader", isLeader);
+            model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
+            model.addAttribute ("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
+            model.addAttribute ("groupRank", groupRank); // 그룹 순위 추가
 
             return "challenge/groupDetail";
         } else {

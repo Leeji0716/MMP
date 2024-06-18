@@ -1,7 +1,9 @@
 package com.example.MMP.ptGroup;
 
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +20,10 @@ public class PtGroup {
     private Long id;
 
     @OneToOne(mappedBy = "ptGroupTrainer")
-    @JsonIgnore
+    @JsonBackReference
     private SiteUser trainer;
 
     @OneToMany(mappedBy = "ptGroupUser")
-    @JsonIgnore
+    @JsonBackReference
     private List<SiteUser> members = new ArrayList<>();
 }

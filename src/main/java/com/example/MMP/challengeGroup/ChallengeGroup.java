@@ -3,7 +3,9 @@ package com.example.MMP.challengeGroup;
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challengeGroup.GroupTag.GroupTag;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,6 +40,8 @@ public class ChallengeGroup {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+
+    @JsonBackReference
     private Set<SiteUser> members = new HashSet<>();
 
     private LocalDateTime createDate;
@@ -45,8 +49,11 @@ public class ChallengeGroup {
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupTag> groupTagList = new ArrayList<> ();
 
+
     @OneToMany(mappedBy = "challengeGroup", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Attendance> attendances = new ArrayList<>();
+
 
 }
 

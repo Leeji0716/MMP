@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -33,5 +34,7 @@ public class ChallengeUser {
     private double achievementRate; // 달성률 추가
 
     private Double initialWeight; // 초기 몸무게 추가
+
+    private Integer initialExerciseTime; // 초기 시간 추가
 
 }

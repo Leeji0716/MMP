@@ -30,6 +30,8 @@ public class QChallengeUser extends EntityPathBase<ChallengeUser> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final NumberPath<Integer> initialExerciseTime = createNumber("initialExerciseTime", Integer.class);
+
     public final NumberPath<Double> initialWeight = createNumber("initialWeight", Double.class);
 
     public final com.example.MMP.siteuser.QSiteUser siteUser;

@@ -4,6 +4,7 @@ import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +24,8 @@ public class Attendance {
     private Long id;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonBackReference
     private SiteUser siteUser;
 
     private LocalDate date;
@@ -39,6 +40,7 @@ public class Attendance {
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = true)
+    @JsonBackReference
     private ChallengeGroup challengeGroup;
 
     @OneToOne(mappedBy = "attendance", fetch = FetchType.LAZY)

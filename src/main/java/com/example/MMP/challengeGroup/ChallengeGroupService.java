@@ -10,9 +10,12 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+
+import java.util.Map;
+
 import java.util.stream.Collectors;
+
 
 @RequiredArgsConstructor
 @Service
@@ -20,6 +23,7 @@ public class ChallengeGroupService {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserRepository userRepository;
     private final SiteUserService userService;
+
 
     // GroupService에 추가
     public boolean isLeader(Long groupId, String username) {
@@ -31,6 +35,7 @@ public class ChallengeGroupService {
     public ChallengeGroup createGroup(String name, Principal principal) {
         String username = principal.getName();
         SiteUser leader = userRepository.findByNumber (username);
+
 
         ChallengeGroup group = new ChallengeGroup();
         group.setName(name);

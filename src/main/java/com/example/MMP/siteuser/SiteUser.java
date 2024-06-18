@@ -2,6 +2,8 @@ package com.example.MMP.siteuser;
 
 import com.example.MMP.alarm.Alarm;
 import com.example.MMP.challenge.attendance.Attendance;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
+import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
@@ -19,7 +21,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -61,7 +65,6 @@ public class SiteUser {
 
     @OneToOne(mappedBy = "siteUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
     @JsonManagedReference
-    @JsonIgnore
     private Point point;
 
     @ManyToMany(cascade = CascadeType.REMOVE)
@@ -88,9 +91,11 @@ public class SiteUser {
 
 
     @ManyToOne
+    @JsonIgnore
     private PtGroup ptGroupUser;
 
     @OneToOne
+    @JsonIgnore
     private PtGroup ptGroupTrainer;
 
     @ManyToMany
@@ -112,4 +117,11 @@ public class SiteUser {
     private List<Alarm> alarmList = new ArrayList<>();
 
     private LocalDate createDate;
+
+    @ManyToMany
+    @JsonManagedReference
+    private Set<ChallengeGroup> challengeGroups = new HashSet<> ();
+
+    @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }

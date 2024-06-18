@@ -1,5 +1,7 @@
 package com.example.MMP.challenge.attendance;
 
+import com.example.MMP.challenge.challenge.ChallengeService;
+import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;
@@ -32,6 +34,7 @@ public class AttendanceService {
     private final SiteUserRepository siteUserRepository;
     private final ChallengeUserRepository challengeUserRepository;
     private final ChallengeGroupRepository challengeGroupRepository;
+
 
 
     // 순환 참조 해결 용도
@@ -69,6 +72,11 @@ public class AttendanceService {
     }
     public LocalDateTime getEndTime(Long userId){
         return attendanceRepository.findEndTimeByUserId (userId);
+    }
+
+    public Integer getTotalTime(Long userId) {
+        Integer totalTime = attendanceRepository.findTotalTimeByUserId(userId);
+        return totalTime != null ? totalTime : 0; // null 처리
     }
 
     public List<Attendance> getUserAttendance(Long siteUserId) {
@@ -167,5 +175,9 @@ public class AttendanceService {
         } else {
             System.out.println("User not found for MAC address: " + macAddress);
         }
+    }
+
+    public List<Attendance> getAttendanceByUserIdAndStartDate(Long userId, LocalDateTime startDate) {
+        return attendanceRepository.findBySiteUserIdAndDateAfter(userId, startDate.toLocalDate());
     }
 }
