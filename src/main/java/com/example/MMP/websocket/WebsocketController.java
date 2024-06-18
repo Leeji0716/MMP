@@ -12,8 +12,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class WebsocketController {
@@ -43,7 +41,7 @@ public class WebsocketController {
         ChatRoomDto chatRoomDto = chatRoomService.findAlarm(siteUser.getId());
         SiteUser me = siteUserService.findByNumber(alarmDto.getSender());
         alarmDto.setSender(me.getName());
-        alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() + 1);
+        alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() -1 + 1);
 
         return alarmDto;
     }

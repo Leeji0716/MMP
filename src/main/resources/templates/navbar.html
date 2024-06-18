@@ -102,13 +102,26 @@
                 const goTalkList = document.querySelectorAll(".gotalk")
                 goTalkList.forEach((goTalk) => {
                     const url = goTalk.querySelector(".talk-url").innerText;
-                    console.log('dkdkdkdkdkdkdk: '+url);
-                    console.log(alarmDto.sender);
-                    if(url === alarmDto.sender){            
+                    const sender = alarmDto.sender;
+                    console.log('url: ' + url);
+                    console.log('urlType : ' + typeof (url));
+                    console.log('sender : ' + sender);
+                    console.log('senderTypeof : ' + typeof (sender));
+                    if (url === sender) {
                         const alarmMessage = alarm.querySelector(".alarmMessage");
                         alarmMessage.innerText = alarmDto.message;
-                        const alarmCnt = alarm.querySelector(".alarmCnt");
-                        alarmCnt.innerText = alarmDto.alarmCnt;
+                        let alarmCnt = alarm.querySelector(".alarmCnt");
+                        console.log('alarm : ' + alarmCnt);
+                        console.log('alarm : ' + typeof (alarmCnt));
+
+                        if (alarmCnt === null) {
+                            alarmCnt = document.createElement('p');
+                            alarmCnt.classList.add('alarmCnt', 'notification-badge');
+                            alarmCnt.innerText = alarmDto.alarmCnt;
+                            alarm.appendChild(alarmCnt);
+                        } else {
+                            alarmCnt.innerText = alarmDto.alarmCnt;
+                        }
                     }
                 });
             });
