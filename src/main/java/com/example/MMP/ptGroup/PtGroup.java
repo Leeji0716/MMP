@@ -23,7 +23,11 @@ public class PtGroup {
     @JsonBackReference
     private SiteUser trainer;
 
-    @OneToMany(mappedBy = "ptGroupUser")
-    @JsonBackReference
+
+    @ManyToMany
+    @JoinTable(name = "ptgroup_siteuser",
+            joinColumns = @JoinColumn(name = "ptgroup_id"),
+            inverseJoinColumns = @JoinColumn(name = "siteuser_id"))
+    @JsonIgnore
     private List<SiteUser> members = new ArrayList<>();
 }

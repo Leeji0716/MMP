@@ -26,8 +26,10 @@
         </div> -->
         <div class="dropdown">
             <button class="dropbtn bg-black text-white text-lg">게시판</button>
-            <div class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
-                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500" th:href="@{/wod/form}">오운완</a>
+            <div
+                class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
+                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500"
+                    th:href="@{/wod/form}">오운완</a>
                 <a class="nav-link inline-block py-2 px-4 text-white no-underline" href="/homeTraining/home">홈트레이닝</a>
             </div>
         </div>
@@ -97,11 +99,19 @@
         function showAlarm(alarmDto) {
             const alarmList = document.querySelectorAll(".alarm");
             alarmList.forEach((alarm) => {
-                const alarmMessage = alarm.querySelector(".alarmMessage")
-                alarmMessage.innerText = alarmDto.message;
+                const goTalkList = document.querySelectorAll(".gotalk")
+                goTalkList.forEach((goTalk) => {
+                    const url = goTalk.querySelector(".talk-url").innerText;
+                    console.log('dkdkdkdkdkdkdk: '+url);
+                    console.log(alarmDto.sender);
+                    if(url === alarmDto.sender){            
+                        const alarmMessage = alarm.querySelector(".alarmMessage")
+                        alarmMessage.innerText = alarmDto.message;
 
-                const alarmCnt = alarm.querySelector(".alarmCnt")
-                alarmCnt.innerText = alarmDto.alarmCnt;
+                        const alarmCnt = alarm.querySelector(".alarmCnt")
+                        alarmCnt.innerText = alarmDto.alarmCnt;
+                    }
+                });
             });
 
             $("#toast").append(
