@@ -3,8 +3,10 @@ package com.example.MMP.chat;
 import com.example.MMP.alarm.Alarm;
 import com.example.MMP.alarm.AlarmService;
 import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.Optional;
 public class ChatRoomService {
     private final ChatRoomRepository chatRoomRepository;
     private final AlarmService alarmService;
+    private final SiteUserService siteUserService;
 
     public ChatRoom findChatroom(SiteUser siteUser, SiteUser siteUser1) {
         Optional<ChatRoom> _chatRoom = chatRoomRepository.findChatroom(siteUser, siteUser1);
@@ -82,5 +85,32 @@ public class ChatRoomService {
                 }
             }
         }
+    }
+
+    @Transactional
+    public ChatRoomDto findAlarm(Long id){
+        SiteUser siteUser = siteUserService.findById(id);
+        List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
+        for (ChatRoom chatRoom : chatRoomList) {
+            int cnt = 0;
+            ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
+            chatRoomDto.setLastMessage(chatMessage.getMessage());
+            chatRoomDto.setSendDate(chatMessage.getSendTime());
+            for (SiteUser siteUser1 : chatRoom.getUserList()) {
+                if (siteUser1.getId() != siteUser.getId()) {
+                    chatRoomDto.setYou(siteUser1.getName());
+                    chatRoomDto.setYouId(siteUser1.getId());
+                    break;
+                }
+            }
+            for (Alarm alarm : chatRoom.getAlarmList()) {
+                if (alarm.getAcceptUser().getId() == siteUser.getId()) {
+                    cnt++;
+                }
+            }
+            chatRoomDto.setAlarmCnt(cnt);
+        }
+        return chatRoomDto;
     }
 }

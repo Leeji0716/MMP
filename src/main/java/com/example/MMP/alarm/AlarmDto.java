@@ -19,4 +19,6 @@ public class AlarmDto {
 
     private Long chatroomId;
 
+    private int alarmCnt;
+
 }

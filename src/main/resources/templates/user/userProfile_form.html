@@ -208,9 +208,9 @@
                                             <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
                                                 th:text="${formattedDate}" class="font-bold justify-end"></p>
                                         </div>
-                                        <div class="flex gap-10">
-                                            <p th:text="${chatroom.lastMessage}" class="text-gray-500"></p>
-                                            <p class="notification-badge" th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
+                                        <div class="alarm flex gap-10">
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
+                                            <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                 </div>
@@ -223,9 +223,9 @@
                                             <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
                                                 th:text="${formattedDate}" class="font-bold justify-end"></p>
                                         </div>
-                                        <div class="flex gap-10">
-                                            <p th:text="${chatroom.lastMessage}" class="text-gray-500"></p>
-                                            <p class="notification-badge" th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
+                                        <div class="alarm flex gap-10">
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
+                                            <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}" th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                 </div>
