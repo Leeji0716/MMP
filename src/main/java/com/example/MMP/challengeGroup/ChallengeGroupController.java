@@ -2,11 +2,15 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
+import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +31,8 @@ public class ChallengeGroupController {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserService userService;
     private final AttendanceRepository attendanceRepository;
+    private final SiteUserService siteUserService;
+    private final ChatRoomService chatRoomService;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -58,7 +64,12 @@ public class ChallengeGroupController {
     @PostMapping("/create")
     public ResponseEntity<ChallengeGroup> createGroup(@RequestParam String name, Principal principal) {
         try {
-            ChallengeGroup group = groupService.createGroup (name, principal);
+            SiteUser siteUser = siteUserService.getUser(principal.getName());
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoomService.save(chatRoom);
+            chatRoom.getUserList().add(siteUser);
+            siteUser.getChatRoomList().add(chatRoom);
+            ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -145,6 +156,15 @@ public class ChallengeGroupController {
         } else {
             return "error/404"; // 그룹을 찾지 못한 경우
         }
+    }
+
+    @GetMapping("/groupTalk/{id}")
+    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
+        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
+        ChallengeGroup challengeGroup = groupService.getGroup(id);
+        model.addAttribute("challengeGroup",challengeGroup);
+        model.addAttribute("me",siteUser);
+        return "chat/groupchat";
     }
 }
 

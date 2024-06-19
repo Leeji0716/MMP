@@ -24,6 +24,8 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public final ListPath<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance> attendances = this.<com.example.MMP.challenge.attendance.Attendance, com.example.MMP.challenge.attendance.QAttendance>createList("attendances", com.example.MMP.challenge.attendance.Attendance.class, com.example.MMP.challenge.attendance.QAttendance.class, PathInits.DIRECT2);
 
+    public final com.example.MMP.chat.QChatRoom chatRoom;
+
     public final DateTimePath<java.time.LocalDateTime> createDate = createDateTime("createDate", java.time.LocalDateTime.class);
 
     public final StringPath goal = createString("goal");
@@ -56,6 +58,7 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public QChallengeGroup(Class<? extends ChallengeGroup> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.chatRoom = inits.isInitialized("chatRoom") ? new com.example.MMP.chat.QChatRoom(forProperty("chatRoom"), inits.get("chatRoom")) : null;
         this.leader = inits.isInitialized("leader") ? new com.example.MMP.siteuser.QSiteUser(forProperty("leader"), inits.get("leader")) : null;
     }
 

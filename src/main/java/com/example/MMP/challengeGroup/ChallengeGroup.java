@@ -2,6 +2,7 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challengeGroup.GroupTag.GroupTag;
+import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -54,6 +55,8 @@ public class ChallengeGroup {
     @JsonManagedReference
     private List<Attendance> attendances = new ArrayList<>();
 
+    @OneToOne
+    private ChatRoom chatRoom;
 
 }
 

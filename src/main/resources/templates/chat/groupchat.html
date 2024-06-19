@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" th:href="@{|/style.css|}">
+    <link th:href="@{|https://cdn.jsdelivr.net/npm/daisyui@4.10.2/dist/full.min.css|}" rel="stylesheet"
+        type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/bccde956fc.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="bg-gray-100 flex items-center justify-center h-screen">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-[800px] h-[800px]">
+            <h1 class="text-2xl font-bold mb-4">Chat Room</h1>
+            <div id="messages" class="w-[100%] h-[85%] overflow-y-auto mb-4">
+                <div th:each="list :${challengeGroup.chatRoom.chatMessageList}">
+                    <div th:if="${list.sender != null}">
+                        <div th:if="${list.sender.name eq me.name}">
+                            <div class="chat chat-end flex flex-col items-end">
+                                <div class="flex items-center">
+                                    <div class="chat-header">
+                                        [[${list.sender.name}]]
+                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                    </div>
+                                </div>
+                                <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${list.sender.name ne me.name}">
+                            <div class="chat chat-start flex flex-col items-start">
+                                <div class="flex">
+                                    <div class="chat-header">
+                                        [[${list.sender.name}]]
+                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                    </div>
+                                </div>
+                                <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="greetings"></div>
+            </div>
+            <input id="message" type="text" class="border border-gray-300 rounded-lg p-2 w-full mb-4"
+                placeholder="Type your message..." />
+        </div>
+        <div>
+            <button class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg">
+                <a th:href="@{/user/profile}">나가기</a>
+            </button>
+        </div>
+        <!--    <div>-->
+        <!--        <div id="images">이미지들</div>-->
+        <!--    </div>-->
+        <script th:inline="javascript">
+            function connect() {
+                var socket = new SockJS("http://localhost:8088/ws-stomp");
+                stompClient = Stomp.over(socket);
+                stompClient.connect({}, function (frame) {
+                    console.log('웹소켓 연결 성공:', frame);
+                    const aa = [[${ challengeGroup.chatRoom.id }]];
+
+                    //구독
+                    stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
+                        showChat(JSON.parse(chatMessageDto.body));
+                    });
+                });
+            }
+
+
+            //html 에서 입력값, roomId 를 받아서 Controller 로 전달
+            function sendChat() {
+                const aa = [[${ challengeGroup.chatRoom.id }]];
+                const sender = [[${me.number}]];
+                const name = [[${ me.name }]];
+
+                var currentDate = new Date();
+                currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
+                var formattedDate = new Date(currentDate).toISOString(); // ISO 형식으로 변환
+
+                if ($("#message").val() != "") {
+                    stompClient.send("/pub/talk/" + aa, {},
+                        JSON.stringify({
+                            'sender': sender,
+                            'name': name,
+                            'message': $("#message").val(),
+                            'sendTime': formattedDate
+                        }));
+                }
+                $("#message").val('');
+            }
+
+            function showChat(chatMessageDto) {
+                const sender = [[${ me.name }]];
+                if (chatMessageDto.name == sender) {
+                    $("#greetings").append(
+                        "<div class = 'chat chat-end  flex flex-col items-end'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble mr-2'>" + chatMessageDto.message + "</div></div>"
+                    );
+                } else {
+                    $("#greetings").append(
+                        "<div class = 'chat chat-start flex flex-col items-start'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble ml-2'>" + chatMessageDto.message + "</div></div>"
+                    );
+                }
+                var messageContainer = document.getElementById("messages");
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+
+            $(function () {
+                $("#message").keyup(function (event) {
+                    if (event.keyCode === 13) {
+                        sendChat();
+                    }
+                });
+            });
+
+            // 페이지 로드 후 실행되는 부분
+            document.addEventListener('DOMContentLoaded', function () {
+                connect();
+
+                // 채팅창의 div 요소를 가져옵니다.
+                var messageContainer = document.getElementById("messages");
+
+                // 스크롤을 아래로 이동시킵니다.
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            });
+        </script>
+    </div>
+</body>
+
+</html>

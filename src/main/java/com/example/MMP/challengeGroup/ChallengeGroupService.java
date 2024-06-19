@@ -1,5 +1,6 @@
 package com.example.MMP.challengeGroup;
 
+import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -32,7 +33,7 @@ public class ChallengeGroupService {
         return group.getLeader().getName().equals(username);
     }
 
-    public ChallengeGroup createGroup(String name, Principal principal) {
+    public ChallengeGroup createGroup(String name, Principal principal, ChatRoom chatRoom) {
         String username = principal.getName();
         SiteUser leader = userRepository.findByNumber (username);
 
@@ -44,6 +45,8 @@ public class ChallengeGroupService {
 
         // 그룹에 리더를 멤버로 추가
         group.getMembers().add(leader);
+
+        group.setChatRoom(chatRoom);
 
         return groupRepository.save(group);
     }
