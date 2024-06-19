@@ -58,7 +58,7 @@ public class QChallengeGroup extends EntityPathBase<ChallengeGroup> {
 
     public QChallengeGroup(Class<? extends ChallengeGroup> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.chatRoom = inits.isInitialized("chatRoom") ? new com.example.MMP.chat.QChatRoom(forProperty("chatRoom"), inits.get("chatRoom")) : null;
+        this.chatRoom = inits.isInitialized("chatRoom") ? new com.example.MMP.chat.QChatRoom(forProperty("chatRoom")) : null;
         this.leader = inits.isInitialized("leader") ? new com.example.MMP.siteuser.QSiteUser(forProperty("leader"), inits.get("leader")) : null;
     }
 

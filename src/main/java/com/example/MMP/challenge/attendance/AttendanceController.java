@@ -32,7 +32,7 @@ public class AttendanceController {
 
     @GetMapping("/checkin")
     public String checkInPage() {
-        return "/challenge/attendanceCalendar";
+        return "challenge/attendanceCalendar";
     }
 
     // 출석 체크 처리
@@ -69,7 +69,7 @@ public class AttendanceController {
         model.addAttribute("distinctAttendanceCount", distinctAttendanceCount);
         model.addAttribute("totalExerciseTime", totalExerciseTime);
 
-        return "/challenge/attendanceCalendar";
+        return "challenge/attendanceCalendar";
     }
 
     // 사용자의 출석 기록을 반환

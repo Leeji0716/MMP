@@ -1,7 +1,5 @@
 package com.example.MMP.challenge.attendance;
 
-import com.example.MMP.challenge.challenge.ChallengeService;
-import com.example.MMP.challenge.challengeActivity.ChallengeActivity;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challenge.challengeUser.ChallengeUserRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUserService;

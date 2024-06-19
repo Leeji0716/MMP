@@ -13,6 +13,7 @@ import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomRepository;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,10 +52,19 @@ public class ChallengeService {
         }
 
         if ("exerciseTime".equals(type) && targetExerciseMinutes != null) {
-            challenge.setTargetExerciseSeconds (targetExerciseMinutes);
+            Integer targetExerciseChangeMinutes = targetExerciseMinutes*60;
+            challenge.setTargetExerciseSeconds (targetExerciseChangeMinutes);
         }
 
         return challengeRepository.save(challenge);
+    }
+    public Challenge getChallenge(Long id) {
+        Optional<Challenge> challengeOptional = challengeRepository.findById(id);
+        return challengeOptional.orElseThrow(() -> new EntityNotFoundException ("Challenge not found with id: " + id));
+    }
+
+    public void delete(Challenge challenge){
+       challengeRepository.delete (challenge);
     }
 
     public Challenge expiration(Long challengeId){
