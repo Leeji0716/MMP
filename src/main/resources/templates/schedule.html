@@ -62,8 +62,8 @@
         <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
         <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
     </div>
-    <div class="main-content w-[80%]">
-        <div style="display: inline-block; vertical-align: top;" class="w-[50%]">
+    <div class="main-content w-[100%]">
+        <div style="display: inline-block; vertical-align: top;" class="w-[40%]">
             <div id='calendar' class="mt-5 h-[700px] w-[700px]"></div>
         </div>
         <div class="sidebar">
@@ -78,8 +78,8 @@
     <footer class="footer footer-center p-10 bg-black border-red-600 border-solid border-2 text-primary-content">
         <aside class="flex items-center">
             <div>
-                <figure>
-                    <img th:src="@{'/uploads/'+ ${information.imagePath}}" alt="WOD">
+                <figure class="h-[150px] w-[200px]">
+                    <img th:src="@{'/uploads/'+ ${information.imagePath}}" alt="LOGO">
                 </figure>
                 <p class="font-bold" th:text="${information.healthName}"></p>
                 <p class="font-bold" th:text="${information.companyNumber}"></p>
