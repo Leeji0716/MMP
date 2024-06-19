@@ -78,7 +78,7 @@
     <footer class="footer footer-center p-10 bg-black border-red-600 border-solid border-2 text-primary-content">
         <aside class="flex items-center">
             <div>
-                <figure class="h-[150px] w-[200px]">
+                <figure class="h-[150px] w-[250px] flex">
                     <img th:src="@{'/uploads/'+ ${information.imagePath}}" alt="LOGO">
                 </figure>
                 <p class="font-bold" th:text="${information.healthName}"></p>
@@ -93,12 +93,15 @@
             <!-- 이미지 지도를 표시할 div 입니다 -->
             <div class="flex flex-col justify-end ml-4 text-black">
                 <div id="map" style="width:750px;height:350px;"></div>
-                <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
-                   target="_blank" class="mt-4 text-white">업체 위치</a>
-                <p class="text-white">
-                    <button onclick="setCenter()">지도 중심좌표 이동시키기</button>
-                    <button onclick="setDraggable(false)">지도 드래그 이동 끄기</button>
-                    <button onclick="setDraggable(true)">지도 드래그 이동 켜기</button>
+<!--                <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"-->
+<!--                   target="_blank" class="mt-4 text-white">업체 위치 카카오로맵으로 찾기</a>-->
+                <p class="text-white mt-1">
+                    <button onclick="window.open('https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0', '_blank')" class="btn btn-outline text-sm py-1 px-2 btn-error">
+                        업체 위치 카카오맵으로 찾기
+                    </button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setCenter()">지도 중심좌표 이동시키기</button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setDraggable(false)">지도 드래그 이동 끄기</button>
+                    <button class="btn btn-outline text-sm py-1 px-2 btn-error" onclick="setDraggable(true)">지도 드래그 이동 켜기</button>
                 </p>
             </div>
             <div>
