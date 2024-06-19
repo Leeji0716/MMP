@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -36,7 +37,6 @@ public class SecurityConfig{
                             .rememberMeParameter("remember-me")
                             .userDetailsService(userDetailService))
                     .csrf(c -> c.ignoringRequestMatchers(
-
                             new AntPathRequestMatcher("/pt/**"),
                             new AntPathRequestMatcher("/totalPass/**"),
                             new AntPathRequestMatcher("/day/**"),
@@ -54,8 +54,11 @@ public class SecurityConfig{
                             new AntPathRequestMatcher ("/upload_image/**"),
                             new AntPathRequestMatcher("/ptGroup/**")
                     ))
-            ;
-
+                    .sessionManagement(sessionManagement -> sessionManagement
+                            .maximumSessions(1) // 동시 세션 수를 1로 제한
+                            .maxSessionsPreventsLogin(true) // 새로운 로그인 시도를 막음
+                            .sessionRegistry(sessionRegistry())
+                    );
             return http.build();
         }
 
@@ -67,5 +70,9 @@ public class SecurityConfig{
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+    @Bean
+    public SessionRegistryImpl sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 }
