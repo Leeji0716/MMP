@@ -15,26 +15,58 @@
     <!-- FullCalendar CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/core/main.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.14/daygrid/main.min.css" rel="stylesheet">
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .sidebar {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+        }
+        #calendar, #lessonListContainer {
+            max-height: 700px;
+            overflow-y: auto;
+        }
+        #map {
+            overflow: hidden;
+        }
+    </style>
 </head>
 
 <body>
-<div layout:fragment="content"
-     class="w-full my-3 flex justify-start items-center flex-col overflow-y-auto h-screen">
+<div layout:fragment="content" class="content">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
         <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
-
     </div>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
         <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>
         <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
     </div>
-    <!-- 각 날짜에 해당하는 레슨 리스트 -->
-    <div class="w-[80%]">
+    <div class="main-content w-[80%]">
         <div style="display: inline-block; vertical-align: top;" class="w-[50%]">
             <div id='calendar' class="mt-5 h-[700px] w-[700px]"></div>
         </div>
-        <div style="display: inline-block; vertical-align: top;" class="w-[40%]">
+        <div class="sidebar">
             <a href="#" class="btn w-[20%]" id="myScheduleButton">My Schedule</a>
             <div class="divider"></div>
             <div id="lessonListContainer" class="mt-5 h-[600px] w-[900px]"></div>
@@ -52,10 +84,15 @@
                 <p>Copyright © 2024 - All right reserved</p>
             </div>
             <!-- 이미지 지도를 표시할 div 입니다 -->
-            <div class="flex flex-col justify-end ml-4">
-                <div id="staticMap" style="width:400px;height:350px;"></div>
+            <div class="flex flex-col justify-end ml-4 text-black">
+                <div id="map" style="width:750px;height:350px;"></div>
                 <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"
                    target="_blank" class="mt-4 text-white">업체 위치</a>
+                <p class="text-white">
+                    <button onclick="setCenter()">지도 중심좌표 이동시키기</button>
+                    <button onclick="setDraggable(false)">지도 드래그 이동 끄기</button>
+                    <button onclick="setDraggable(true)">지도 드래그 이동 켜기</button>
+                </p>
             </div>
             <div>
                 <input type="hidden" id="currentUser" th:value="${#authentication.principal.username}"/>
@@ -66,21 +103,42 @@
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e71195e7a1854be49ca6900abef2dd50&libraries=services"></script>
     <script>
-        // 이미지 지도에 표시할 마커입니다
-        var marker = {
-            position: new kakao.maps.LatLng(33.450701, 126.570667),
-            text: '미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다.' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
-        };
-
-        var staticMapContainer = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
-            staticMapOption = {
-                center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
-                level: 3, // 이미지 지도의 확대 레벨
-                marker: marker // 이미지 지도에 표시할 마커
+        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            mapOption = {
+                center: new kakao.maps.LatLng(36.3510064, 127.3797339), // 지도의 중심좌표
+                level: 3, // 지도의 확대 레벨
+                mapTypeId : kakao.maps.MapTypeId.ROADMAP // 지도종류
             };
+        // 지도를 생성한다
+        var map = new kakao.maps.Map(mapContainer, mapOption);
 
-        // 이미지 지도를 생성합니다
-        var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+        // 지도에 마커를 생성하고 표시한다
+        var marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(36.3510064, 127.3797339), // 마커의 좌표
+            map: map // 마커를 표시할 지도 객체
+        });
+        // 커스텀 오버레이를 생성하고 지도에 표시한다
+        var customOverlay = new kakao.maps.CustomOverlay({
+            map: map,
+            content: '<div style="padding:0 5px;background:#fff;">미라클 빌딩 3층에 위치하고 있습니다! 주차장은 지하 2층까지 사용가능합니다 :D</div>',
+            position: new kakao.maps.LatLng(36.3510064, 127.3797339), // 커스텀 오버레이를 표시할 좌표
+            xAnchor: 0.5, // 컨텐츠의 x 위치
+            yAnchor: 0 // 컨텐츠의 y 위치
+        });
+
+        // 버튼 클릭에 따라 지도 이동 기능을 막거나 풀고 싶은 경우에는 map.setDraggable 함수를 사용합니다
+        function setDraggable(draggable) {
+            // 마우스 드래그로 지도 이동 가능여부를 설정합니다
+            map.setDraggable(draggable);
+        }
+
+        function setCenter() {
+            // 이동할 위도 경도 위치를 생성합니다
+            var moveLatLon = new kakao.maps.LatLng(36.3510064, 127.3797339);
+
+            // 지도 중심을 이동 시킵니다
+            map.setCenter(moveLatLon);
+        }
     </script>
     <script type='module'>
         import { Calendar } from '@fullcalendar/core';
@@ -250,7 +308,7 @@
                         }
                     }
                 } else {
-                    attendanceButton.classList.add('bg-blue-500', 'text-white');
+                    attendanceButton.classList.add('bg-blue-500', 'text-white', 'text-xs');
                     attendanceButton.innerHTML = `상세보기 <br> ${lesson.attendanceList.length}/${lesson.headCount}`;
                 }
 
