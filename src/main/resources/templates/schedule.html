@@ -78,9 +78,16 @@
     <footer class="footer footer-center p-10 bg-black border-red-600 border-solid border-2 text-primary-content">
         <aside class="flex items-center">
             <div>
-                <p class="font-bold">
-                    ACME Industries Ltd. <br>Providing reliable tech since 1992
-                </p>
+                <figure>
+                    <img th:src="@{'/uploads/'+ ${information.imagePath}}" alt="WOD">
+                </figure>
+                <p class="font-bold" th:text="${information.healthName}"></p>
+                <p class="font-bold" th:text="${information.companyNumber}"></p>
+                <p class="font-bold" th:text="${information.address}"></p>
+                <p class="font-bold" th:text="${information.callNumber}"></p>
+                <p class="font-bold" th:text="${information.email}"></p>
+                <p class="font-bold" th:text="${information.text}"></p>
+
                 <p>Copyright © 2024 - All right reserved</p>
             </div>
             <!-- 이미지 지도를 표시할 div 입니다 -->

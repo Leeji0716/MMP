@@ -178,6 +178,9 @@
                                 th:text="${challengeCount}"></span>
                         </li>
                     </div>
+                    <div class="flex items-end space-x-2 mt-2">
+                        <a href="#" class="btn btn-sm">정보저장</a>
+                    </div>
                     <form id="image_form" th:action="@{|/user/imageform|}" method="post" enctype="multipart/form-data">
                         <input id="file" type="file" name="file" value="이미지 등록" style="display: none;">
                     </form>

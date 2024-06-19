@@ -267,5 +267,20 @@ public class SiteUserController {
 
         return "chat/chatroom";
     }
+
+    @GetMapping("/calorie")
+    public String calorie(CalorieForm calorieForm){
+        return "user/calorieForm";
+    }
+
+//    @PostMapping("/calorie")
+//    public String calorie(@Valid CalorieForm calorieForm, BindingResult bindingResult){
+//        if (bindingResult.hasErrors()){
+//            return "user/calorieForm";
+//        }
+//
+//        siteUserService.calorieCounting
+//
+//    }
 }
  
