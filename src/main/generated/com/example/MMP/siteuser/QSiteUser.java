@@ -46,8 +46,6 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson> lessonsAttending = this.<com.example.MMP.lesson.Lesson, com.example.MMP.lesson.QLesson>createList("lessonsAttending", com.example.MMP.lesson.Lesson.class, com.example.MMP.lesson.QLesson.class, PathInits.DIRECT2);
 
-    public final StringPath macAddress = createString("macAddress");
-
     public final StringPath name = createString("name");
 
     public final StringPath number = createString("number");

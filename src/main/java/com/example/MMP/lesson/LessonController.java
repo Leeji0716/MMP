@@ -1,39 +1,65 @@
 package com.example.MMP.lesson;
 
-import com.example.MMP.chat.ChatRoom;
-import com.example.MMP.chat.ChatRoomService;
-import com.example.MMP.homeTraining.HomeTrainingForm;
-import com.example.MMP.homeTraining.category.Category;
-import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
-import jakarta.persistence.EntityManager;
+import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.userPass.UserPtPassService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
+@EnableScheduling
 @RequestMapping("/lesson")
 public class LessonController {
     private final LessonService lessonService;
     private final SiteUserService siteUserService;
+    private final UserPtPassService userPtPassService;
+
+    @Scheduled(cron = "0 0 */1 * * *")
+    @Transactional
+    public void cheri(){
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        LocalTime nowTime = LocalTime.now();
+        List<Lesson> lessonList = lessonService.getLessonFromDate(LocalDate.now());
+        for(Lesson lesson : lessonList){
+            if(nowTime.isAfter(lesson.getStartTime().minusHours(1)) && nowTime.isBefore(lesson.getStartTime()) ){
+                List<SiteUser> lessonUserList = lesson.getAttendanceList();
+                Long i = 0L;
+                for(SiteUser siteUser : lessonUserList){
+                    if(i >= lesson.getHeadCount()){
+                        break;
+                    }else {
+                        UserPtPass userPtPass = userPtPassService.findfinshTime(siteUser).get(0);
+                        userPtPass.setPassCount((userPtPass.getPassCount()-1));
+                        if(userPtPass.getPassCount() == 0){
+                            userPtPassService.delete(userPtPass);
+                        }else {
+                            userPtPassService.save(userPtPass);
+                        }
+                        i++;
+                    }
+                }
+            }
+        }
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
     private String create(LessonForm lessonForm){
@@ -57,6 +83,8 @@ public class LessonController {
     public String detail(@PathVariable("id") Long id, Model model, Principal principal){
         Lesson lesson = lessonService.getLesson(id);
         String currentUsername = principal.getName();
+
+        SiteUser user = siteUserService.getUser(currentUsername);
 
         boolean isUserAttending = lesson.getAttendanceList().stream()
                 .anyMatch(attendant -> attendant.getUserId().equals(currentUsername));
@@ -100,6 +128,7 @@ public class LessonController {
         SiteUser siteUser = siteUserService.getUser(principal.getName());
 
         lessonService.reservation(lesson, siteUser);
+
         return "redirect:/lesson/detail/" + id;
     }
 

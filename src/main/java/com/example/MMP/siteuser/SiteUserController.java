@@ -22,7 +22,6 @@ import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,7 +82,6 @@ public class SiteUserController {
 
     @GetMapping("/commandcenter")
     public String commandcenter() {
-
         return "commandcenter";
     }
 
@@ -267,20 +265,5 @@ public class SiteUserController {
 
         return "chat/chatroom";
     }
-
-    @GetMapping("/calorie")
-    public String calorie(CalorieForm calorieForm){
-        return "user/calorieForm";
-    }
-
-//    @PostMapping("/calorie")
-//    public String calorie(@Valid CalorieForm calorieForm, BindingResult bindingResult){
-//        if (bindingResult.hasErrors()){
-//            return "user/calorieForm";
-//        }
-//
-//        siteUserService.calorieCounting
-//
-//    }
 }
  

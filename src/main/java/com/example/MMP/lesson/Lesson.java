@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -43,4 +45,5 @@ public class Lesson {
     @ManyToMany(mappedBy = "lessonsAttending", cascade = CascadeType.PERSIST)
     @JsonManagedReference
     private List<SiteUser> attendanceList;
+
 }

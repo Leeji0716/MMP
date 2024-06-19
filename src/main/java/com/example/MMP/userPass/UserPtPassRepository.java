@@ -10,4 +10,6 @@ public interface UserPtPassRepository extends JpaRepository<UserPtPass,Long> {
     List<UserPtPass> findBySiteUser(SiteUser siteUser);
 
     UserPtPass findByPassName(String passName);
+
+    List<UserPtPass> findAllBySiteUserOrderByPassFinishAsc(SiteUser siteUser);
 }

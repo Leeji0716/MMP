@@ -30,11 +30,22 @@ public class UserPtPassService {
     }
 
     public UserPtPass findByPassName(String passName) {
-
         return userPtPassRepository.findByPassName(passName);
+    }
+
+    public UserPtPass findByPassId(Long id) {
+        return userPtPassRepository.findById(id).orElse(null);
     }
 
     public void save(UserPtPass userPtPass) {
         userPtPassRepository.save(userPtPass);
+    }
+
+    public List<UserPtPass> findfinshTime(SiteUser siteUser){
+        return userPtPassRepository.findAllBySiteUserOrderByPassFinishAsc(siteUser);
+    }
+
+    public void delete(UserPtPass userPtPass) {
+        userPtPassRepository.delete(userPtPass);
     }
 }

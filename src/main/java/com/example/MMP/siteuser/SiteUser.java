@@ -113,8 +113,6 @@ public class SiteUser {
     @JsonIgnore
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
-    private String macAddress; // MAC 주소
-
     @OneToMany(mappedBy = "acceptUser")
     private List<Alarm> alarmList = new ArrayList<>();
 

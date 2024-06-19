@@ -28,5 +28,4 @@ public class UserDayPass {
     @ManyToOne
     private SiteUser siteUser;
 
-
 }

@@ -75,6 +75,7 @@
                     </a>
                 </div>
             </div>
+
             <div th:if="${#authentication.principal.username == lesson.trainer.userId}">
                 <div class="mb-3 w-full">
                     <label class="block text-gray-700">예약자</label>
@@ -137,52 +138,6 @@
             });
         });
     </script>
-    <script type="text/javascript">
-        function cancelReservation(lessonId) {
-            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
-
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `/lesson/cancel-reservation/${lessonId}`, true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    window.location.reload(); // 예약 취소가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
-                } else {
-                    console.error('Failed to cancel reservation.');
-                }
-            };
-            xhr.onerror = function () {
-                console.error('Network error occurred.');
-            };
-
-            xhr.send();
-        }
-
-        function reserveLesson(lessonId) {
-            const csrfToken = getCsrfToken(); // CSRF 토큰을 가져오는 함수 (이미 구현되어 있다고 가정)
-
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", `/lesson/reserve/${lessonId}`, true);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.setRequestHeader('X-CSRF-TOKEN', csrfToken);
-
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    window.location.reload(); // 예약하기가 성공했을 때 페이지 새로고침 또는 필요한 작업 수행
-                } else {
-                    console.error('Failed to reserve lesson.');
-                }
-            };
-            xhr.onerror = function () {
-                console.error('Network error occurred.');
-            };
-
-            xhr.send();
-        }
-    </script>
-
 </div>
 
 </html>
