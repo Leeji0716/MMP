@@ -88,8 +88,9 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomDto findAlarm(Long id){
+    public ChatRoomDto findAlarm(Long id,Long meId){
         SiteUser siteUser = siteUserService.findById(id);
+        SiteUser me = siteUserService.findById(meId);
         List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
         ChatRoomDto chatRoomDto = new ChatRoomDto();
         for (ChatRoom chatRoom : chatRoomList) {
@@ -105,11 +106,11 @@ public class ChatRoomService {
                 }
             }
             for (Alarm alarm : chatRoom.getAlarmList()) {
-                if (alarm.getAcceptUser().getId() == siteUser.getId()) {
+                if (alarm.getAcceptUser().getId().equals(siteUser.getId()) && alarm.getSender().equals(me.getNumber())) {
                     cnt++;
+                    chatRoomDto.setAlarmCnt(cnt);
                 }
             }
-            chatRoomDto.setAlarmCnt(cnt);
         }
         return chatRoomDto;
     }

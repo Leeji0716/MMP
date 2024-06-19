@@ -38,8 +38,8 @@ public class WebsocketController {
         ChatRoom chatRoom = chatRoomService.findById(alarmDto.getChatroomId());
         Alarm alarm = Alarm.builder().sender(alarmDto.getSender()).acceptUser(siteUser).message(alarmDto.getMessage()).sendTime(alarmDto.getSendTime()).chatRoom(chatRoom).build();
         alarmService.save(alarm);
-        ChatRoomDto chatRoomDto = chatRoomService.findAlarm(siteUser.getId());
         SiteUser me = siteUserService.findByNumber(alarmDto.getSender());
+        ChatRoomDto chatRoomDto = chatRoomService.findAlarm(siteUser.getId(),me.getId());
         alarmDto.setSender(me.getName());
         alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() -1 + 1);
 

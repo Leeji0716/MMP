@@ -98,35 +98,33 @@
 
 
         function showAlarm(alarmDto) {
-            const alarmList = document.querySelectorAll(".alarm");
-            alarmList.forEach((alarm) => {
-                const goTalkList = document.querySelectorAll(".gotalk")
-                goTalkList.forEach((goTalk) => {
-                    const url = goTalk.querySelector(".talk-url").innerText;
-                    const sender = alarmDto.sender;
-                    console.log('url: ' + url);
-                    console.log('urlType : ' + typeof (url));
-                    console.log('sender : ' + sender);
-                    console.log('senderTypeof : ' + typeof (sender));
-                    if (url === sender) {
-                        const alarmMessage = alarm.querySelector(".alarmMessage");
-                        alarmMessage.innerText = alarmDto.message;
-                        let alarmCnt = alarm.querySelector(".alarmCnt");
-                        console.log('alarm : ' + alarmCnt);
-                        console.log('alarm : ' + typeof (alarmCnt));
+            const gotalk = document.querySelectorAll('.gotalk')
+            gotalk.forEach((talk) => {
+                const sender = alarmDto.sender;
+                const url = talk.querySelector(".talk-url").innerText;
+                if (url === sender) {
+                    const sendTime = new Date(alarmDto.sendTime);
+                    const formattedTime = formatTime(sendTime);
 
-                        if (alarmCnt === null) {
-                            alarmCnt = document.createElement('p');
-                            alarmCnt.classList.add('alarmCnt', 'notification-badge');
-                            alarmCnt.innerText = alarmDto.alarmCnt;
-                            alarm.appendChild(alarmCnt);
-                        } else {
-                            alarmCnt.innerText = alarmDto.alarmCnt;
-                        }
+                    const talkTime = talk.querySelector(".talk-time");
+                    talkTime.innerText = formattedTime;
+
+                    const alarm = talk.querySelector('.alarm');
+                    const alarmMessage = alarm.querySelector(".alarmMessage");
+                    alarmMessage.innerText = alarmDto.message;
+
+                    let alarmCnt = alarm.querySelector(".alarmCnt");
+                    if (alarmCnt === null) {
+                        alarmCnt = document.createElement('p');
+                        alarmCnt.classList.add('alarmCnt', 'notification-badge');
+                        alarmCnt.innerText = alarmDto.alarmCnt;
+                        alarm.appendChild(alarmCnt);
+                    } else {
+                        alarmCnt.innerText = alarmDto.alarmCnt;
                     }
-                });
-            });
+                }
 
+            });
             $("#toast").append(
                 toastr.info(alarmDto.sender + '님의 메세지 : ' + alarmDto.message)
             );
@@ -137,6 +135,22 @@
             // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
             connectIfLoggedIn();
         });
+
+
+        function formatTime(date) {
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const period = hours >= 12 ? '오후' : '오전';
+
+            // 시간을 12시간 형식으로 변환
+            const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+            const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+            return `${period} ${formattedHours}:${formattedMinutes}`;
+        }
+        const sendTime = new Date(alarmDto.sendTime);
+        const formattedTime = formatTime(sendTime);
+
 
     </script>
 </nav>
