@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -91,6 +92,7 @@ public class ChallengeService {
             challengeUser.setStartDate(LocalDateTime.now());
             challengeUser.setEndDate(challenge.getCloseDate());
             challengeUser.setSuccess(false);
+            challengeUser.setInitialDuration (0);
             challengeUserRepository.save(challengeUser);
             System.out.println("참여 성공: " + challengeUser.getId());
 
@@ -295,6 +297,50 @@ public class ChallengeService {
             long currentExerciseTime = initialExerciseTime + finalTotalExerciseTimeInSeconds;
 
             int achievementRate = (int) ((currentExerciseTime * 100) / targetExerciseTime);
+            challengeUser.setAchievementRate(achievementRate);
+            challengeUserRepository.save(challengeUser);
+
+            // 달성률이 100% 이상인 경우 챌린지 성공 처리
+            if (achievementRate >= 100) {
+                challengeUserService.markChallengeAsSuccessful(challengeUser.getId());
+            }
+        });
+    }
+
+    @Transactional
+    public void updateExerciseAttendance(Long challengeId, Principal principal) {
+        String userId = principal.getName();
+        SiteUser siteUser = siteUserRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(() -> new RuntimeException("챌린지를 찾을 수 없습니다."));
+        Long siteUserId = siteUser.getId();
+
+        Long challengeUserId = challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser)
+                .orElseThrow(() -> new RuntimeException("챌린지 유저를 찾을 수 없습니다.")).getId();
+
+        LocalDateTime challengeStartDate = challengeUserRepository.findById (challengeUserId).get ().getStartDate ();
+
+        // AttendanceService를 사용하여 운동 시간 계산
+        List<Attendance> attendanceList = attendanceRepository.findBySiteUserId (siteUserId);
+
+        long uniqueAttendanceDays = attendanceList.stream()
+                .map(Attendance::getDate)
+                .collect(Collectors.toSet())
+                .size();
+
+
+        challengeUserRepository.findByChallengeAndSiteUser(challenge, siteUser).ifPresent(challengeUser -> {
+
+            LocalDate openDate = challenge.getOpenDate ().toLocalDate();
+            LocalDate closeDate = challenge.getCloseDate ().toLocalDate ();
+
+            Period period = Period.between(openDate, closeDate);
+            int targetDays = period.getDays(); // 날짜 차이를 일 단위로 계산
+
+            long currentDays = uniqueAttendanceDays+1;
+
+            int achievementRate = (int) ((currentDays) / targetDays);
             challengeUser.setAchievementRate(achievementRate);
             challengeUserRepository.save(challengeUser);
 

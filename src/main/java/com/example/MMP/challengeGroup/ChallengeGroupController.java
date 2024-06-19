@@ -6,6 +6,7 @@ import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
+import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,7 @@ public class ChallengeGroupController {
     private final AttendanceRepository attendanceRepository;
     private final SiteUserService siteUserService;
     private final ChatRoomService chatRoomService;
+    private final SiteUserRepository siteUserRepository;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -84,15 +86,22 @@ public class ChallengeGroupController {
         return ResponseEntity.ok ().build ();
     }
 
+    @PostMapping("/{groupId}/leave")
+    public ResponseEntity<Void> leaveGroup(@PathVariable Long groupId, @RequestParam Long userId) {
+        groupService.removeGroup(groupId, userId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/list")
     public String getAllGroups(Model model, Principal principal) {
         List<ChallengeGroup> groups = groupService.getAllGroups ();
         model.addAttribute ("groups", groups);
 
         // 로그인된 사용자 정보 추가
-        String username = principal.getName ();
+        String username = principal.getName();
+        Optional<SiteUser> siteUsers = siteUserRepository.findByUserId (username);
 
-        SiteUser user = userService.getUserByUserNumber (username);
+        SiteUser user = siteUsers.get ();
 
         model.addAttribute ("user", user);
 

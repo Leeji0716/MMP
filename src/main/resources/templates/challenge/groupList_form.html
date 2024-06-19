@@ -53,8 +53,16 @@
                     </td>
                     <td th:text="${challengeGroup.members.size()}">0</td>
                     <td>
-                        <a class="btn btn-ghost btn-xs" href="#"
-                           th:onclick="'joinGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 가입</a>
+                        <div th:if="${#lists.contains(challengeGroup.members, user)}">
+                            <!-- 사용자가 그룹의 멤버인 경우 '그룹 탈퇴' 버튼을 보여줌 -->
+                            <a class="btn btn-ghost btn-xs" href="#"
+                               th:onclick="'leaveGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 탈퇴</a>
+                        </div>
+                        <div th:unless="${#lists.contains(challengeGroup.members, user)}">
+                            <!-- 사용자가 그룹의 멤버가 아닌 경우 '그룹 가입' 버튼을 보여줌 -->
+                            <a class="btn btn-ghost btn-xs" href="#"
+                               th:onclick="'joinGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 가입</a>
+                        </div>
                     </td>
                 </tr>
                 </tbody>
@@ -162,6 +170,33 @@
                     alert("An error occurred while trying to join the group.");
                 });
             }
+
+            window.leaveGroup = function (groupId, userId) {
+            const url = `/groupChallenge/${groupId}/leave`;
+            const formData = new FormData();
+            formData.append("userId", userId);
+
+            const headers = new Headers();
+            headers.append('Content-Type', 'application/x-www-form-urlencoded'); // Ensuring valid header
+            headers.append(csrfHeader, csrfToken); // CSRF 토큰 헤더 설정
+
+            fetch(url, {
+                method: 'POST',
+                headers: headers,
+                body: new URLSearchParams(formData)
+            }).then(response => {
+                if (response.ok) {
+                    alert("성공적으로 그룹에서 탈퇴하였습니다");
+                    location.reload(); // 페이지를 새로고침하여 변경 사항 반영
+                } else {
+                    alert("그룹 탈퇴에 실패하였습니다. 관리자에게 문의 바랍니다.");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("An error occurred while trying to leave the group.");
+            });
+        }
+
         });
     </script>
     </body>

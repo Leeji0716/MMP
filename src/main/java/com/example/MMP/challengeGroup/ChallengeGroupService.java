@@ -1,6 +1,7 @@
 package com.example.MMP.challengeGroup;
 
 import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -30,13 +31,17 @@ public class ChallengeGroupService {
     public boolean isLeader(Long groupId, String username) {
         ChallengeGroup group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
-        return group.getLeader().getName().equals(username);
+
+        String userName = group.getLeader ().getUserId ();
+
+        return group.getLeader ().getUserId ().equals (username);
     }
 
     public ChallengeGroup createGroup(String name, Principal principal, ChatRoom chatRoom) {
         String username = principal.getName();
-        SiteUser leader = userRepository.findByNumber (username);
+        Optional<SiteUser> siteUsers = userRepository.findByUserId (username);
 
+        SiteUser leader = siteUsers.get ();
 
         ChallengeGroup group = new ChallengeGroup();
         group.setName(name);
@@ -65,6 +70,21 @@ public class ChallengeGroupService {
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
         }
     }
+
+    public void removeGroup(Long groupId, Long userId) {
+        Optional<ChallengeGroup> groupOpt = groupRepository.findById(groupId);
+        Optional<SiteUser> userOpt = userRepository.findById(userId);
+
+        if (groupOpt.isPresent() && userOpt.isPresent()) {
+            ChallengeGroup group = groupOpt.get();
+            SiteUser user = userOpt.get();
+            group.getMembers().remove(user);
+            groupRepository.save(group);
+        } else {
+            throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
+        }
+    }
+
     // 그룹 업데이트 메소드 추가
     public ChallengeGroup updateGroup(Long groupId, String name, String goal) {
         ChallengeGroup group = groupRepository.findById(groupId)

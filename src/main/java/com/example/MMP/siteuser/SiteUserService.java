@@ -79,16 +79,6 @@ public class SiteUserService {
         return siteUser;
     }
 
-    public SiteUser getUserByUserNumber(String username) {
-        SiteUser siteUser = this.siteUserRepository.findByNumber(username);
-        if (siteUser != null) {
-            return siteUser;
-        } else {
-            throw new DataNotFoundException("사용자를 찾을 수 없습니다.");
-        }
-    }
-
-
     public void changePassword(Long userId, String currentPassword, String newPassword) throws Exception {
         SiteUser user = siteUserRepository.findById(userId).orElseThrow(() -> new Exception("사용자를 찾을 수 없습니다."));
 

@@ -36,6 +36,8 @@ public class UserDetail implements UserDetails {
         return siteUser.getPoint ().getPoints ();
     }
 
+    public String getNumber(){return siteUser.getNumber();}
+
     public Long getId(){return siteUser.getId ();}
 
     @Override

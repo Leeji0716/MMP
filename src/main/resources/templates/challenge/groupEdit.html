@@ -3,25 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${group.name} + ' 그룹 편집'">그룹 편집</title>
+    <!-- Tailwind CSS 및 데이지UI 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.15.0/dist/full.css" rel="stylesheet">
 </head>
-<body>
-<h1 th:text="${group.name} + ' 그룹 편집'"></h1>
+<body class="bg-black min-h-screen flex items-center justify-center">
 
-<form th:action="@{/groupChallenge/edit/{id}(id=${group.id})}" method="post">
-    <div>
-        <label for="name">그룹 이름:</label>
-        <input type="text" id="name" name="name" th:value="${group.name}" required>
-    </div>
-    <div>
-        <label for="goal">그룹 목표:</label>
-        <textarea id="goal" name="goal" required th:text="${group.goal}"></textarea>
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">저장</button>
-    </div>
-</form>
+<div class="max-w-4xl w-full bg-white p-6 rounded-lg shadow-lg">
+    <h1 class="text-2xl font-bold mb-4" th:text="${group.name} + ' 그룹 편집'">그룹 편집</h1>
 
-<a class="btn btn-secondary" th:href="@{/group/detail/{id}(id=${group.id})}">취소</a>
+    <form th:action="@{/groupChallenge/edit/{id}(id=${group.id})}" method="post" class="space-y-4">
+        <div class="form-control">
+            <label for="name" class="label">
+                <span class="label-text">그룹 이름:</span>
+            </label>
+            <input type="text" id="name" name="name" th:value="${group.name}" required
+                   class="input input-bordered w-full">
+        </div>
+        <div class="form-control">
+            <label for="goal" class="label">
+                <span class="label-text">그룹 목표:</span>
+            </label>
+            <textarea id="goal" name="goal" required th:text="${group.goal}"
+                      class="textarea textarea-bordered w-full"></textarea>
+        </div>
+        <div class="form-control" style="display: flex; justify-content: center; width: 100%;">
+            <button type="submit" class="btn btn-primary w-32 h-12">저장</button>
+            <a class="btn btn-secondary w-32 h-12" th:href="@{/groupChallenge/detail/{id}(id=${group.id})}" style="display: flex; align-items: center; justify-content: center;">취소</a>
+        </div>
+    </form>
+
+</div>
 
 </body>
 </html>

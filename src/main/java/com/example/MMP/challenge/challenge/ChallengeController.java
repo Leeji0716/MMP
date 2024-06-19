@@ -148,6 +148,8 @@ public class ChallengeController {
                 case "exerciseTime":
                     // 초기 운동 시간을 0으로 설정
                     challengeService.participateInChallengeWithExerciseTime(challengeId, principal, 0);
+                case "attendance":
+                    challengeService.participateInChallenge (challengeId,principal);
                     break;
                 default:
                     challengeService.participateInChallenge(challengeId, principal);
@@ -199,25 +201,5 @@ public class ChallengeController {
         challengeService.updateWeight(challengeId, principal, weight);
         return "redirect:/challenge/challenges";
     }
-
-
-    // 운동 시간 입력 폼 반환
-    @GetMapping("/enterExerciseTime")
-    public String enterExerciseTimeForm(@RequestParam("challengeId") Long challengeId, Model model) {
-        model.addAttribute("challengeId", challengeId);
-        return "challenge/enterExerciseTime";
-    }
-
-    // 운동 시간 입력 처리
-    @PostMapping("/enterExerciseTime")
-    public String enterExerciseTime(@RequestParam("challengeId") Long challengeId, @RequestParam("exerciseTime") int exerciseTime, Principal principal) {
-        if (principal == null) {
-            return "redirect:/user/login";
-        }
-
-        challengeService.participateInChallengeWithExerciseTime(challengeId, principal, exerciseTime);
-        return "redirect:/challenge/challenges";
-    }
-
 
 }

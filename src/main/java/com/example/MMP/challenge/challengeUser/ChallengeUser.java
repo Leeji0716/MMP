@@ -37,4 +37,6 @@ public class ChallengeUser {
 
     private Integer initialExerciseTime; // 초기 시간 추가
 
+    private Integer initialDuration;
+
 }
