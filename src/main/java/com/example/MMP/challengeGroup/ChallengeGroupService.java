@@ -3,7 +3,6 @@ package com.example.MMP.challengeGroup;
 import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
-import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
@@ -14,10 +13,8 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-
 import java.util.Map;
-
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -72,10 +69,13 @@ public class ChallengeGroupService {
             SiteUser user = userOpt.get();
             group.getMembers().add(user);
 
-            ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
+            ChatRoom chatRoom = group.getChatRoom();
             chatRoom.getUserList().add(user);
             chatRoomService.save(chatRoom);
 
+            user.getChallengeGroups().add(group);
+
+            userService.save(user);
             groupRepository.save(group);
         } else{
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
@@ -163,6 +163,10 @@ public class ChallengeGroupService {
 
     public void deleteGroup(ChallengeGroup challengeGroup) {
         groupRepository.delete (challengeGroup);
+    }
+
+    public ChallengeGroup findByName(String cName) {
+        return groupRepository.findByName(cName);
     }
 }
 

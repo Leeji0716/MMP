@@ -55,19 +55,20 @@ public class ChatRoomService {
 
         for (ChatRoom chatRoom : chatRoomList) {
             int cnt = 0;
-            int groupCnt =0;
+            int groupCnt = 0;
             ChatRoomDto chatRoomDto = new ChatRoomDto();
 
             ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
             chatRoomDto.setLastMessage(chatMessage.getMessage());
             chatRoomDto.setSendDate(chatMessage.getSendTime());
 
-            if(chatMessage.getSort().equals("many")){
+
+            if (chatMessage.getSort().equals("many")) {
                 List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
                 chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
                 chatRoomDto.setYouId(challengeGroupList.get(groupCnt).getId());
-            }else{
-                if(chatRoom.getUserList().size() > 1) {
+            } else {
+                if (chatRoom.getUserList().size() > 1) {
                     for (SiteUser siteUser1 : chatRoom.getUserList()) {
                         if (siteUser1.getId() != siteUser.getId()) {
                             chatRoomDto.setYou(siteUser1.getName());
@@ -75,7 +76,7 @@ public class ChatRoomService {
                             break;
                         }
                     }
-                }else{
+                } else {
                     chatRoomDto.setYouId(null);
                     chatRoomDto.setYou(null);
                 }
@@ -86,7 +87,7 @@ public class ChatRoomService {
                 }
             }
             chatRoomDto.setAlarmCnt(cnt);
-            if(chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
+            if (chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
                 chatRoomDtoList.add(chatRoomDto);
         }
         return chatRoomDtoList;
@@ -122,6 +123,30 @@ public class ChatRoomService {
             }
             for (Alarm alarm : chatRoom.getAlarmList()) {
                 if (alarm.getAcceptUser().getId().equals(siteUser.getId()) && alarm.getSender().equals(me.getNumber())) {
+                    cnt++;
+                    chatRoomDto.setAlarmCnt(cnt);
+                }
+            }
+        }
+        return chatRoomDto;
+    }
+
+    @Transactional
+    public ChatRoomDto findGroupAlarm(Long id, String cName) {
+        SiteUser siteUser = siteUserService.findById(id);
+        List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
+        ChatRoomDto chatRoomDto = new ChatRoomDto();
+        for (ChatRoom chatRoom : chatRoomList) {
+            int cnt = 0;
+            ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
+            chatRoomDto.setLastMessage(chatMessage.getMessage());
+            chatRoomDto.setSendDate(chatMessage.getSendTime());
+
+            chatRoomDto.setYou(cName);
+            chatRoomDto.setYouId(1L);
+
+            for (Alarm alarm : chatRoom.getAlarmList()) {
+                if (alarm.getAcceptUser().getId().equals(siteUser.getId()) && alarm.getSender().equals(cName)) {
                     cnt++;
                     chatRoomDto.setAlarmCnt(cnt);
                 }

@@ -7,7 +7,6 @@ import com.example.MMP.chat.*;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -50,6 +49,13 @@ public class WebsocketController {
     @MessageMapping("/groupAlarm/{number}")
     @SendTo("/sub/groupAlarm/{number}")
     public AlarmDto groupAlarm(@DestinationVariable("number") String number,AlarmDto alarmDto){
+        SiteUser siteUser = siteUserService.findByNumber(alarmDto.getAcceptUser());
+        ChatRoom chatRoom = chatRoomService.findById(alarmDto.getChatroomId());
+        Alarm alarm = Alarm.builder().sender(alarmDto.getSender()).acceptUser(siteUser).message(alarmDto.getMessage()).sendTime(alarmDto.getSendTime()).chatRoom(chatRoom).sort(alarmDto.getSort()).build();
+        alarmService.save(alarm);
+        ChatRoomDto chatRoomDto = chatRoomService.findGroupAlarm(siteUser.getId(),alarmDto.getSender());
+        alarmDto.setSender(alarmDto.getSender());
+        alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() -1 + 1);
 
         return alarmDto;
     }

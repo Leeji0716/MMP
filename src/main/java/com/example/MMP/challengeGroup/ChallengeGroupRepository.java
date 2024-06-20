@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-import java.util.Optional;
-
 
 public interface ChallengeGroupRepository extends JpaRepository<ChallengeGroup,Long> {
     @Query("SELECT g FROM ChallengeGroup g ORDER BY SIZE(g.members) DESC")
@@ -15,5 +13,7 @@ public interface ChallengeGroupRepository extends JpaRepository<ChallengeGroup,L
 
 
     List<ChallengeGroup> findByMembersContaining(SiteUser siteUser);
+
+    ChallengeGroup findByName(String cName);
 }
 
