@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>챌린지 생성</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.0/dist/full.css" rel="stylesheet">
     <style>
         body {
             background-color: black;
@@ -9,16 +11,6 @@
             font-family: Arial, sans-serif;
             padding: 20px;
             text-align: center;
-        }
-        form {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border-radius: 10px;
-            background-color: #333333;
-        }
-        .form-group {
-            margin-bottom: 15px;
         }
     </style>
     <script type="text/javascript">
@@ -32,71 +24,64 @@
         });
     </script>
 </head>
-<body>
-<h1>챌린지 생성</h1>
-<form th:action="@{/challenge/create}" th:object="${challengeForm}" method="post">
-    <div class="form-group">
-        <label for="name">챌린지 이름</label>
-        <br/>
-        <input type="text" id="name" th:field="*{name}" />
-        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+<body class="min-h-screen flex flex-col justify-center items-center">
+<h1 class="text-4xl font-bold mb-8">챌린지 생성</h1>
+<form th:action="@{/challenge/create}" th:object="${challengeForm}" method="post" class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
+    <div class="form-group mb-4">
+        <label for="name" class="block text-lg mb-2">챌린지 이름</label>
+        <input type="text" id="name" th:field="*{name}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500"></div>
     </div>
-    <div class="form-group">
-        <label for="description">챌린지 설명</label>
-        <br/>
-        <input type="text" id="description" th:field="*{description}" />
-        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+    <div class="form-group mb-4">
+        <label for="description" class="block text-lg mb-2">챌린지 설명</label>
+        <textarea id="description" th:field="*{description}" class="textarea textarea-bordered w-full text-black"></textarea>
+        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-red-500"></div>
     </div>
-    <div class="form-group">
-        <label for="openDate">챌린지 시작 날짜</label>
-        <br/>
-        <input type="datetime-local" id="openDate" th:field="*{openDate}" />
-        <div th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}"></div>
+    <div class="form-group mb-4">
+        <label for="openDate" class="block text-lg mb-2">챌린지 시작 날짜</label>
+        <input type="datetime-local" id="openDate" th:field="*{openDate}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}" class="text-red-500"></div>
     </div>
-    <div class="form-group">
-        <label for="closeDate">챌린지 종료 날짜</label>
-        <br/>
-        <input type="datetime-local" id="closeDate" th:field="*{closeDate}" />
-        <div th:if="${#fields.hasErrors('closeDate')}" th:errors="*{closeDate}"></div>
+    <div class="form-group mb-4">
+        <label for="closeDate" class="block text-lg mb-2">챌린지 종료 날짜</label>
+        <input type="datetime-local" id="closeDate" th:field="*{closeDate}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('closeDate')}" th:errors="*{closeDate}" class="text-red-500"></div>
     </div>
-    <div class="form-group">
-        <label for="requiredPoint">챌린지 보상 포인트</label>
-        <br/>
-        <input type="number" id="requiredPoint" th:field="*{requiredPoint}" />
-        <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}"></div>
+    <div class="form-group mb-4">
+        <label for="requiredPoint" class="block text-lg mb-2">챌린지 보상 포인트</label>
+        <input type="number" id="requiredPoint" th:field="*{requiredPoint}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}" class="text-red-500"></div>
     </div>
-    <div class="form-group">
-        <label>분류</label>
-        <div>
-            <input type="radio" id="weight" name="type" value="weight" th:field="*{type}" onchange="toggleFields()"/>
-            <label for="weight">몸무게 챌린지</label>
+    <div class="form-group mb-4">
+        <label class="block text-lg mb-2">분류</label>
+        <div class="flex items-center mb-2">
+            <input type="radio" id="weight" name="type" value="weight" th:field="*{type}" class="radio radio-primary mr-2" onchange="toggleFields()"/>
+            <label for="weight" class="mr-4">몸무게 챌린지</label>
         </div>
-        <div>
-            <input type="radio" id="exerciseTime" name="type" value="exerciseTime" th:field="*{type}" onchange="toggleFields()"/>
-            <label for="exerciseTime">운동시간 챌린지</label>
+        <div class="flex items-center mb-2">
+            <input type="radio" id="exerciseTime" name="type" value="exerciseTime" th:field="*{type}" class="radio radio-primary mr-2" onchange="toggleFields()"/>
+            <label for="exerciseTime" class="mr-4">운동시간 챌린지</label>
         </div>
-        <div>
-            <input type="radio" id="attendance" name="type" value="attendance" th:field="*{type}" onchange="toggleFields()"/>
+        <div class="flex items-center mb-2">
+            <input type="radio" id="attendance" name="type" value="attendance" th:field="*{type}" class="radio radio-primary mr-2" onchange="toggleFields()"/>
             <label for="attendance">출석체크 챌린지</label>
         </div>
-        <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}"></div>
+        <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-red-500"></div>
     </div>
-    <div id="weightFields" class="form-group" style="display: none;">
-        <label for="targetWeightLoss">목표 몸무게 감소(kg)</label>
-        <br/>
-        <input type="number" step="0.1" id="targetWeightLoss" th:field="*{targetWeightLoss}" />
-        <div th:if="${#fields.hasErrors('targetWeightLoss')}" th:errors="*{targetWeightLoss}"></div>
+    <div id="weightFields" class="form-group mb-4" style="display: none;">
+        <label for="targetWeightLoss" class="block text-lg mb-2">목표 몸무게 감소(kg)</label>
+        <input type="number" step="0.1" id="targetWeightLoss" th:field="*{targetWeightLoss}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('targetWeightLoss')}" th:errors="*{targetWeightLoss}" class="text-red-500"></div>
     </div>
-    <div id="exerciseTimeFields" class="form-group" style="display: none;">
-        <label for="targetExerciseMinutes">목표 운동 시간(분)</label>
-        <br/>
-        <input type="number" id="targetExerciseMinutes" th:field="*{targetExerciseMinutes}" />
-        <div th:if="${#fields.hasErrors('targetExerciseMinutes')}" th:errors="*{targetExerciseMinutes}"></div>
+    <div id="exerciseTimeFields" class="form-group mb-4" style="display: none;">
+        <label for="targetExerciseMinutes" class="block text-lg mb-2">목표 운동 시간(분)</label>
+        <input type="number" id="targetExerciseMinutes" th:field="*{targetExerciseMinutes}" class="input input-bordered w-full text-black" />
+        <div th:if="${#fields.hasErrors('targetExerciseMinutes')}" th:errors="*{targetExerciseMinutes}" class="text-red-500"></div>
     </div>
     <div>
-        <button type="submit">챌린지 생성하기</button>
+        <button type="submit" class="btn btn-primary w-full">챌린지 생성하기</button>
     </div>
-    <a href="/challenge/challenges">챌린지 리스트로 가기(내가 편하려고 임시로 만들어둠)</a>
+    <a href="/challenge/challenges" class="text-blue-400 mt-4 inline-block">챌린지 리스트로 가기(내가 편하려고 임시로 만들어둠)</a>
 </form>
 </body>
 </html>
