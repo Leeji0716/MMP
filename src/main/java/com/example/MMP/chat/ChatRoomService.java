@@ -9,11 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -65,9 +63,8 @@ public class ChatRoomService {
             chatRoomDto.setSendDate(chatMessage.getSendTime());
 
             if(chatMessage.getSort().equals("many")){
-
                 List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
-                 chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
+                chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
                 chatRoomDto.setYouId(challengeGroupList.get(groupCnt).getId());
             }else{
                 if(chatRoom.getUserList().size() > 1) {

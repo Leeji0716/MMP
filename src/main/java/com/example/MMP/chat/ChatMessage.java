@@ -2,8 +2,6 @@ package com.example.MMP.chat;
 
 import com.example.MMP.siteuser.SiteUser;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,18 +27,17 @@ public class ChatMessage {
     private LocalDateTime sendTime;
 
     @ManyToOne
-//    @JsonManagedReference
-    @JsonIgnore
+    @JsonBackReference
     private ChatRoom chatRoom;
 
     private String sort;
 
     @Builder
-    private ChatMessage(String message,SiteUser sender,LocalDateTime sendTime,ChatRoom chatRoom,String sort){
+    private ChatMessage(String message, SiteUser sender, LocalDateTime sendTime, ChatRoom chatRoom, String sort) {
         this.message = message;
         this.sender = sender;
         this.sendTime = sendTime;
         this.chatRoom = chatRoom;
-        this.sort =sort;
+        this.sort = sort;
     }
 }
