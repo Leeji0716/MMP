@@ -30,35 +30,8 @@ import java.util.List;
 public class LessonController {
     private final LessonService lessonService;
     private final SiteUserService siteUserService;
-    private final UserPtPassService userPtPassService;
 
-    @Scheduled(cron = "0 0 */1 * * *")
-    @Transactional
-    public void cheri(){
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        LocalTime nowTime = LocalTime.now();
-        List<Lesson> lessonList = lessonService.getLessonFromDate(LocalDate.now());
-        for(Lesson lesson : lessonList){
-            if(nowTime.isAfter(lesson.getStartTime().minusHours(1)) && nowTime.isBefore(lesson.getStartTime()) ){
-                List<SiteUser> lessonUserList = lesson.getAttendanceList();
-                Long i = 0L;
-                for(SiteUser siteUser : lessonUserList){
-                    if(i >= lesson.getHeadCount()){
-                        break;
-                    }else {
-                        UserPtPass userPtPass = userPtPassService.findfinshTime(siteUser).get(0);
-                        userPtPass.setPassCount((userPtPass.getPassCount()-1));
-                        if(userPtPass.getPassCount() == 0){
-                            userPtPassService.delete(userPtPass);
-                        }else {
-                            userPtPassService.save(userPtPass);
-                        }
-                        i++;
-                    }
-                }
-            }
-        }
-    }
+
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/create")
@@ -181,7 +154,7 @@ public class LessonController {
         }else {
             lessonList = siteUserService.getLessonList(siteUser);
         }
-        return lessonService.sortLessonsByDateDesc(lessonList);
+        return lessonService.sortLessonsByDateAndTimeDesc(lessonList);
     }
 
 }

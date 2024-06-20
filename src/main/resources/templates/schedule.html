@@ -94,7 +94,7 @@
             <!-- 이미지 지도를 표시할 div 입니다 -->
             <div class="flex flex-col justify-end ml-4 text-black">
                 <div id="map" style="width:750px;height:350px;"></div>
-<!--                <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"-->
+                <a href="https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0"-->
 <!--                   target="_blank" class="mt-4 text-white">업체 위치 카카오로맵으로 찾기</a>-->
                 <p class="text-white mt-1">
                     <button onclick="window.open('https://map.kakao.com/?q=%EB%8C%80%EC%A0%84+%EC%BD%94%EB%A6%AC%EC%95%84%EC%95%84%EC%9D%B4%ED%8B%B0', '_blank')" class="btn btn-outline text-sm py-1 px-2 btn-error">
@@ -228,6 +228,7 @@
 
             lessons.forEach(function (lesson) {
                 const endTime = new Date(lesson.lessonDate + 'T' + lesson.endTime);
+                const startTime = new Date(lesson.lessonDate + 'T' + lesson.startTime);
                 const currentTime = new Date();
 
                 const lessonDiv = document.createElement('div');
@@ -285,8 +286,9 @@
                 attendanceButton.classList.add('btn', 'w-full', 'h-full');
                 attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;
 
+                const disableTime = startTime - (60 * 60 * 1000);
                 // 종료 시간이 지났으면 버튼을 비활성화합니다.
-                if (endTime < currentTime) {
+                if (currentTime >= disableTime) {
                     attendanceButton.setAttribute('disabled', 'disabled');
                 }
 

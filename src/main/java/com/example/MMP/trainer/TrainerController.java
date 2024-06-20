@@ -3,6 +3,7 @@ package com.example.MMP.trainer;
 import com.example.MMP.wod.FileUploadUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -70,7 +71,7 @@ public class TrainerController {
 
     @GetMapping("/list")
     public String TrainerList(Model model) {
-        List<Trainer> trainerList = trainerService.findAll();//
+        List<Trainer> trainerList = trainerService.findAll();
         model.addAttribute("trainerList", trainerList);
         return "trainer/trainer_list";
     }
@@ -110,13 +111,22 @@ public class TrainerController {
         return "redirect:/trainer/detail/" + id;
     }
 
+//    @PostMapping("/filter")
+//    public String filterTrainers(@RequestParam(name = "gender", required = false) String gender,
+//                                 @RequestParam(name = "classType", required = false) String classType,
+//                                 @RequestParam(name = "specialization", required = false) String specialization,
+//                                 Model model) {
+//        List<Trainer> filteredTrainers = trainerService.filterTrainers(gender, classType, specialization);
+//        model.addAttribute("trainerList", filteredTrainers);
+//        return "trainer/trainer_list";
+//    }
+
     @PostMapping("/filter")
-    public String filterTrainers(@RequestParam(name = "gender", required = false) String gender,
-                                 @RequestParam(name = "classType", required = false) String classType,
-                                 @RequestParam(name = "specialization", required = false) String specialization,
-                                 Model model) {
-        List<Trainer> filteredTrainers = trainerService.filterTrainers(gender, classType, specialization);
-        model.addAttribute("trainerList", filteredTrainers);
-        return "trainer/trainer_list";
+    public ResponseEntity<List<Trainer>> filterTrainers(@RequestBody FilterRequest filterRequest) {
+        List<Trainer> filteredTrainers = trainerService.filterTrainers(filterRequest);
+        System.out.println(filterRequest.getGender());
+        System.out.println(filterRequest.getClassType());
+        System.out.println(filterRequest.getSpecialization());
+        return ResponseEntity.ok(filteredTrainers);
     }
 }

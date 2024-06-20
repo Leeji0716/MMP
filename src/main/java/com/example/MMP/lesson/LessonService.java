@@ -79,12 +79,16 @@ public class LessonService {
         return lessonList;
     }
 
-    public List<Lesson> sortLessonsByDateDesc(List<Lesson> lessonList) {
-        // lessonDate를 기준으로 내림차순 정렬하는 Comparator 생성
-        Comparator<Lesson> byDateDesc = (lesson1, lesson2) -> lesson2.getLessonDate().compareTo(lesson1.getLessonDate());
+    public List<Lesson> sortLessonsByDateAndTimeDesc(List<Lesson> lessonList) {
+        // lessonDate와 startTime을 기준으로 내림차순 정렬하는 Comparator 생성
+        Comparator<Lesson> byDateAndTimeDesc = (lesson1, lesson2) -> {
+            LocalDateTime dateTime1 = LocalDateTime.of(lesson1.getLessonDate(), lesson1.getStartTime());
+            LocalDateTime dateTime2 = LocalDateTime.of(lesson2.getLessonDate(), lesson2.getStartTime());
+            return dateTime2.compareTo(dateTime1); // 내림차순 정렬
+        };
 
-        // lessonList를 lessonDate 기준으로 정렬
-        Collections.sort(lessonList, byDateDesc);
+        // lessonList를 lessonDate와 startTime 기준으로 정렬
+        Collections.sort(lessonList, byDateAndTimeDesc);
 
         return lessonList;
     }

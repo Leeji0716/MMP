@@ -1,96 +1,17 @@
-<!--<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">-->
-<!--<div layout:fragment="content" class="w-full my-3">-->
-<!--    <div class="h-screen flex items-center justify-center bg-black">-->
-<!--        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">-->
-<!--            <form action="/trainer/create" method="post" enctype="multipart/form-data">-->
-<!--                <div>-->
-<!--                    <label for="trainerName">트레이너 이름:</label>-->
-<!--                    <input type="text" id="trainerName" name="trainerName" required>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>성별:</label>-->
-<!--                    <input type="radio" id="genderMale" name="gender" value="man">-->
-<!--                    <label for="genderMale">남성</label>-->
-<!--                    <input type="radio" id="genderFemale" name="gender" value="woman">-->
-<!--                    <label for="genderFemale">여성</label>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>레슨 종류:</label>-->
-<!--                    <input type="checkbox" id="classTypeHealth" name="classType" value="Health">-->
-<!--                    <label for="classTypeHealth">헬스</label>-->
-<!--                    <input type="checkbox" id="classTypePT" name="classType" value="PT">-->
-<!--                    <label for="classTypePT">PT</label>-->
-<!--                    <input type="checkbox" id="classTypePilates" name="classType" value="Pilates">-->
-<!--                    <label for="classTypePilates">필라테스</label>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label>전문화:</label>-->
-<!--                    <input type="checkbox" id="specialization1to1" name="specialization" value="1:1">-->
-<!--                    <label for="specialization1to1">1:1</label>-->
-<!--                    <input type="checkbox" id="specialization1toN" name="specialization" value="1:n">-->
-<!--                    <label for="specialization1toN">1:n</label>-->
-<!--                    <input type="checkbox" id="specializationNtoN" name="specialization" value="n:n">-->
-<!--                    <label for="specializationNtoN">n:n</label>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label for="introduce">소개:</label><br>-->
-<!--                    <textarea id="introduce" name="introduce" rows="4" cols="50"></textarea>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <label for="image">이미지 업로드:</label>-->
-<!--                    <input type="file" id="image" name="image" accept="image/*">-->
-<!--                </div>-->
-<!--                <button type="submit">등록</button>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</html>-->
-
-<!DOCTYPE html>
-<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Trainer Form</title>
-    <script>
-        // 데이터를 받아와서 처리하는 함수
-        function handleData(data) {
-            // 데이터가 배열인지 확인
-            if (Array.isArray(data)) {
-                // 배열일 경우에만 forEach 실행
-                data.forEach(item => {
-                    console.log(item);
-                });
-            } else {
-                console.error("Data is not an array:", data);
-            }
-        }
-
-        // 예시로 서버로부터 데이터를 받아오는 함수
-        function fetchData() {
-            fetch('/path/to/api')
-                .then(response => response.json())
-                .then(data => handleData(data))
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
-        // 페이지 로드 시 데이터 가져오기
-        window.onload = fetchData;
-    </script>
-</head>
-<body>
-<div layout:fragment="content" class="w-full my-3">
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">
             <form action="/trainer/create" method="post" enctype="multipart/form-data">
                 <div>
                     <label for="trainerName">트레이너 이름:</label>
-                    <input type="text" id="trainerName" name="trainerName" required>
+                    <input type="text" id="trainerName" name="trainerName" class="input" placeholder="이름을 입력하세요." required>
                 </div>
                 <div>
                     <label>성별:</label>
-                    <input type="radio" id="genderMale" name="gender" value="male">
+                    <input type="radio" id="genderMale" name="gendere" value="man">
                     <label for="genderMale">남성</label>
-                    <input type="radio" id="genderFemale" name="gender" value="female">
+                    <input type="radio" id="genderFemale" name="gender" value="woman">
                     <label for="genderFemale">여성</label>
                 </div>
                 <div>
@@ -104,11 +25,11 @@
                 </div>
                 <div>
                     <label>전문화:</label>
-                    <input type="checkbox" id="specialization1to1" name="specialization" value="1:1">
+                    <input type="checkbox" id="specialization1to1" name="specialization" value="1">
                     <label for="specialization1to1">1:1</label>
-                    <input type="checkbox" id="specialization1toN" name="specialization" value="1:n">
+                    <input type="checkbox" id="specialization1toN" name="specialization" value="2">
                     <label for="specialization1toN">1:n</label>
-                    <input type="checkbox" id="specializationNtoN" name="specialization" value="n:n">
+                    <input type="checkbox" id="specializationNtoN" name="specialization" value="3">
                     <label for="specializationNtoN">n:n</label>
                 </div>
                 <div>
@@ -124,5 +45,4 @@
         </div>
     </div>
 </div>
-</body>
 </html>
