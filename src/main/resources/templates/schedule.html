@@ -57,6 +57,7 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
         <a class="btn btn-error text-white justify-start" th:href="@{/lesson/create}">추가</a>
+        <a href="/user/adminSignup">관리자회원가입</a>
     </div>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
         <a class="btn btn-error text-white justify-start" href="user/commandcenter">관리자 페이지</a>

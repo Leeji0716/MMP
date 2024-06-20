@@ -19,11 +19,17 @@ public class QTrainer extends EntityPathBase<Trainer> {
 
     public static final QTrainer trainer = new QTrainer("trainer");
 
+    public final StringPath classType = createString("classType");
+
+    public final StringPath gender = createString("gender");
+
+    public final NumberPath<Long> id = createNumber("id", Long.class);
+
     public final StringPath imagePath = createString("imagePath");
 
     public final StringPath introduce = createString("introduce");
 
-    public final NumberPath<Long> trainerId = createNumber("trainerId", Long.class);
+    public final StringPath specialization = createString("specialization");
 
     public final StringPath trainerName = createString("trainerName");
 

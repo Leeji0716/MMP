@@ -16,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/trainer")
 public class TrainerController {
+
     private final TrainerService trainerService;
     private final FileUploadUtil fileUploadUtil;
 
@@ -23,8 +24,12 @@ public class TrainerController {
     private String trainer(Model model) {
         List<Trainer> trainerList = trainerService.getList();
         model.addAttribute("trainerList", trainerList);
-
         return "trainer/trainer_form";
+    }
+
+    @GetMapping("/category")
+    private String category() {
+        return "trainer/categoryFilter";
     }
 
     @GetMapping("/create")
@@ -42,20 +47,19 @@ public class TrainerController {
             return "trainer/trainer_create";
         }
 
-        // 이미지 파일의 경로가 비어있지 않으면 업로드를 시도합니다.
         if (image != null && !image.isEmpty()) {
             String fileName = StringUtils.cleanPath(image.getOriginalFilename());
 
             try {
                 this.fileUploadUtil.saveFile(fileName, image);
-
             } catch (Exception e) {
                 e.printStackTrace();
                 bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
-
-                return "trainer/trainer_create"; // 업로드 실패 시 처리하는 방법에 따라 변경
+                return "trainer/trainer_create";
             }
-            trainerService.create(fileName,trainerForm.getTrainerName(), trainerForm.getIntroduce());
+
+            trainerService.create(fileName, trainerForm.getTrainerName(), trainerForm.getIntroduce(),
+                    trainerForm.getGender(), trainerForm.getClassType(), trainerForm.getSpecialization());
         }
 
         List<Trainer> trainerList = trainerService.getList();
@@ -66,15 +70,14 @@ public class TrainerController {
 
     @GetMapping("/list")
     public String TrainerList(Model model) {
-        List<Trainer> trainerList = trainerService.findAll();
+        List<Trainer> trainerList = trainerService.findAll();//
         model.addAttribute("trainerList", trainerList);
-        return "trainer/trainerList";
+        return "trainer/trainer_list";
     }
 
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id,
                          Model model) {
-
         Trainer trainer = trainerService.getTrainer(id);
         model.addAttribute("trainer", trainer);
         return "trainer/trainer_detail";
@@ -90,7 +93,6 @@ public class TrainerController {
     public String update(@PathVariable("id") Long id,
                          TrainerForm trainerForm,
                          Model model) {
-
         Trainer trainer = trainerService.getTrainer(id);
         model.addAttribute("trainer", trainer);
         trainerForm.setIntroduce(trainer.getIntroduce());
@@ -101,11 +103,20 @@ public class TrainerController {
     public String update(@Valid TrainerForm trainerForm,
                          BindingResult bindingResult,
                          @PathVariable("id") Long id) {
-
         if (bindingResult.hasErrors()) {
             return "trainer/trainer_create";
         }
         trainerService.update(id, trainerForm.getIntroduce());
         return "redirect:/trainer/detail/" + id;
+    }
+
+    @PostMapping("/filter")
+    public String filterTrainers(@RequestParam(name = "gender", required = false) String gender,
+                                 @RequestParam(name = "classType", required = false) String classType,
+                                 @RequestParam(name = "specialization", required = false) String specialization,
+                                 Model model) {
+        List<Trainer> filteredTrainers = trainerService.filterTrainers(gender, classType, specialization);
+        model.addAttribute("trainerList", filteredTrainers);
+        return "trainer/trainer_list";
     }
 }

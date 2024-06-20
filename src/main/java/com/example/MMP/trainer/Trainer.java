@@ -1,26 +1,30 @@
 package com.example.MMP.trainer;
 
-import com.example.MMP.Comment.Comment;
-import com.example.MMP.siteuser.SiteUser;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
 public class Trainer {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long trainerId;
+    private Long id;
+
+    private String imagePath;
 
     private String trainerName;
 
     private String introduce;
 
-    private String imagePath;
+    private String gender;
 
+    private String classType;
 
+    private String specialization;
 }

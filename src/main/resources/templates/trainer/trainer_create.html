@@ -1,36 +1,128 @@
+<!--<html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">-->
+<!--<div layout:fragment="content" class="w-full my-3">-->
+<!--    <div class="h-screen flex items-center justify-center bg-black">-->
+<!--        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">-->
+<!--            <form action="/trainer/create" method="post" enctype="multipart/form-data">-->
+<!--                <div>-->
+<!--                    <label for="trainerName">트레이너 이름:</label>-->
+<!--                    <input type="text" id="trainerName" name="trainerName" required>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>성별:</label>-->
+<!--                    <input type="radio" id="genderMale" name="gender" value="man">-->
+<!--                    <label for="genderMale">남성</label>-->
+<!--                    <input type="radio" id="genderFemale" name="gender" value="woman">-->
+<!--                    <label for="genderFemale">여성</label>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>레슨 종류:</label>-->
+<!--                    <input type="checkbox" id="classTypeHealth" name="classType" value="Health">-->
+<!--                    <label for="classTypeHealth">헬스</label>-->
+<!--                    <input type="checkbox" id="classTypePT" name="classType" value="PT">-->
+<!--                    <label for="classTypePT">PT</label>-->
+<!--                    <input type="checkbox" id="classTypePilates" name="classType" value="Pilates">-->
+<!--                    <label for="classTypePilates">필라테스</label>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label>전문화:</label>-->
+<!--                    <input type="checkbox" id="specialization1to1" name="specialization" value="1:1">-->
+<!--                    <label for="specialization1to1">1:1</label>-->
+<!--                    <input type="checkbox" id="specialization1toN" name="specialization" value="1:n">-->
+<!--                    <label for="specialization1toN">1:n</label>-->
+<!--                    <input type="checkbox" id="specializationNtoN" name="specialization" value="n:n">-->
+<!--                    <label for="specializationNtoN">n:n</label>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label for="introduce">소개:</label><br>-->
+<!--                    <textarea id="introduce" name="introduce" rows="4" cols="50"></textarea>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <label for="image">이미지 업로드:</label>-->
+<!--                    <input type="file" id="image" name="image" accept="image/*">-->
+<!--                </div>-->
+<!--                <button type="submit">등록</button>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--</html>-->
+
+<!DOCTYPE html>
 <html layout:decorate="~{layout}" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Trainer Form</title>
+    <script>
+        // 데이터를 받아와서 처리하는 함수
+        function handleData(data) {
+            // 데이터가 배열인지 확인
+            if (Array.isArray(data)) {
+                // 배열일 경우에만 forEach 실행
+                data.forEach(item => {
+                    console.log(item);
+                });
+            } else {
+                console.error("Data is not an array:", data);
+            }
+        }
+
+        // 예시로 서버로부터 데이터를 받아오는 함수
+        function fetchData() {
+            fetch('/path/to/api')
+                .then(response => response.json())
+                .then(data => handleData(data))
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        // 페이지 로드 시 데이터 가져오기
+        window.onload = fetchData;
+    </script>
+</head>
+<body>
 <div layout:fragment="content" class="w-full my-3">
     <div class="h-screen flex items-center justify-center bg-black">
-        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg">
-            <form th:object="${trainerForm}" method="post" enctype="multipart/form-data">
-                <!-- CSRF 토큰 입력 -->
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
-                <!-- 프로필 이미지 출력 (조건부) -->
-                <img th:if="${trainer != null}" th:src="@{'/uploads/'+ ${trainerForm.imagePath}}" alt="프로필 사진">
-
-                <!-- 프로필 이미지 업로드 입력 -->
-                <div class="mb-3 w-full">
-                    <input input th:if="${trainer == null}" type="file" class="file-input file-input-bordered w-full max-w-xl text-black" id="image" name="image"/>
+        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">
+            <form action="/trainer/create" method="post" enctype="multipart/form-data">
+                <div>
+                    <label for="trainerName">트레이너 이름:</label>
+                    <input type="text" id="trainerName" name="trainerName" required>
                 </div>
-
-                <!-- 트레이너 이름 입력 -->
-                <div class="mb-3 w-full">
-                    <input th:if="${trainer == null}" type="text" class="input w-full input-bordered text-black" th:field="*{trainerName}" placeholder="트레이너 이름">
-                    <input th:if="${trainer != null}" type="text" class="input w-full input-bordered text-black" th:field="*{trainerName}" th:value="${trainer.trainerName}" placeholder="트레이너 이름">
+                <div>
+                    <label>성별:</label>
+                    <input type="radio" id="genderMale" name="gender" value="male">
+                    <label for="genderMale">남성</label>
+                    <input type="radio" id="genderFemale" name="gender" value="female">
+                    <label for="genderFemale">여성</label>
                 </div>
-
-                <!-- 경력 작성 입력 -->
-                <div class="mb-3 w-full">
-                    <input th:if="${trainer == null}" type="text" class="input w-full input-bordered text-black" th:field="*{introduce}" placeholder="경력 작성">
-                    <input th:if="${trainer != null}" type="text" class="input w-full input-bordered text-black" th:field="*{introduce}" th:value="${trainer.introduce}" placeholder="경력 작성">
+                <div>
+                    <label>레슨 종류:</label>
+                    <input type="checkbox" id="classTypeHealth" name="classType" value="Health">
+                    <label for="classTypeHealth">헬스</label>
+                    <input type="checkbox" id="classTypePT" name="classType" value="PT">
+                    <label for="classTypePT">PT</label>
+                    <input type="checkbox" id="classTypePilates" name="classType" value="Pilates">
+                    <label for="classTypePilates">필라테스</label>
                 </div>
-
-                <!-- 수정 완료 버튼 -->
-                <button th:if="${trainer == null}" type="submit" class="btn btn-error">업로드</button>
-                <button th:if="${trainer != null}" type="submit" class="btn btn-primary">수정</button>
+                <div>
+                    <label>전문화:</label>
+                    <input type="checkbox" id="specialization1to1" name="specialization" value="1:1">
+                    <label for="specialization1to1">1:1</label>
+                    <input type="checkbox" id="specialization1toN" name="specialization" value="1:n">
+                    <label for="specialization1toN">1:n</label>
+                    <input type="checkbox" id="specializationNtoN" name="specialization" value="n:n">
+                    <label for="specializationNtoN">n:n</label>
+                </div>
+                <div>
+                    <label for="introduce">소개:</label><br>
+                    <textarea id="introduce" name="introduce" rows="4" cols="50"></textarea>
+                </div>
+                <div>
+                    <label for="image">이미지 업로드:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <button type="submit">등록</button>
             </form>
         </div>
     </div>
 </div>
+</body>
 </html>
