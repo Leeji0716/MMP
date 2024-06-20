@@ -8,7 +8,5 @@ import java.util.List;
 @Getter
 @Setter
 public class FilterRequest {
-    private List<String> gender;
-    private List<String> classType;
-    private List<String> specialization;
+    private List<String> keyword;
 }

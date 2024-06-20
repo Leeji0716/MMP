@@ -29,6 +29,8 @@ public class QTrainer extends EntityPathBase<Trainer> {
 
     public final StringPath introduce = createString("introduce");
 
+    public final StringPath keyword = createString("keyword");
+
     public final StringPath specialization = createString("specialization");
 
     public final StringPath trainerName = createString("trainerName");

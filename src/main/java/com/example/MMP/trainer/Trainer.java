@@ -27,4 +27,6 @@ public class Trainer {
     private String classType;
 
     private String specialization;
+
+    private String keyword;
 }

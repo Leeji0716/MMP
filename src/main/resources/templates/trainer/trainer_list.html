@@ -1,116 +1,109 @@
 <html layout:decorate="~{layout}">
-    <div layout:fragment="content" class="w-full mx-auto h-64">
-        <!-- 필터링 폼 -->
-        <form action="/trainer/filter" id="categoryFilterForm" class="mb-4">
-            <!-- 성별 필터 -->
-            <div class="filter-container">
-                <input type="checkbox" id="genderMale" name="gender" value="man">
-                <label for="genderMale">남성</label>
+<div layout:fragment="content" class="w-full flex-1 flex flex-col overflow-y-auto mx-auto h-[800px] text-black">
+    <div class="container mx-auto py-8">
+        <h1 class="text-3xl font-bold mb-8 text-white">Trainer Profile</h1>
+        <div class="flex flex-wrap mb-8">
+            <div class="w-full md:w-1/3 px-2">
+                <div class="bg-white rounded shadow p-4">
+                    <h3 class="font-bold mb-2">Gender</h3>
+                    <label><input type="checkbox" class="filter-checkbox" name="gender" value="male"> Male</label><br>
+                    <label><input type="checkbox" class="filter-checkbox" name="gender" value="female"> Female</label>
+                </div>
             </div>
-            <div class="filter-container">
-                <input type="checkbox" id="genderFemale" name="gender" value="woman">
-                <label for="genderFemale">여성</label>
+            <div class="w-full md:w-1/3 px-2">
+                <div class="bg-white rounded shadow p-4">
+                    <h3 class="font-bold mb-2">Class Type</h3>
+                    <label><input type="checkbox" class="filter-checkbox" name="classType" value="PT"> PT</label><br>
+                    <label><input type="checkbox" class="filter-checkbox" name="classType" value="Health">
+                        Health</label><br>
+                    <label><input type="checkbox" class="filter-checkbox" name="classType" value="Pilates">
+                        Pilates</label>
+                </div>
             </div>
-
-            <!-- 레슨 종류 필터 -->
-            <div class="filter-container">
-                <input type="checkbox" id="classType" name="classType" value="Health">
-                <label for="classTypeHealth">헬스</label>
-            </div>
-            <div class="filter-container">
-                <input type="checkbox" id="classType" name="classType" value="PT">
-                <label for="classTypePT">PT</label>
-            </div>
-            <div class="filter-container">
-                <input type="checkbox" id="classType" name="classType" value="Pilates">
-                <label for="classTypePilates">필라테스</label>
-            </div>
-
-            <!-- 전문화 필터 -->
-            <div class="filter-container">
-                <input type="checkbox" id="specialization" name="specialization" value="1">
-                <label for="specialization1to1">1:1</label>
-            </div>
-            <div class="filter-container">
-                <input type="checkbox" id="specialization" name="specialization" value="2">
-                <label for="specialization1toN">1:n</label>
-            </div>
-            <div class="filter-container">
-                <input type="checkbox" id="specialization" name="specialization" value="3">
-                <label for="specializationNtoN">n:n</label>
-            </div>
-
-            <!-- 필터 적용 버튼 -->
-            <button type="button" onclick="filterItems()" class="btn btn-primary">적용</button>
-        </form>
-
-        <div class="custom-scale">
-            <div class="flex justify-between -translate-y-12" id="trainerListContainer">
-                <!-- 필터링된 트레이너 카드가 여기에 동적으로 추가됩니다 -->
+            <div class="w-full md:w-1/3 px-2">
+                <div class="bg-white rounded shadow p-4">
+                    <h3 class="font-bold mb-2">Specialization</h3>
+                    <label><input type="checkbox" class="filter-checkbox" name="specialization" value="1">
+                        1:1</label><br>
+                    <label><input type="checkbox" class="filter-checkbox" name="specialization" value="2">
+                        1:n</label><br>
+                    <label><input type="checkbox" class="filter-checkbox" name="specialization" value="3"> n:n</label>
+                </div>
             </div>
         </div>
-        <script>
-            function getCheckedValues(name) {
-                const checkboxes = document.querySelectorAll(`input[name=${name}]:checked`);
-                return Array.from(checkboxes).map(checkbox => checkbox.value);
-            }
-    
-            function filterItems() {
-                const checkedGenders = getCheckedValues('gender');
-                console.log(checkedGenders);
-                const checkedClassTypes = getCheckedValues('classType');
-                console.log(checkedClassTypes);
-                const checkedSpecializations = getCheckedValues('specialization');
-                console.log(checkedSpecializations);
-
-    
-                fetch('/trainer/filter', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        gender: checkedGenders,
-                        classType: checkedClassTypes,
-                        specialization: checkedSpecializations
-                    })
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok ' + response.statusText);
-                        }
-                        return response.json();
-                    })
-                    .then(filteredTrainers => {
-                        const trainerListContainer = document.getElementById('trainerListContainer');
-                        trainerListContainer.innerHTML = ''; // 기존 내용을 지웁니다
-    
-                        filteredTrainers.forEach(trainer => {
-                            const trainerCard = document.createElement('div');
-                            trainerCard.className = 'card w-80 bg-base-100 shadow-xl m-2 pt-2.5 text-black';
-                            trainerCard.dataset.trainerId = trainer.id;
-    
-                            trainerCard.innerHTML = `
-                                <figure><img src="/uploads/${trainer.imagePath}" alt="profile" /></figure>
-                                <div class="card-body">
-                                    <p>트레이너 : ${trainer.trainerName}</p>
-                                    <p>성별 : ${trainer.gender}</p>
-                                    <p>레슨 : ${trainer.classType}</p>
-                                    <p>전문 : ${trainer.specialization}</p>
-                                    <p>경력 : ${trainer.introduce}</p>
-                                    <div class="card-actions justify-end">
-                                        <a href="/totalPass/list" class="btn btn-primary">이용권 보러가기</a>
-                                    </div>
-                                </div>
-                            `;
-    
-                            trainerListContainer.appendChild(trainerCard);
-                        });
-                    })
-                    .catch(error => console.error('필터링 중 오류 발생:', error));
-            }
-        </script>
+        <div id="trainerListContainer" class="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3"></div>
     </div>
 
-    
+    <script>
+        const itemList = document.getElementById("trainerListContainer");
+        const checkboxes = document.querySelectorAll(".filter-checkbox");
+
+        function getCheckedValues(name) {
+            const checkboxes = document.querySelectorAll(`input[name=${name}]:checked`);
+            return Array.from(checkboxes).map(checkbox => checkbox.value);
+        }
+
+        function filterItems() {
+            const checkedGenders = getCheckedValues('gender');
+            const checkedClassTypes = getCheckedValues('classType');
+            const checkedSpecializations = getCheckedValues('specialization');
+
+            // 합쳐진 키워드 생성
+            const keyword = checkedGenders.concat(checkedClassTypes, checkedSpecializations);
+
+            fetch('/trainer/filter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    keyword: keyword
+                })
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(filteredTrainers => {
+                    renderTrainers(filteredTrainers);
+                })
+                .catch(error => console.error('필터링 중 오류 발생:', error));
+        }
+
+        function renderTrainers(trainers) {
+            const trainerListContainer = document.getElementById('trainerListContainer');
+            trainerListContainer.innerHTML = ''; // 기존 내용을 지웁니다
+            // itemList.innerHTML = "";
+            trainers.forEach(trainer => {
+                const trainerCard = document.createElement('div');
+                trainerCard.className = 'bg-white rounded shadow p-4';
+                trainerCard.innerHTML = `
+                    <figure class="mb-2">
+                        <img src="/uploads/${trainer.imagePath}" alt="profile" class="rounded-full w-200 h-48 object-cover mx-auto">
+                    </figure>
+                    <p class="font-bold text-lg text-center">${trainer.trainerName}</p>
+                    <p class="text-center">성별: ${trainer.gender}</p>
+                    <p class="text-center">레슨: ${trainer.classType}</p>
+                    <p class="text-center">전문: ${trainer.specialization}</p>
+                    <p class="text-center">소개: ${trainer.introduce}</p>
+                    <div class="mt-4 flex justify-center">
+                        <a href="/totalPass/list" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">이용권 보러가기</a>
+                    </div>
+                `;
+                itemList.appendChild(trainerCard);
+            });
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener("change", filterItems);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            filterItems();
+        })
+    </script>
+</div>
+
 </html>

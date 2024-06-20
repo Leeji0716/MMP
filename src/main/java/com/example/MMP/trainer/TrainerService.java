@@ -3,6 +3,7 @@ package com.example.MMP.trainer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,17 @@ public class TrainerService {
         trainer.setClassType(classType);
         trainer.setSpecialization(specialization);
 
+        // keyword 생성 및 설정
+        String keyword = generateKeyword(gender, classType, specialization);
+        trainer.setKeyword(keyword);
+
+        // Trainer 객체 저장
         this.trainerRepository.save(trainer);
+    }
+
+    // keyword 생성 메서드
+    private String generateKeyword(String gender, String classType, String specialization) {
+        return gender + "," + classType + "," + specialization;
     }
 
     public List<Trainer> getList() {
@@ -51,18 +62,16 @@ public class TrainerService {
     }
 
     public List<Trainer> findAll() {
-        return this.trainerRepository.findAll();//
+        return this.trainerRepository.findAll();
     }
+    public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
+        return trainers.stream()
+                .filter(trainer -> filterRequest.getKeyword() == null
+                        || filterRequest.getKeyword().isEmpty()
+                        || Arrays.stream(trainer.getKeyword().split(",\\s*"))
+                        .anyMatch(keyword -> filterRequest.getKeyword().contains(keyword)))
 
-    public List<Trainer> filterTrainers(FilterRequest filterRequest) {
-        // 모든 트레이너 목록 가져오기
-        List<Trainer> allTrainers = trainerRepository.findAll();
-
-        // 필터 조건에 따라 트레이너 목록을 필터링
-        return allTrainers.stream()
-                .filter(trainer -> filterRequest.getGender().isEmpty() || filterRequest.getGender().contains(trainer.getGender()))
-                .filter(trainer -> filterRequest.getClassType().isEmpty() || filterRequest.getClassType().contains(trainer.getClassType()))
-                .filter(trainer -> filterRequest.getSpecialization().isEmpty() || filterRequest.getSpecialization().contains(trainer.getSpecialization()))
+                // 필터링된 트레이너들을 리스트로 수집합니다.
                 .collect(Collectors.toList());
     }
 }
