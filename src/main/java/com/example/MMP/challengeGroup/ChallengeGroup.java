@@ -32,7 +32,7 @@ public class ChallengeGroup {
 
     @ManyToOne
     @JoinColumn(name = "leader_id")
-    @JsonIgnore
+    @JsonBackReference
     private SiteUser leader;
 
     @ManyToMany
@@ -41,13 +41,13 @@ public class ChallengeGroup {
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-
     @JsonBackReference
     private Set<SiteUser> members = new HashSet<>();
 
     private LocalDateTime createDate;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<GroupTag> groupTagList = new ArrayList<> ();
 
 
@@ -56,6 +56,7 @@ public class ChallengeGroup {
     private List<Attendance> attendances = new ArrayList<>();
 
     @OneToOne
+    @JsonManagedReference
     private ChatRoom chatRoom;
 
 }

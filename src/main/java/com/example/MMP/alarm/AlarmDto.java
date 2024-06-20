@@ -21,4 +21,5 @@ public class AlarmDto {
 
     private int alarmCnt;
 
+    private String sort;
 }

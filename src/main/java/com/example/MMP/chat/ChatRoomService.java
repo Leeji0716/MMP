@@ -2,6 +2,7 @@ package com.example.MMP.chat;
 
 import com.example.MMP.alarm.Alarm;
 import com.example.MMP.alarm.AlarmService;
+import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -48,22 +50,37 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
     }
 
+    @Transactional
     public List<ChatRoomDto> findChat(SiteUser siteUser) {
         List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
         List<ChatRoomDto> chatRoomDtoList = new ArrayList<>();
 
         for (ChatRoom chatRoom : chatRoomList) {
             int cnt = 0;
+            int groupCnt =0;
             ChatRoomDto chatRoomDto = new ChatRoomDto();
+
             ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
             chatRoomDto.setLastMessage(chatMessage.getMessage());
             chatRoomDto.setSendDate(chatMessage.getSendTime());
 
-            for (SiteUser siteUser1 : chatRoom.getUserList()) {
-                if (siteUser1.getId() != siteUser.getId()) {
-                    chatRoomDto.setYou(siteUser1.getName());
-                    chatRoomDto.setYouId(siteUser1.getId());
-                    break;
+            if(chatMessage.getSort().equals("many")){
+
+                List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
+                 chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
+                chatRoomDto.setYouId(challengeGroupList.get(groupCnt).getId());
+            }else{
+                if(chatRoom.getUserList().size() > 1) {
+                    for (SiteUser siteUser1 : chatRoom.getUserList()) {
+                        if (siteUser1.getId() != siteUser.getId()) {
+                            chatRoomDto.setYou(siteUser1.getName());
+                            chatRoomDto.setYouId(siteUser1.getId());
+                            break;
+                        }
+                    }
+                }else{
+                    chatRoomDto.setYouId(null);
+                    chatRoomDto.setYou(null);
                 }
             }
             for (Alarm alarm : chatRoom.getAlarmList()) {
@@ -72,7 +89,8 @@ public class ChatRoomService {
                 }
             }
             chatRoomDto.setAlarmCnt(cnt);
-            chatRoomDtoList.add(chatRoomDto);
+            if(chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
+                chatRoomDtoList.add(chatRoomDto);
         }
         return chatRoomDtoList;
     }
@@ -88,7 +106,7 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public ChatRoomDto findAlarm(Long id,Long meId){
+    public ChatRoomDto findAlarm(Long id, Long meId) {
         SiteUser siteUser = siteUserService.findById(id);
         SiteUser me = siteUserService.findById(meId);
         List<ChatRoom> chatRoomList = siteUser.getChatRoomList();

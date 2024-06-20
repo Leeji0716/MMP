@@ -16,4 +16,6 @@ public class ChatMessageDto {
     private LocalDateTime sendTime;
 
     private String name;
+
+    private String sort;
 }

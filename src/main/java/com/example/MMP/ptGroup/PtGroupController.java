@@ -26,10 +26,6 @@ public class PtGroupController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 
     @GetMapping("/join")
     public String joinUser(@AuthenticationPrincipal UserDetail userDetail){
@@ -63,12 +59,7 @@ public class PtGroupController {
         siteUser.getChatRoomList().add(chatRoom);
         member.getChatRoomList().add(chatRoom);
 
-        ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setSender(siteUser);
-        chatMessage.setMessage(chatMessage.getSender().getName()+"의 PT그룹에 참여한걸 환영합니다...!");
-        chatMessage.setSendTime(LocalDateTime.now());
-        chatMessage.setChatRoom(chatRoom);
-        chatMessageService.save(chatMessage);
+        chatMessageService.firstChatMessage(siteUser,chatRoom);
 
         siteUserService.save(member);
         return "redirect:/";

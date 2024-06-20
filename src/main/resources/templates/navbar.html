@@ -2,7 +2,7 @@
     <div class="container mx-auto flex flex-wrap items-center justify-between">
         <a href="/" class="text-white text-xl">
             <img src="https://i.imgur.com/Af3T5qw.png" alt="로고" class="h-8 w-auto inline">
-<!--            <img src="https://i.imgur.com/XtzS14O.png" alt="로고" class="h-8 w-auto inline">-->
+            <!--            <img src="https://i.imgur.com/XtzS14O.png" alt="로고" class="h-8 w-auto inline">-->
         </a>
         <div>
             <a class="dropbtn bg-black text-white text-lg" th:href="@{/notice/list}">공지사항</a>
@@ -31,7 +31,8 @@
                 class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52 bg-black text-white">
                 <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500"
                     th:href="@{/wod/form}">오운완</a>
-                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500" href="/homeTraining/home">홈트레이닝</a>
+                <a class="nav-link inline-block py-2 px-4 text-white no-underline border-b border-gray-500"
+                    href="/homeTraining/home">홈트레이닝</a>
                 <a class="nav-link inline-block py-2 px-4 text-white no-underline" href="/groupChallenge/list">그룹</a>
             </div>
         </div>
@@ -92,6 +93,11 @@
                 stompClient.subscribe('/sub/alarm/' + user, function (alarmDto) {
                     showAlarm(JSON.parse(alarmDto.body));
                 });
+
+                stompClient.subscribe('/sub/groupAlarm/' + user, function (alarmDto) {
+                    showAlarm(JSON.parse(alarmDto.body));
+                });
+
             }, function (error) {
                 console.error('웹소켓 연결 실패:', error);
             });
@@ -106,7 +112,8 @@
                 if (url === sender) {
                     const sendTime = new Date(alarmDto.sendTime);
                     const formattedTime = formatTime(sendTime);
-
+                    console.log(formattedTime);
+                    
                     const talkTime = talk.querySelector(".talk-time");
                     talkTime.innerText = formattedTime;
 
@@ -149,8 +156,7 @@
 
             return `${period} ${formattedHours}:${formattedMinutes}`;
         }
-        const sendTime = new Date(alarmDto.sendTime);
-        const formattedTime = formatTime(sendTime);
+        
 
 
     </script>

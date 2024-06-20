@@ -22,7 +22,7 @@
         <div class="bg-white p-6 rounded-lg shadow-lg w-[800px] h-[800px]">
             <h1 class="text-2xl font-bold mb-4">Chat Room</h1>
             <div id="messages" class="w-[100%] h-[85%] overflow-y-auto mb-4">
-                <div th:each="list :${challengeGroup.chatRoom.chatMessageList}">
+                <div th:each="list :${chatRoom.chatMessageList}">
                     <div th:if="${list.sender != null}">
                         <div th:if="${list.sender.name eq me.name}">
                             <div class="chat chat-end flex flex-col items-end">
@@ -65,36 +65,37 @@
         <!--    </div>-->
         <script th:inline="javascript">
             function connect() {
-                var socket = new SockJS("http://43.202.255.109:8088/ws-stomp");
+                var socket = new SockJS("http://localhost:8088/ws-stomp");
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
-                    const aa = [[${ challengeGroup.chatRoom.id }]];
-
+                    const aa = [[${chatRoom.id}]];
+                    const members = [[${memberList}]];
+                    const me = [[${me.number}]];
                     //구독
                     stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
                         showChat(JSON.parse(chatMessageDto.body));
                     });
+                    members.forEach((member) => {
+                        if (member.number !== me) {
+                            stompClient.subscribe('/sub/groupAlarm/' + member.number, function (alarmDto) {
+                            });
+                        } else {
+                            console.log("자신은 구독 안하지롱");
+                        }
 
-                    // const memberList = [[${ challengeGroup.members }]];
-                    // memberList.forEach((member) => {
-                    //     const number = member.number;
-                    //     const menumber = [[${me.number}]];
-                    //     if (number !== menumber) {
-                    //         stompClient.subscribe('/sub/talk/' + menumber, function (chatMessageDto) {
-                    //             showChat(JSON.parse(chatMessageDto.body));
-                    //         });
-                    //     }
-                    // });
+                    });
+
                 });
             }
 
 
-            //html 에서 입력값, roomId 를 받아서 Controller 로 전달
             function sendChat() {
-                const aa = [[${ challengeGroup.chatRoom.id }]];
+                const aa = [[${ chatRoom.id }]];
                 const sender = [[${ me.number }]];
                 const name = [[${ me.name }]];
+                const members = [[${ memberList }]];
+                const groupName = [[${challengeGroup.name}]];
 
                 var currentDate = new Date();
                 currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
@@ -106,8 +107,24 @@
                             'sender': sender,
                             'name': name,
                             'message': $("#message").val(),
-                            'sendTime': formattedDate
+                            'sendTime': formattedDate,
+                            'sort' : "one"
                         }));
+                        members.forEach((member) => {
+                            if(member.number !== sender){
+                            stompClient.send("/pub/groupAlarm/" + member.number,{},
+                            JSON.stringify({
+                            'sender': groupName,
+                            'acceptUser': member.number,
+                            'message': $("#message").val(),
+                            'sendTime': formattedDate,
+                            'chatroomId' : aa,
+                            'alarmCnt' : '0',
+                            'sort' : "many"
+                        }))
+                        }
+                        })
+                        
                 }
                 $("#message").val('');
             }

@@ -1,6 +1,8 @@
 package com.example.MMP.challengeGroup;
 
+import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
+import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
@@ -25,6 +27,8 @@ public class ChallengeGroupService {
     private final ChallengeGroupRepository groupRepository;
     private final SiteUserRepository userRepository;
     private final SiteUserService userService;
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
 
     // GroupService에 추가
@@ -53,6 +57,8 @@ public class ChallengeGroupService {
 
         group.setChatRoom(chatRoom);
 
+        leader.getChallengeGroups().add(group);
+
         return groupRepository.save(group);
     }
 
@@ -65,6 +71,11 @@ public class ChallengeGroupService {
             ChallengeGroup group = groupOpt.get();
             SiteUser user = userOpt.get();
             group.getMembers().add(user);
+
+            ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
+            chatRoom.getUserList().add(user);
+            chatRoomService.save(chatRoom);
+
             groupRepository.save(group);
         } else{
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
@@ -81,6 +92,10 @@ public class ChallengeGroupService {
             SiteUser user = userOpt.get();
             group.getMembers().remove(user);
             groupRepository.save(group);
+
+            ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
+            chatRoom.getUserList().remove(user);
+            chatRoomService.save(chatRoom);
         } else {
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
         }

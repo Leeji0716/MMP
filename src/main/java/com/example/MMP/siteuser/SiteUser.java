@@ -20,10 +20,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -110,19 +107,20 @@ public class SiteUser {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_room_id")
     )
-
-    @JsonIgnore
+    @JsonBackReference
     private List<ChatRoom> chatRoomList = new ArrayList<>();
 
     @OneToMany(mappedBy = "acceptUser")
+    @JsonManagedReference
     private List<Alarm> alarmList = new ArrayList<>();
 
     private LocalDate createDate;
 
     @ManyToMany
     @JsonManagedReference
-    private Set<ChallengeGroup> challengeGroups = new HashSet<> ();
+    private Set<ChallengeGroup> challengeGroups = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "siteUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 }

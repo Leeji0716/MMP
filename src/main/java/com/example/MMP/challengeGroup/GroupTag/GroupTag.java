@@ -3,6 +3,7 @@ package com.example.MMP.challengeGroup.GroupTag;
 
 import com.example.MMP.Tag.Tag;
 import com.example.MMP.challengeGroup.ChallengeGroup;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,5 +23,6 @@ public class GroupTag {
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
+    @JsonBackReference
     private ChallengeGroup group;
 }

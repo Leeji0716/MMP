@@ -100,7 +100,8 @@
                             'sender': sender,
                             'name': name,
                             'message': $("#message").val(),
-                            'sendTime': formattedDate
+                            'sendTime': formattedDate,
+                            'sort' : "one"
                         }));
 
                     stompClient.send("/pub/alarm/" + number, {},
@@ -110,7 +111,8 @@
                             'message': $("#message").val(),
                             'sendTime': formattedDate,
                             'chatroomId' : aa,
-                            'alarmCnt' : '0'
+                            'alarmCnt' : '0',
+                            'sort' : "one"
                         }));
                 }
                 $("#message").val('');
