@@ -67,6 +67,7 @@ public class ChallengeGroupController {
         try {
             SiteUser siteUser = siteUserService.getUser(principal.getName());
             ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setSort("many");
             chatRoomService.save(chatRoom);
             chatRoom.getUserList().add(siteUser);
             siteUser.getChatRoomList().add(chatRoom);
@@ -173,12 +174,20 @@ public class ChallengeGroupController {
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
         ChallengeGroup challengeGroup = groupService.getGroup(id);
         List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
+        List<String> memberNumber = new ArrayList<>();
+        for(SiteUser siteUser1 : memberList){
+            memberNumber.add(siteUser1.getNumber());
+        }
         ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
 
         model.addAttribute("challengeGroup",challengeGroup);
         model.addAttribute("me",siteUser);
         model.addAttribute("chatRoom",chatRoom);
-        model.addAttribute("memberList",memberList);
+        model.addAttribute("memberNumber",memberNumber);
+
+
+
+
         return "chat/groupchat";
     }
 

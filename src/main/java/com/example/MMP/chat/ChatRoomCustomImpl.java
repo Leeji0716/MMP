@@ -17,7 +17,8 @@ public class ChatRoomCustomImpl implements ChatRoomCustom{
     public Optional<ChatRoom> findChatroom(SiteUser trainer, SiteUser user){
         return Optional.ofNullable(jpaQueryFactory.selectFrom(qChatRoom)
                 .where(qChatRoom.userList.contains(trainer)
-                        .and(qChatRoom.userList.contains(user)))
+                        .and(qChatRoom.userList.contains(user))
+                        .and(qChatRoom.sort.eq("one")))
                 .fetchOne());
     }
 

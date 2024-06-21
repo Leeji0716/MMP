@@ -201,32 +201,68 @@
                             </summary>
                             <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
-                                    <div th:if="${!#lists.isEmpty(chatRoomDtoList)}"
-                                        th:each="chatroom : ${chatRoomDtoList}" class="gotalk">
+                                    <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
+                                        class="gotalk">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
                                             <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end"></p>
+                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
+                                            </p>
                                         </div>
                                         <div class="alarm flex gap-10">
-                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
+                                            </p>
+                                            <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}"
+                                                th:text="${chatroom.alarmCnt}"></p>
+                                        </div>
+                                    </div>
+                                    <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
+                                        class="gotalk">
+                                        <div class="flex gap-10">
+                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}" th:text="${chatroom.you}"
+                                                class="talk-url font-bold justify-start"></a>
+                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
+                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
+                                            </p>
+                                        </div>
+                                        <div class="alarm flex gap-10">
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
+                                            </p>
                                             <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}"
                                                 th:text="${chatroom.alarmCnt}"></p>
                                         </div>
                                     </div>
                                 </div>
                                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
-                                    <div th:if="${!#lists.isEmpty(chatRoomDtoList)}"
-                                        th:each="chatroom : ${chatRoomDtoList}" class="gotalk">
+                                    <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
+                                        class="gotalk">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
                                             <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end"></p>
+                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
+                                            </p>
                                         </div>
                                         <div class="alarm flex gap-10">
-                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
+                                            </p>
+                                            <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}"
+                                                th:text="${chatroom.alarmCnt}"></p>
+                                        </div>
+                                    </div>
+                                    <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
+                                        class="gotalk">
+                                        <div class="flex gap-10">
+                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}" th:text="${chatroom.you}"
+                                                class="talk-url font-bold justify-start"></a>
+                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
+                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
+                                            </p>
+                                        </div>
+                                        <div class="alarm flex gap-10">
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
+                                            </p>
                                             <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}"
                                                 th:text="${chatroom.alarmCnt}"></p>
                                         </div>

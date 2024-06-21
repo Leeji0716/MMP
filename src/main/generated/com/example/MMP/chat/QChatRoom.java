@@ -28,6 +28,8 @@ public class QChatRoom extends EntityPathBase<ChatRoom> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath sort = createString("sort");
+
     public final ListPath<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser> userList = this.<com.example.MMP.siteuser.SiteUser, com.example.MMP.siteuser.QSiteUser>createList("userList", com.example.MMP.siteuser.SiteUser.class, com.example.MMP.siteuser.QSiteUser.class, PathInits.DIRECT2);
 
     public QChatRoom(String variable) {

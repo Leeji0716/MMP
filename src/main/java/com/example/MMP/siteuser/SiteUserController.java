@@ -220,9 +220,9 @@ public class SiteUserController {
                 model.addAttribute("MyStandPass",MyStandPass);
             }
 
-            List<ChatRoomDto> chatRoomDtoList = chatRoomService.findChat(user);
-            if(chatRoomDtoList == null){
-                model.addAttribute("chatRoomDtoList",null);
+            Map<String,List<ChatRoomDto>> chatDto = chatRoomService.findChat(user);
+            if(chatDto == null){
+                model.addAttribute("chatDto",null);
             }
 
 
@@ -234,7 +234,7 @@ public class SiteUserController {
             model.addAttribute("ongoingChallenges", ongoingChallenges);
             model.addAttribute("successfulChallenges", successfulChallenges);
             model.addAttribute("failedChallenges", failedChallenges);
-            model.addAttribute("chatRoomDtoList",chatRoomDtoList);
+            model.addAttribute("chatDto",chatDto);
             model.addAttribute("challengeCount", challengeCount);
 
             return "user/userProfile_form";

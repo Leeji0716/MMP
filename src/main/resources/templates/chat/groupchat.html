@@ -70,15 +70,19 @@
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
                     const aa = [[${ chatRoom.id }]];
-                    const members = [[${ memberList }]];
-                    const me = [[${ me.number }]];
+                    const members = [[${ memberNumber }]];
+                    const menunmber = [[${ me.number }]];
+                    console.log('컨트롤러에서 넘어온 맴버 : '+members);
+                    console.log('맴버타입 : '+typeof(members));
                     //구독
                     stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
                         showChat(JSON.parse(chatMessageDto.body));
                     });
                     members.forEach((member) => {
-                        if (member.number !== me) {
-                            stompClient.subscribe('/sub/groupAlarm/' + member.number, function (alarmDto) {
+                        console.log('member: '+member);
+                        console.log('맴버타입 : '+typeof(members));
+                        if (member !== menunmber) {
+                            stompClient.subscribe('/sub/groupAlarm/' + member, function (alarmDto) {
                             });
                         } else {
                             console.log("자신은 구독 안하지롱");
@@ -94,7 +98,7 @@
                 const aa = [[${ chatRoom.id }]];
                 const sender = [[${ me.number }]];
                 const name = [[${ me.name }]];
-                const members = [[${ memberList }]];
+                const members = [[${ memberNumber }]];
                 const groupName = [[${ challengeGroup.name }]];
 
                 var currentDate = new Date();
@@ -112,11 +116,10 @@
                         }));
                     members.forEach((member) => {
                         if (member.number !== sender) {
-                            console.log(member.number);
-                            stompClient.send("/pub/groupAlarm/" + member.number, {},
+                            stompClient.send("/pub/groupAlarm/" + member, {},
                                 JSON.stringify({
                                     'sender': groupName,
-                                    'acceptUser': member.number,
+                                    'acceptUser': member,
                                     'message': $("#message").val(),
                                     'sendTime': formattedDate,
                                     'chatroomId': aa,

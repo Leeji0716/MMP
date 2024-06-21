@@ -55,45 +55,45 @@
 <body>
 <div layout:fragment="content" class="content">
 
-<!--    <div class ="flex justify-center w-full">-->
-<!--        <div style="width: 60%;" class="flex flex-col">-->
+    <div class ="flex justify-center w-full">
+        <div style="width: 60%;" class="flex flex-col">
 
-<!--            <div class="flex justify-center w-full">-->
-<!--                <p style="font-size: 1.5rem; color: white; font-weight: bold; text-align: center; margin: 10px 0; margin-bottom:0px">-->
-<!--                    현재 헬스장 사용 인원은-->
-<!--                    <a href="/attendance/checkin">-->
-<!--                    <span th:text="${presentCount}" style="font-size: 2rem; color: red;"></span> 명입니다-->
-<!--                    </a>-->
-<!--                </p>-->
-<!--            </div>-->
+            <div class="flex justify-center w-full">
+                <p style="font-size: 1.5rem; color: white; font-weight: bold; text-align: center; margin: 10px 0; margin-bottom:0px">
+                    현재 헬스장 사용 인원은
+                    <a href="/attendance/checkin">
+                    <span th:text="${presentCount}" style="font-size: 2rem; color: red;"></span> 명입니다
+                    </a>
+                </p>
+            </div>
 
-<!--            &lt;!&ndash; 조건에 따른 메시지 표시 &ndash;&gt;-->
-<!--            <div class="flex justify-center w-full">-->
-<!--                <div th:if="${presentCount} >= 0 and ${presentCount} <= 30">-->
-<!--                    <img src="https://i.imgur.com/AxP2Y2P.png" alt="쾌적 상태 이미지">-->
-<!--                </div>-->
-<!--                <div th:if="${presentCount} > 30 and ${presentCount} <= 70">-->
-<!--                    <img src="https://i.imgur.com/x9fF2NP.png" alt="양호 상태 이미지">-->
-<!--                </div>-->
-<!--                <div th:if="${presentCount} > 70 and ${presentCount} <= 100">-->
-<!--                    <img src="https://i.imgur.com/7fXhguJ.png" alt="양호 상태 이미지">-->
-<!--                </div>-->
-<!--            </div>-->
+            <!-- 조건에 따른 메시지 표시 -->
+            <div class="flex justify-center w-full">
+                <div th:if="${presentCount} >= 0 and ${presentCount} <= 30">
+                    <img src="https://i.imgur.com/AxP2Y2P.png" alt="쾌적 상태 이미지">
+                </div>
+                <div th:if="${presentCount} > 30 and ${presentCount} <= 70">
+                    <img src="https://i.imgur.com/x9fF2NP.png" alt="양호 상태 이미지">
+                </div>
+                <div th:if="${presentCount} > 70 and ${presentCount} <= 100">
+                    <img src="https://i.imgur.com/7fXhguJ.png" alt="양호 상태 이미지">
+                </div>
+            </div>
 
-<!--            &lt;!&ndash;        <div class="flex flex-col items-center space-y-4 mt-4">&ndash;&gt;-->
-<!--            &lt;!&ndash;            <input type="range" min="0" max="50" th:value="${presentCount}" class="range range-error" step="1" />&ndash;&gt;-->
-<!--            &lt;!&ndash;            <div class="w-full flex justify-between text-xs px-2">&ndash;&gt;-->
-<!--            &lt;!&ndash;                <span>쾌적(0명)</span>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <span></span>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <span>양호(25명)</span>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <span></span>&ndash;&gt;-->
-<!--            &lt;!&ndash;                <span>가득(50명)</span>&ndash;&gt;-->
-<!--            &lt;!&ndash;            </div>&ndash;&gt;-->
-<!--            &lt;!&ndash;        </div>&ndash;&gt;-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <br>-->
-<!--    <br>-->
+            <!--        <div class="flex flex-col items-center space-y-4 mt-4">-->
+            <!--            <input type="range" min="0" max="50" th:value="${presentCount}" class="range range-error" step="1" />-->
+            <!--            <div class="w-full flex justify-between text-xs px-2">-->
+            <!--                <span>쾌적(0명)</span>-->
+            <!--                <span></span>-->
+            <!--                <span>양호(25명)</span>-->
+            <!--                <span></span>-->
+            <!--                <span>가득(50명)</span>-->
+            <!--            </div>-->
+            <!--        </div>-->
+        </div>
+    </div>
+    <br>
+    <br>
 
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">

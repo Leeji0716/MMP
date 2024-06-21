@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +47,11 @@ public class ChatRoomService {
     }
 
     @Transactional
-    public List<ChatRoomDto> findChat(SiteUser siteUser) {
+    public Map<String, List<ChatRoomDto>> findChat(SiteUser siteUser) {
         List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
-        List<ChatRoomDto> chatRoomDtoList = new ArrayList<>();
-
+        List<ChatRoomDto> chatRoomOneList = new ArrayList<>();
+        List<ChatRoomDto> chatRoomManyList = new ArrayList<>();
+        Map<String, List<ChatRoomDto>> chatMap = new HashMap<>();
         for (ChatRoom chatRoom : chatRoomList) {
             int cnt = 0;
             int groupCnt = 0;
@@ -67,12 +66,14 @@ public class ChatRoomService {
                 List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
                 chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
                 chatRoomDto.setYouId(challengeGroupList.get(groupCnt).getId());
+                chatRoomDto.setSort(chatMessage.getSort());
             } else {
                 if (chatRoom.getUserList().size() > 1) {
                     for (SiteUser siteUser1 : chatRoom.getUserList()) {
                         if (siteUser1.getId() != siteUser.getId()) {
                             chatRoomDto.setYou(siteUser1.getName());
                             chatRoomDto.setYouId(siteUser1.getId());
+                            chatRoomDto.setSort(chatMessage.getSort());
                             break;
                         }
                     }
@@ -88,11 +89,16 @@ public class ChatRoomService {
             }
             chatRoomDto.setAlarmCnt(cnt);
             if (chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
-                chatRoomDtoList.add(chatRoomDto);
+                if(chatRoomDto.getSort().equals("many")) {
+                    chatRoomManyList.add(chatRoomDto);
+                }else{
+                    chatRoomOneList.add(chatRoomDto);
+                }
         }
-        return chatRoomDtoList;
+        chatMap.put("one",chatRoomOneList);
+        chatMap.put("many",chatRoomManyList);
+        return chatMap;
     }
-
     public void deleteAlarm(SiteUser siteUser, ChatRoom chatRoom) {
         for (Alarm alarm : chatRoom.getAlarmList()) {
             for (Alarm alarm1 : siteUser.getAlarmList()) {

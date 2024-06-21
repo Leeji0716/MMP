@@ -72,8 +72,8 @@ public class ChallengeGroupService {
             ChatRoom chatRoom = group.getChatRoom();
             chatRoom.getUserList().add(user);
             chatRoomService.save(chatRoom);
-
             user.getChallengeGroups().add(group);
+            user.getChatRoomList().add(chatRoom);
 
             userService.save(user);
             groupRepository.save(group);

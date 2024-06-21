@@ -42,4 +42,5 @@ public class ChatRoom {
     @JsonIgnore
     List<Alarm> alarmList = new ArrayList<>();
 
+    private String sort;
 }

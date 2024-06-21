@@ -52,6 +52,7 @@ public class PtGroupController {
         member.getPtGroupUser().add(ptGroup);
 
         ChatRoom chatRoom = new ChatRoom();
+        chatRoom.setSort("one");
         chatRoomService.save(chatRoom);
         chatRoom.getUserList().add(siteUser);
         chatRoom.getUserList().add(member);
