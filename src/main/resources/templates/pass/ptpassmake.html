@@ -1,9 +1,9 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full flex items-center justify-center my-3">
-    <div class="w-full bg-gray-100 max-w-md p-8 bg-white rounded-lg shadow-lg">
-        <div class="text-center text-2xl mb-4 text-black">PT회원권 만들기</div>
+    <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
+        <div class="text-center text-2xl mb-4 text-white">PT회원권 만들기</div>
         <a href="/day/add" class="btn">요일권 만들기</a>
-        <form th:action="@{|/pt/add|}" th:object="${ptPassDto}" class="space-y-4 text-black" method="post">
+        <form th:action="@{|/pt/add|}" th:object="${ptPassDto}" class="space-y-4 text-white" method="post">
             <input type="text" th:field="*{passName}"
                    class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
             <p th:if="${#fields.hasErrors('passName')}" th:errors="*{passName}" class="text-red-500 text-sm"></p>
