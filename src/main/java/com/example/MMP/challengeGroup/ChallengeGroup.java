@@ -35,6 +35,10 @@ public class ChallengeGroup {
     @JsonBackReference
     private SiteUser leader;
 
+    // db에 저장이 안 되면서 챌린지 그룹에 담기는 애너테이션
+    @Transient
+    private int rank;
+
     @ManyToMany
     @JoinTable(
             name = "group_user",
@@ -58,6 +62,7 @@ public class ChallengeGroup {
     @OneToOne
     @JsonManagedReference
     private ChatRoom chatRoom;
+
 
 }
 

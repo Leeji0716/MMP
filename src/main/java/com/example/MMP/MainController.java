@@ -27,7 +27,7 @@ public class MainController {
 
         if (!attendances.isEmpty ()) {
             for (Attendance attendance : attendances) {
-                if (attendance.isPresent () == false) {
+                if (attendance.isPresent () == true) {
                     presentCount++;
                 }
             }

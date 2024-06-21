@@ -75,7 +75,7 @@
                         </div>
                         <div class="stat-title font-semibold mb-2">오늘의 그룹순위</div>
 
-                        <div class="stat-value" th:text="${groupRank}"></div>
+                        <div class="stat-value" th:text="${group.rank}"></div>
 
                         <div class="stat-desc">↘︎ 90 (14%)</div>
                     </div>
@@ -139,7 +139,8 @@
                         </td>
                         <td th:text="${member.name}">Name Placeholder</td>
                         <td th:text="${member.createDate}">Date Placeholder</td>
-                        <td th:text="${memberAttendanceFormattedMap[member.id]}">Attendance Placeholder</td>
+                        <td th:text="${totalTimeByMember[member.id]}">Attendance Placeholder</td>
+                    </tr>
                     </tr>
                     </tbody>
                 </table>

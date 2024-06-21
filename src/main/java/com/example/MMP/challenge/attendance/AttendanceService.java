@@ -35,7 +35,6 @@ public class AttendanceService {
     private final ChallengeGroupRepository challengeGroupRepository;
 
 
-
     // 순환 참조 해결 용도
     @Lazy
     @Autowired

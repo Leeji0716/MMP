@@ -136,12 +136,18 @@
                         <ul>
                             <li th:each="attendance, stat : ${attendanceList}">
                                 <!-- 날짜가 변경될 때만 출력 -->
-                                <div th:if="${stat.index == 0} or ${attendanceList[stat.index - 1].date} != ${attendance.date}" class="dropdown">
-                                    <p class="text-black font-bold inline bg-white px-2 dropdown-toggle"> <span th:text="${#temporals.format(attendance.date, 'yyyy-MM-dd')}"></span></p>
+                                <div th:if="${stat.index == 0} or ${attendanceList[stat.index - 1].date} != ${attendance.date}"
+                                     class="dropdown">
+                                    <p class="text-black font-bold inline bg-white px-2 dropdown-toggle"><span
+                                            th:text="${#temporals.format(attendance.date, 'yyyy-MM-dd')}"></span></p>
                                     <ul class="dropdown-menu">
                                         <li th:each="item : ${attendanceList}">
                                             <div th:if="${item.date} == ${attendance.date}">
-                                                <p>시작 시간 : <span th:text="${#temporals.format(item.startTime, 'HH : mm')}"></span> ~ 종료 시간 : <span th:text="${#temporals.format(item.endTime, 'HH : mm')}"></span></p>
+                                                <p>시작 시간 : <span
+                                                        th:text="${#temporals.format(item.startTime, 'HH : mm')}"></span>
+                                                    ~ 종료 시간 : <span
+                                                            th:text="${#temporals.format(item.endTime, 'HH : mm')}"></span>
+                                                </p>
                                             </div>
                                         </li>
                                     </ul>

@@ -2,6 +2,7 @@ package com.example.MMP.challengeGroup;
 
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
+import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
@@ -9,6 +10,7 @@ import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
+import jakarta.persistence.Table;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -89,25 +91,33 @@ public class ChallengeGroupController {
 
     @PostMapping("/{groupId}/leave")
     public ResponseEntity<Void> leaveGroup(@PathVariable Long groupId, @RequestParam Long userId) {
-        groupService.removeGroup(groupId, userId);
-        return ResponseEntity.ok().build();
+        groupService.removeGroup (groupId, userId);
+        return ResponseEntity.ok ().build ();
     }
 
     @GetMapping("/list")
     public String getAllGroups(Model model, Principal principal) {
-        List<ChallengeGroup> groups = groupService.getAllGroups ();
-        model.addAttribute ("groups", groups);
 
+        List<ChallengeGroup> groups = groupService.getGroupRanks ();
         // 로그인된 사용자 정보 추가
-        String username = principal.getName();
+        String username = principal.getName ();
         Optional<SiteUser> siteUsers = siteUserRepository.findByUserId (username);
+        SiteUser user = siteUsers.orElse (null);
 
-        SiteUser user = siteUsers.get ();
+        List<Boolean> leaderStatus = new ArrayList<>();
 
+        for (ChallengeGroup challengeGroup : groups) {
+            boolean isCurrentUserLeader = challengeGroup.getLeader() != null && challengeGroup.getLeader().getName ().equals(username);
+            leaderStatus.add(isCurrentUserLeader);
+        }
+
+        model.addAttribute ("groups", groups);
+        model.addAttribute("leaderStatus", leaderStatus);
         model.addAttribute ("user", user);
 
         return "challenge/groupList_form";
     }
+
 
     @GetMapping("/sorted")
     public ResponseEntity<List<ChallengeGroup>> getAllGroupsSortedByMembers() {
@@ -121,10 +131,16 @@ public class ChallengeGroupController {
             return "error/404"; // 잘못된 ID 처리
         }
 
+        List<ChallengeGroup> challengeGroups = groupService.getGroupRanks ();
+        ChallengeGroup target = null;
+        for (ChallengeGroup challengeGroup : challengeGroups) {
+            if (challengeGroup.getId () == groupId) {
+                target = challengeGroup;
+            }
+        }
 
-        Optional<ChallengeGroup> groupOpt = groupRepository.findById (groupId);
-        if (groupOpt.isPresent ()) {
-            ChallengeGroup group = groupOpt.get ();
+        if (target != null) {
+            ChallengeGroup group = target;
             String username = principal.getName ();
             boolean isLeader = groupService.isLeader (groupId, username);
 
@@ -137,31 +153,18 @@ public class ChallengeGroupController {
             // 해당 그룹의 출석 기록 조회
 
             List<Attendance> attendances = attendanceRepository.findByChallengeGroupId (groupId);
+            Map<Long, Long> totalTimeByMember = attendances.stream()
+                    .collect(Collectors.groupingBy(
+                            attendance -> attendance.getSiteUser().getId(),
+                            Collectors.summingLong(Attendance::getTotalTime)
+                    ));
 
-            // 각 멤버별 총 출석 시간 계산 및 포맷팅
-            Map<Long, String> memberAttendanceFormattedMap = new HashMap<> ();
-            Map<Long, Long> memberAttendanceTimeMap = attendances.stream ()
-                    .collect (Collectors.groupingBy (att -> att.getSiteUser ().getId (),
-                            Collectors.summingLong (Attendance::getTotalTime)));
-
-            memberAttendanceTimeMap.forEach ((memberId, totalSeconds) -> {
-                long hours = totalSeconds / 3600;
-                long minutes = (totalSeconds % 3600) / 60;
-                long seconds = totalSeconds % 60;
-                String formattedTime = String.format ("%d 시간 %d 분 %d 초", hours, minutes, seconds);
-                memberAttendanceFormattedMap.put (memberId, formattedTime);
-            });
-
-            // 모든 그룹의 총 운동 시간과 순위를 계산
-            Map<Long, Integer> groupRanks = groupService.getGroupRanks (memberAttendanceTimeMap);
-            int groupRank = groupRanks.get (group.getId ());
 
             model.addAttribute ("group", group);
             model.addAttribute ("isLeader", isLeader);
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
-            model.addAttribute ("memberAttendanceFormattedMap", memberAttendanceFormattedMap); // 멤버별 포맷된 출석 시간 추가
-            model.addAttribute ("groupRank", groupRank); // 그룹 순위 추가
-            model.addAttribute ("groupLeader",group.getLeader ());
+            model.addAttribute ("groupLeader", group.getLeader ());
+            model.addAttribute("totalTimeByMember", totalTimeByMember);
 
             return "challenge/groupDetail";
         } else {
@@ -194,8 +197,8 @@ public class ChallengeGroupController {
 
     @PostMapping("/delete/{groupId}")
     public String challengeGroupDelete(@PathVariable Long groupId) {
-        ChallengeGroup challengeGroup = groupService.getGroup(groupId);
-        groupService.deleteGroup(challengeGroup);
+        ChallengeGroup challengeGroup = groupService.getGroup (groupId);
+        groupService.deleteGroup (challengeGroup);
         return "redirect:/groupChallenge/list";
     }
 }
