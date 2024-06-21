@@ -127,5 +127,12 @@ public class SiteUser {
     @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 
-//    private List<Coupon> couponList = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+            name = "user_coupon",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "coupon_id")
+    )
+    @JsonBackReference
+    private List<Coupon> couponList = new ArrayList<>();
 }

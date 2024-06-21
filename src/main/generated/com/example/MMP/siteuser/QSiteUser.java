@@ -34,6 +34,8 @@ public class QSiteUser extends EntityPathBase<SiteUser> {
 
     public final ListPath<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom> chatRoomList = this.<com.example.MMP.chat.ChatRoom, com.example.MMP.chat.QChatRoom>createList("chatRoomList", com.example.MMP.chat.ChatRoom.class, com.example.MMP.chat.QChatRoom.class, PathInits.DIRECT2);
 
+    public final ListPath<com.example.MMP.coupon.Coupon, com.example.MMP.coupon.QCoupon> couponList = this.<com.example.MMP.coupon.Coupon, com.example.MMP.coupon.QCoupon>createList("couponList", com.example.MMP.coupon.Coupon.class, com.example.MMP.coupon.QCoupon.class, PathInits.DIRECT2);
+
     public final DatePath<java.time.LocalDate> createDate = createDate("createDate", java.time.LocalDate.class);
 
     public final StringPath email = createString("email");

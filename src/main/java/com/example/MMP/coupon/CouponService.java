@@ -22,4 +22,9 @@ public class CouponService {
     public List<Coupon> getAll() {
         return couponRepository.findAll();
     }
+
+    public Coupon getCoupon(Long id) {
+        Coupon coupon = couponRepository.findById(id).orElseThrow();
+        return coupon;
+    }
 }

@@ -2,10 +2,30 @@
 <div layout:fragment="content" class="w-full h-screen my-3 flex text-black flex-wrap gap-2 flex-col justify-start">
     <div class="flex items-center space-x-2 mt-2">
         <li class="flex border-2 items-center rounded-full bg-white p-2">
-            <span class="text-black font-bold w-auto inline-block">Points: </span>
-            <span class="text-white font-bold badge badge-error" sec:authorize="isAuthenticated()" th:text="${points}"></span>
+            <span class="text-black font-bold w-auto inline-block" data-points>Points: </span>
+            <span class="text-white font-bold badge badge-error" sec:authorize="isAuthenticated()"
+                th:text="${#numbers.formatInteger(points, 0, 'COMMA')}"></span>
         </li>
     </div>
+
+    <div class="relative inline-block">
+        <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg">보유 쿠폰 목록</button>
+        <div id="dropdownContent"
+            class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
+            <span th:each="userCop : ${userCouponList}" 
+                class="block py-2 px-4 text-black no-underline border-b border-gray-500"
+                th:text="${userCop.name}"></span>
+        </div>
+    </div>
+
+    <!-- <div class="dropdown inline-block relative">
+        <button class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg">보유 쿠폰 목록</button>
+        <div class="dropdown-content absolute hidden bg-black text-white shadow-lg rounded-lg mt-2 w-52">
+            <a th:each="userCop : ${userCouponList}" th:href="@{'/coupon/' + ${userCop.id}}"
+               class="block py-2 px-4 text-white no-underline border-b border-gray-500 hover:bg-gray-700"
+               th:text="${userCop.name}"></a>
+        </div>
+    </div> -->
 
     <div class="flex justify-center">
         <div class="card-container flex flex-wrap">
@@ -15,12 +35,40 @@
                     <p th:text="${#numbers.formatInteger(coupon.point, 0, 'COMMA')} + ' 포인트'"></p>
                     <p th:text="${#numbers.formatInteger(coupon.discount, 0, 'COMMA')} + ' 원'"></p>
                     <div class="card-actions justify-end">
-                        <a th:href="@{|/checkout/}" class="btn btn-primary">쿠폰 구매</a>
+                        <a th:dataset-uri="@{|/coupon/purchase/${coupon.id}|}" th:data-points="${points}"
+                            th:data-coupon-point="${coupon.point}" class="btn btn-primary purchase">쿠폰 구매</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        // JavaScript에서 데이터 속성을 통해 Thymeleaf 변수를 읽음
+        const purchaseElements = document.getElementsByClassName("purchase");
+        Array.from(purchaseElements).forEach(function (element) {
+            element.addEventListener('click', function (event) {
+                const points = parseInt(this.getAttribute('data-points'));
+                const couponPoint = parseInt(this.getAttribute('data-coupon-point'));
+
+                // 버튼이 비활성화된 상태인지 확인
+                if (couponPoint > points) {
+                    alert("포인트가 부족합니다.");
+                    event.preventDefault(); // 기본 동작을 막음
+                } else {
+                    if (confirm(`쿠폰을 구매하시겠습니까?\n현재 내 포인트 : ${points} / 차감 포인트 : ${couponPoint}`)) {
+                        location.href = this.getAttribute('dataset-uri'); // 데이터 속성에서 URI를 읽어와서 페이지 이동
+                    }
+                }
+            });
+        });
+
+        // 버튼 클릭 시 드롭다운 토글
+        document.getElementById('toggleDropdown').addEventListener('click', function () {
+            var dropdownContent = document.getElementById('dropdownContent');
+            dropdownContent.classList.toggle('hidden');
+        });
+    </script>
 </div>
+
 
 </html>
