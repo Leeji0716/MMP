@@ -1,16 +1,26 @@
 <html layout:decorate="~{layout}">
-    <div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center">
-    <div class="card-container flex flex-wrap">
-        <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="coupon:${couponList}">
-            <div class="card-body">
-                <h2 class="card-title" th:text="${coupon.name}"></h2>
-                <p th:text="${coupon.point}"></p>
-                <p th:text="${coupon.discount}"></p>
-                <div class="card-actions justify-end">
-                    <a th:href="@{|/checkout/}" class="btn btn-primary">Buy Now</a>
+<div layout:fragment="content" class="w-full h-screen my-3 flex text-black flex-wrap gap-2 flex-col justify-start">
+    <div class="flex items-center space-x-2 mt-2">
+        <li class="flex border-2 items-center rounded-full bg-white p-2">
+            <span class="text-black font-bold w-auto inline-block">Points: </span>
+            <span class="text-white font-bold badge badge-error" sec:authorize="isAuthenticated()" th:text="${points}"></span>
+        </li>
+    </div>
+
+    <div class="flex justify-center">
+        <div class="card-container flex flex-wrap">
+            <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="coupon:${couponList}">
+                <div class="card-body w-[300px] h-[200px]">
+                    <h2 class="card-title" th:text="${coupon.name}"></h2>
+                    <p th:text="${#numbers.formatInteger(coupon.point, 0, 'COMMA')} + ' 포인트'"></p>
+                    <p th:text="${#numbers.formatInteger(coupon.discount, 0, 'COMMA')} + ' 원'"></p>
+                    <div class="card-actions justify-end">
+                        <a th:href="@{|/checkout/}" class="btn btn-primary">쿠폰 구매</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </html>
