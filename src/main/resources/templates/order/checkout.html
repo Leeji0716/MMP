@@ -21,20 +21,22 @@
       <!-- 이용약관 UI -->
       <div id="agreement"></div>
       <!-- 쿠폰 체크박스 -->
-      <div class="checkable typography--p" style="padding-left: 25px">
-        <label for="coupon-box" class="checkable__label typography--regular"><input id="coupon-box"
-            class="checkable__input" type="checkbox" aria-checked="true" disabled /><span
-            class="checkable__label-text">5,000원 쿠폰 적용</span></label>
-      </div>
+      <select id="passSelect" name="pass">
+        <option disabled selected>사용할 쿠폰을 선택해 주세요</option>
+        <option th:if="${!#lists.isEmpty(couponList)}" th:each="coupon : ${couponList}" th:value="${coupon.discount}"
+          th:text="${coupon.name}" th:id="${coupon.id}">
+        </option>
+      </select>
+
       <!-- 결제하기 버튼 -->
       <button class="button" id="payment-button" style="margin-top: 30px" disabled>결제하기</button>
     </div>
   </div>
   <script>
     const button = document.getElementById("payment-button");
-    const coupon = document.getElementById("coupon-box");
+    const coupon = document.getElementById("passSelect");
     const generateRandomString = () => window.btoa(Math.random()).slice(0, 20);
-    
+
     var amount = [[${ Pass.passPrice }]];
     // ------  결제위젯 초기화 ------
     // TODO: clientKey는 개발자센터의 결제위젯 연동 키 > 클라이언트 키로 바꾸세요.
@@ -69,11 +71,8 @@
     // ------  결제 금액 업데이트 ------
     // @docs https://docs.tosspayments.com/reference/widget-sdk#updateamount결제-금액
     coupon.addEventListener("change", function () {
-      if (coupon.checked) {
-        paymentMethodWidget.updateAmount(amount - 5000);
-      } else {
-        paymentMethodWidget.updateAmount(amount);
-      }
+      const discount = coupon.value;
+      paymentMethodWidget.updateAmount(amount - discount);
     });
 
     // ------ '결제하기' 버튼 누르면 결제창 띄우기 ------
@@ -82,15 +81,37 @@
       var Name = "[[${Pass.passName}]]";
       // 결제를 요청하기 전에 orderId, amount를 서버에 저장하세요.
       // 결제 과정에서 악의적으로 결제 금액이 바뀌는 것을 확인하는 용도입니다.
-      paymentWidget.requestPayment({
-        orderId: customerKey,
-        orderName: "[[${Pass.passName}]]",
-        successUrl: window.location.origin + "/success/" + Name,
-        failUrl: window.location.origin + "/fail",
-        customerEmail: "[[${user.email}]]",
-        customerName: "[[${user.name}]]",
-        customerMobilePhone: "[[${user.number}]]",
-      });
+
+
+      let selectBox = document.getElementById("passSelect");
+      let selectedOption = selectBox.options[selectBox.selectedIndex];      
+      let targetNo = selectedOption.getAttribute("id");
+
+      const coupon = document.getElementById("passSelect");
+      if (coupon.value !== null && coupon.value !== 'undefined') {
+        target = "?coupon=" + targetNo;
+        console.log(target);
+        paymentWidget.requestPayment({
+          orderId: customerKey,
+          orderName: "[[${Pass.passName}]]",
+          successUrl: window.location.origin + "/success/" + Name + target,
+          failUrl: window.location.origin + "/fail",
+          customerEmail: "[[${user.email}]]",
+          customerName: "[[${user.name}]]",
+          customerMobilePhone: "[[${user.number}]]",
+        });
+      } else {
+
+        paymentWidget.requestPayment({
+          orderId: customerKey,
+          orderName: "[[${Pass.passName}]]",
+          successUrl: window.location.origin + "/success/" + Name,
+          failUrl: window.location.origin + "/fail",
+          customerEmail: "[[${user.email}]]",
+          customerName: "[[${user.name}]]",
+          customerMobilePhone: "[[${user.number}]]",
+        });
+      }
     });
   </script>
 </body>

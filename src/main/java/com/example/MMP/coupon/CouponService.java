@@ -27,4 +27,12 @@ public class CouponService {
         Coupon coupon = couponRepository.findById(id).orElseThrow();
         return coupon;
     }
+
+    public void delete(Coupon useCoupon) {
+        couponRepository.delete(useCoupon);
+    }
+
+    public void save(Coupon useCoupon) {
+        couponRepository.save(useCoupon);
+    }
 }

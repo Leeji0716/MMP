@@ -1,7 +1,11 @@
 package com.example.MMP.order;
 
+import com.example.MMP.coupon.Coupon;
+import com.example.MMP.coupon.CouponService;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.daypass.DayPassService;
+import com.example.MMP.point.Point;
+import com.example.MMP.point.PointService;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
@@ -22,10 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +36,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -45,6 +47,8 @@ public class OrderController {
     private final UserPtPassService userPtPassService;
     private final DayPassService dayPassService;
     private final UserDayPassService userDayPassService;
+    private final CouponService couponService;
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @RequestMapping(value = "/confirm")
@@ -55,7 +59,7 @@ public class OrderController {
         String amount;
         String paymentKey;
         try {
-            Map<String, String> requestData = (Map<String, String>)parser.parse();
+            Map<String, String> requestData = (Map<String, String>) parser.parse();
 
             // 클라이언트에서 받은 JSON 요청 바디입니다.
 //            JSONObject requestData = (JSONObject) parser.parse();
@@ -64,7 +68,8 @@ public class OrderController {
             amount = (String) requestData.get("amount");
         } catch (ParseException e) {
             throw new RuntimeException(e);
-        };
+        }
+        ;
         JSONObject obj = new JSONObject();
         obj.put("orderId", orderId);
         obj.put("amount", amount);
@@ -110,14 +115,22 @@ public class OrderController {
 
 
     @RequestMapping(value = "/success/{name}", method = RequestMethod.GET)
-    public String paymentRequest(HttpServletRequest request, Model model,@PathVariable("name")String name,@AuthenticationPrincipal UserDetail userDetail ) throws Exception {
+    public String paymentRequest(HttpServletRequest request, Model model, @PathVariable("name") String name, @AuthenticationPrincipal UserDetail userDetail, @RequestParam(value = "coupon", defaultValue = "0") Long coupon) throws Exception {
         SiteUser siteUser = siteUserService.findByUserName(userDetail.getUsername());
         PtPass ptPass = ptPassService.findByName(name);
-        if(ptPass != null) {
+        if (ptPass != null) {
             UserPtPass userPtPass = userPtPassService.UserPtAdd(ptPass.getPassName(), ptPass.getPassTitle(), ptPass.getPassCount(), ptPass.getPassPrice(), ptPass.getPassDays(), siteUser);
-        }else{
+        } else {
             DayPass dayPass = dayPassService.findByName(name);
-            UserDayPass userDayPass =  userDayPassService.UserDayadd(dayPass.getPassName(),dayPass.getPassTitle(),dayPass.getPassPrice(),dayPass.getPassDays(),siteUser);
+            UserDayPass userDayPass = userDayPassService.UserDayadd(dayPass.getPassName(), dayPass.getPassTitle(), dayPass.getPassPrice(), dayPass.getPassDays(), siteUser);
+        }
+        if(coupon == 1){
+            Coupon useCoupon = couponService.getCoupon(coupon);
+            useCoupon.getUsers().remove(siteUser);
+
+            siteUser.getCouponList().remove(useCoupon);
+            siteUserService.save(siteUser);
+            couponService.save(useCoupon);
         }
         return "order/success";
     }
@@ -125,19 +138,25 @@ public class OrderController {
     @RequestMapping(value = "/checkout/{name}", method = RequestMethod.GET)
     public String index(HttpServletRequest request, Model model, @PathVariable("name") String name, @AuthenticationPrincipal UserDetail userDetail) throws Exception {
         PtPass ptPass = ptPassService.findByName(name);
-        if(ptPass != null) {
+        if (ptPass != null) {
             model.addAttribute("Pass", ptPass);
-        } else{
+        } else {
             DayPass dayPass = dayPassService.findByName(name);
-            model.addAttribute("Pass",dayPass);
+            model.addAttribute("Pass", dayPass);
         }
         SiteUser siteUser = siteUserService.findByUserName(userDetail.getUsername());
-        model.addAttribute("user",siteUser);
+        List<Coupon> couponList = siteUser.getCouponList();
+        if(couponList.isEmpty()){
+            model.addAttribute("couponList",null);
+        }
+        model.addAttribute("couponList",couponList);
+        model.addAttribute("user", siteUser);
         return "order/checkout";
     }
 
     /**
      * 인증실패처리
+     *
      * @param request
      * @param model
      * @return
