@@ -22,7 +22,12 @@ public class MapController {
     }
 
     @GetMapping("/main")
-    public String schedule(){
+    public String schedule() {
         return "main";
+    }
+
+    @GetMapping("/coupon")
+    public String coupon() {
+        return "test";
     }
 }
