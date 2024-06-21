@@ -96,6 +96,9 @@ public class ChallengeGroupService {
             ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
             chatRoom.getUserList().remove(user);
             chatRoomService.save(chatRoom);
+
+            user.getChatRoomList().remove(chatRoom);
+            userService.save(user);
         } else {
             throw new IllegalArgumentException("그룹이나 유저를 찾을 수 없습니다.");
         }
