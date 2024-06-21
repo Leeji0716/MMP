@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full h-screen my-3 flex justify-center items-center flex-col">
+<div layout:fragment="content" class="w-full h-[90%] overflow-y-auto my-3 flex justify-center items-center flex-col">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div class="flex my-3 h-[10%]">
         <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
@@ -18,7 +18,7 @@
             <input class="btn btn-error" type="submit" id="btn_search" value="찾기">
         </form>
     </div>
-    <div class="h-[85%] overflow-y-auto">
+    <div>
         <div class="flex w-full justify-center flex-wrap">
             <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">
                 <div th:replace="~{homeTraining/htCard :: htCard(${homeTraining})}"></div>

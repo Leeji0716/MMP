@@ -66,6 +66,6 @@ public class CouponController {
 
         model.addAttribute("couponList", couponList);
         model.addAttribute("points", points);
-        return "redirect:/";
+        return "redirect:/coupon/list";
     }
 }
