@@ -160,4 +160,13 @@ public class ChatRoomService {
         }
         return chatRoomDto;
     }
+
+    public void deleteGroupAlarm(ChallengeGroup challengeGroup, SiteUser siteUser) {
+        List<Alarm> alarmList = challengeGroup.getChatRoom().getAlarmList();
+        for(Alarm alarm : alarmList){
+            if(alarm.getAcceptUser() == siteUser){
+                alarmService.delete(alarm);
+            }
+        }
+    }
 }

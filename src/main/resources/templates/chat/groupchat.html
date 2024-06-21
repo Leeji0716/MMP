@@ -115,7 +115,7 @@
                             'sort': "many"
                         }));
                     members.forEach((member) => {
-                        if (member.number !== sender) {
+                        if (member !== sender) {
                             stompClient.send("/pub/groupAlarm/" + member, {},
                                 JSON.stringify({
                                     'sender': groupName,

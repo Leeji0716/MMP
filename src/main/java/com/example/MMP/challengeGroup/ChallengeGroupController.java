@@ -180,6 +180,7 @@ public class ChallengeGroupController {
         }
         ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
 
+        chatRoomService.deleteGroupAlarm(challengeGroup,siteUser);
         model.addAttribute("challengeGroup",challengeGroup);
         model.addAttribute("me",siteUser);
         model.addAttribute("chatRoom",chatRoom);
