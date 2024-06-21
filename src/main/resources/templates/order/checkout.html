@@ -22,7 +22,7 @@
       <div id="agreement"></div>
       <!-- 쿠폰 체크박스 -->
       <select id="passSelect" name="pass">
-        <option disabled selected>사용할 쿠폰을 선택해 주세요</option>
+        <option disabled selected value="0">사용할 쿠폰을 선택해 주세요</option>
         <option th:if="${!#lists.isEmpty(couponList)}" th:each="coupon : ${couponList}" th:value="${coupon.discount}"
           th:text="${coupon.name}" th:id="${coupon.id}">
         </option>
@@ -87,9 +87,9 @@
       let targetNo = selectedOption.getAttribute("id");
 
       const coupon = document.getElementById("passSelect");
-      if (coupon.value !== null && coupon.value !== 'undefined') {
+
+      if (coupon.value !== '0') {
         target = "?coupon=" + targetNo;
-        console.log(target);
         paymentWidget.requestPayment({
           orderId: customerKey,
           orderName: "[[${Pass.passName}]]",
@@ -100,11 +100,11 @@
           customerMobilePhone: "[[${user.number}]]",
         });
       } else {
-
+        const target1 = "?coupon=0";
         paymentWidget.requestPayment({
           orderId: customerKey,
           orderName: "[[${Pass.passName}]]",
-          successUrl: window.location.origin + "/success/" + Name,
+          successUrl: window.location.origin + "/success/" + Name + target1,
           failUrl: window.location.origin + "/fail",
           customerEmail: "[[${user.email}]]",
           customerName: "[[${user.name}]]",
