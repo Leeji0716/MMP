@@ -14,7 +14,7 @@
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-center items-center">
+<div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center flex-wrap">
 <h1 class="text-4xl font-bold mb-8">챌린지 생성</h1>
 <form th:action="@{/coupon/create}" th:object="${couponForm}" method="post" class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
     <div class="form-group mb-4">

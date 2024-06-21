@@ -43,7 +43,7 @@ public class NoticeController {
                          BindingResult bindingResult){
 
         noticeService.create (noticeForm.title,noticeForm.content);
-        return "redirect:/";
+        return "redirect:/notice/list";
     }
 
     @GetMapping("/list")

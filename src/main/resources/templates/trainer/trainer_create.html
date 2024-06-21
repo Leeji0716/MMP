@@ -1,48 +1,59 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full my-3 flex justify-center text-black">
+<div layout:fragment="content" class="w-full my-3 flex justify-center text-white">
     <div class="h-screen flex items-center justify-center bg-black">
-        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-black">
+        <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
             <form action="/trainer/create" method="post" enctype="multipart/form-data">
-                <div>
-                    <label for="trainerName">트레이너 이름:</label>
-                    <input type="text" id="trainerName" name="trainerName" class="input" placeholder="이름을 입력하세요." required>
+                <div class="pt-4">
+                    <label for="trainerName" class="flex flex-col">트레이너 이름</label>
+                    <input type="text" id="trainerName" name="trainerName" class="input" placeholder="이름을 입력하세요."
+                        required>
                 </div>
-                <div>
-                    <label>성별:</label>
-                    <input type="radio" id="genderMale" name="gender" value="male">
+                <div class="pt-4">
+                    <label class="flex flex-col">성별</label>
+                    <input type="radio" id="genderMale" name="gender" value="male" class="radio radio-primary mr-2">
                     <label for="genderMale">남성</label>
-                    <input type="radio" id="genderFemale" name="gender" value="female">
+                    <input type="radio" id="genderFemale" name="gender" value="female" class="radio radio-primary mr-2">
                     <label for="genderFemale">여성</label>
                 </div>
-                <div>
-                    <label>레슨 종류:</label>
-                    <input type="checkbox" id="classTypeHealth" name="classType" value="Health">
+                <div class="pt-4">
+                    <label class="flex flex-col">레슨 종류</label>
+                    <input type="checkbox" id="classTypeHealth" name="classType" value="Health"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="classTypeHealth">헬스</label>
-                    <input type="checkbox" id="classTypePT" name="classType" value="PT">
+                    <input type="checkbox" id="classTypePT" name="classType" value="PT"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="classTypePT">PT</label>
-                    <input type="checkbox" id="classTypePilates" name="classType" value="Pilates">
+                    <input type="checkbox" id="classTypePilates" name="classType" value="Pilates"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="classTypePilates">필라테스</label>
                 </div>
-                <div>
-                    <label>전문화:</label>
-                    <input type="checkbox" id="specialization1to1" name="specialization" value="1">
+                <div class="pt-4">
+                    <label class="flex flex-col">전문화</label>
+                    <input type="checkbox" id="specialization1to1" name="specialization" value="1"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="specialization1to1">1:1</label>
-                    <input type="checkbox" id="specialization1toN" name="specialization" value="2">
+                    <input type="checkbox" id="specialization1toN" name="specialization" value="2"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="specialization1toN">1:n</label>
-                    <input type="checkbox" id="specializationNtoN" name="specialization" value="3">
+                    <input type="checkbox" id="specializationNtoN" name="specialization" value="3"
+                        class="checkbox checkbox-primary mr-2">
                     <label for="specializationNtoN">n:n</label>
                 </div>
-                <div>
-                    <label for="introduce">소개:</label><br>
-                    <textarea id="introduce" name="introduce" rows="4" cols="50"></textarea>
+                <div class="pt-4">
+                    <label for="introduce" class="flex flex-col">소개</label><br>
+                    <textarea id="introduce" name="introduce" rows="4" cols="50"
+                        class="textarea textarea-bordered w-full text-black"></textarea>
                 </div>
-                <div>
-                    <label for="image">이미지 업로드:</label>
-                    <input type="file" id="image" name="image" accept="image/*">
+                <div class="pt-4">
+                    <label for="image" class="flex flex-col">이미지 업로드</label>
+                    <input type="file" id="image" name="image" accept="image/*" class="file-input file-input-bordered">
                 </div>
-                <button type="submit">등록</button>
+                <div class="pt-4">
+                    <button type="submit" class="btn btn-error w-full">등록</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
 </html>
