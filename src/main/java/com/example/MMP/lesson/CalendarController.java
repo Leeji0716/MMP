@@ -32,7 +32,7 @@ public class CalendarController {
         Map<String, Object> response = new HashMap<>();
         response.put("lessons", lessonList); // lessons라는 키에 lessonList를 할당
 
-//        // JSON 응답을 출력
+        // JSON 응답을 출력
 //        try {
 //            ObjectMapper mapper = new ObjectMapper();
 //            mapper.registerModule(new JavaTimeModule());

@@ -2,6 +2,7 @@ package com.example.MMP.challenge.challengeUser;
 
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.siteuser.SiteUser;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class ChallengeUser {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "site_user_id")
+    @JsonManagedReference
     private SiteUser siteUser;
 
     @ManyToOne(fetch = FetchType.LAZY)

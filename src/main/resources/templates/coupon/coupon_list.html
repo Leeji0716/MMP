@@ -1,0 +1,16 @@
+<html layout:decorate="~{layout}">
+    <div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center">
+    <div class="card-container flex flex-wrap">
+        <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="coupon:${couponList}">
+            <div class="card-body">
+                <h2 class="card-title" th:text="${coupon.name}"></h2>
+                <p th:text="${coupon.point}"></p>
+                <p th:text="${coupon.discount}"></p>
+                <div class="card-actions justify-end">
+                    <a th:href="@{|/checkout/}" class="btn btn-primary">Buy Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

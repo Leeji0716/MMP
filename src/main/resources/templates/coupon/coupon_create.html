@@ -1,0 +1,22 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center">
+    <form th:action="@{/coupon/create}" th:object="${couponForm}" method="post" class="w-[20%] bg-gray-800 p-6 rounded-lg max-w-lg mx-auto text-white">
+        <div class="form-group mb-4">
+            <label for="name" class="block text-lg mb-2">쿠폰 이름</label>
+            <input type="text" id="name" th:field="*{name}" class="input input-bordered w-full text-black" placeholder="쿠폰 이름을 입력해주세요"/>
+        </div>
+        <div class="form-group mb-4">
+            <label for="point" class="block text-lg mb-2">구매 포인트</label>
+            <input type="text" id="point" th:field="*{point}" class="input input-bordered w-full text-black" placeholder="구매 포인트를 입력해주세요" />
+        </div>
+        <div class="form-group mb-4">
+            <label for="discount" class="block text-lg mb-2">할인 금액</label>
+            <input type="text" id="discount" th:field="*{discount}" class="input input-bordered w-full text-black" placeholder="할인 금액을 입력해주세요"/>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-error w-full">쿠폰 생성하기</button>
+        </div>
+    </form>
+
+</div>
+</html>

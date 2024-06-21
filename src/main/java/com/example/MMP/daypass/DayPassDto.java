@@ -14,10 +14,7 @@ public class DayPassDto {
     @NotEmpty(message = "회원권 설명을 입력해주세요.")
     private String dayPassTitle;
 
+    private String dayPassPrice;
 
-    private int dayPassPrice;
-
-
-
-    private int dayPassDays;
+    private String dayPassDays;
 }

@@ -26,7 +26,7 @@ public class DayPassController {
         if(bindingResult.hasErrors()){
             return "pass/daypassmake";
         }
-        dayPassService.create(dayPassDto.getDayPassName(),dayPassDto.getDayPassTitle(),dayPassDto.getDayPassPrice(),dayPassDto.getDayPassDays());
+        dayPassService.create(dayPassDto.getDayPassName(),dayPassDto.getDayPassTitle(),Integer.parseInt(dayPassDto.getDayPassPrice()),Integer.parseInt(dayPassDto.getDayPassDays()));
 
         return "redirect:/totalPass/list";
     }
