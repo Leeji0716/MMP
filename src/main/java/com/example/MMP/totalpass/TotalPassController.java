@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static com.example.MMP.ptpass.QPtPass.ptPass;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,6 +47,7 @@ public class TotalPassController {
         List<DayPass> dayPassList = dayPassService.findAll();
         model.addAttribute("ptPassList", ptPassList);
         model.addAttribute("dayPassList", dayPassList);
+
         return "pass/passList";
     }
 

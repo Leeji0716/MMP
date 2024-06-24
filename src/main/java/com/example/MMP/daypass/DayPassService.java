@@ -25,4 +25,16 @@ private final DayPassRepository dayPassRepository;
     public DayPass findByName(String name){
         return dayPassRepository.findByPassName(name);
     }
+
+    public DayPass findById(Long id) {
+        return dayPassRepository.findById(id).orElseThrow();
+    }
+
+    public void save(DayPass dayPass) {
+        dayPassRepository.save(dayPass);
+    }
+
+    public void delete(DayPass dayPass) {
+        dayPassRepository.delete(dayPass);
+    }
 }

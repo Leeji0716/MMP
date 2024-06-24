@@ -42,4 +42,8 @@ public class PtPassService {
     public void save(PtPass ptPass) {
         ptPassRepository.save(ptPass);
     }
+
+    public void delete(PtPass ptPass) {
+        ptPassRepository.delete(ptPass);
+    }
 }

@@ -1,22 +1,36 @@
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full flex items-center justify-center my-3">
-    <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-        <div class="text-center text-2xl mb-4 text-white">PT회원권 만들기</div>
-        <a href="/day/add" class="btn">요일권 만들기</a>
-        <form th:action="@{|/pt/add|}" th:object="${ptPassDto}" class="space-y-4 text-white" method="post">
-            <input type="text" th:field="*{passName}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
+    <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto text-black">
+        <div th:if="${ptPass == null}" class="text-center text-2xl mb-4 text-white">PT회원권 만들기</div>
+        <div th:if="${ptPass != null}" class="text-center text-2xl mb-4 text-white">PT회원권 수정하기</div>
+        <a th:if="${ptPass == null}" href="/day/add" class="btn">요일권 만들기</a>
+        <form th:object="${ptPassDto}" class="space-y-4 text-black" method="post">
+            <input th:if="${ptPass == null}" type="text" th:field="*{passName}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
+            <input th:if="${ptPass != null}" type="text" th:field="*{passName}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
             <p th:if="${#fields.hasErrors('passName')}" th:errors="*{passName}" class="text-red-500 text-sm"></p>
-            <textarea placeholder="회원권 설명.." th:field="*{passTitle}"
-                      class="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+            <textarea th:if="${ptPass == null}" placeholder="회원권 설명.." th:field="*{passTitle}"
+                class="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+            <input th:if="${ptPass != null}" placeholder="회원권 설명.." th:field="*{passTitle}"
+                class="textarea textarea-bordered textarea-lg w-full max-w-xs"></input>
             <p th:if="${#fields.hasErrors('passTitle')}" th:errors="*{passTitle}" class="text-red-500 text-sm"></p>
-            <input type="text" th:field="*{passCount}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 횟수..">
-            <input type="text" th:field="*{passPrice}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
-            <input type="text" th:field="*{passDays}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 유효기간..">
+            <input th:if="${ptPass == null}" type="text" th:field="*{passCount}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 횟수..">
+            <input th:if="${ptPass != null}" type="text" th:field="*{passCount}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 횟수..">
+            <input th:if="${ptPass == null}" type="text" th:field="*{passPrice}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
+            <input th:if="${ptPass != null}" type="text" th:field="*{passPrice}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
+            <input th:if="${ptPass == null}" type="text" th:field="*{passDays}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 유효기간..">
+            <input th:if="${ptPass != null}" type="text" th:field="*{passDays}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 유효기간..">
+            <input type="hidden" th:if="${ptPass != null}" name="id" th:value="${ptPass.passId}">
             <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
         </form>
     </div>
 </div>
+
 </html>
