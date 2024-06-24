@@ -25,9 +25,13 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers("/user/**").permitAll().anyRequest().authenticated())
-                .formLogin((formLogin) -> formLogin
-                        .loginPage("/user/login")
-                        .defaultSuccessUrl("/"))
+//                .formLogin((formLogin) -> formLogin
+//                        .loginPage("/user/login")
+//                        .defaultSuccessUrl("/"))
+                .formLogin(formLogin ->
+                        formLogin.loginPage("/user/login")
+                                .defaultSuccessUrl("/", true)
+                )
                 .logout((logout) -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
                         .logoutSuccessUrl("/")

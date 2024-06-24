@@ -13,18 +13,20 @@ import java.io.IOException;
 
 @Component
 public class FileUploadUtil {
-    private final ResourceLoader resourceLoader;
     @Getter
     private final String uploadDirPath;
 
-    public FileUploadUtil(ResourceLoader resourceLoader, @Value("${file.upload-dir}") String uploadDirPath) {
-        this.resourceLoader = resourceLoader;
-        this.uploadDirPath = uploadDirPath;
+    public FileUploadUtil() {
+        OSType osType = OSType.getInstance();
+        if (osType != null) {
+            this.uploadDirPath = osType.getPath();
+        } else {
+            throw new RuntimeException("Unsupported operating system.");
+        }
     }
 
     public void saveFile(String fileName, MultipartFile file) throws IOException {
-        Resource resource = resourceLoader.getResource(uploadDirPath);
-        File directory = resource.getFile();
+        File directory = new File(uploadDirPath);
         if (!directory.exists()) {
             directory.mkdirs(); // 디렉토리가 없으면 생성
         }
