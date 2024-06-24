@@ -2,15 +2,23 @@
 <div layout:fragment="content" class="container-fluid my-3">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-            <div class="text-center text-2xl mb-4 text-white">유저 회원가입</div>
+            <div class="text-center text-2xl mb-4 text-black">유저 회원가입</div>
             <!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
             <form th:action="@{|/user/signup|}" th:object="${userDto}" class="space-y-4 text-black" method="post">
                 <input type="text" th:field="*{name}"
+<<<<<<< HEAD
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                    placeholder="Name">
+                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
+                <input type="text" th:field="*{number}"
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+=======
                     class="input input-bordered w-full p-2 border border-gray-300 rounded"
                     placeholder="Name">
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{number}"
                     class="input input-bordered w-full p-2 border border-gray-300 rounded"
+>>>>>>> 5966fd799b1d920f0e23f9dcb5f9a6c22056cf01
                     placeholder="Phone..">
                 <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="text-red-500 text-sm"></p>
                 <label class="text-white">남자</label>

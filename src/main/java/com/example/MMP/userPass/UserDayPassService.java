@@ -38,4 +38,12 @@ public class UserDayPassService {
     public void save(UserDayPass userDayPass) {
         userDayPassRepository.save(userDayPass);
     }
+
+    public List<UserDayPass> findAll() {
+        return userDayPassRepository.findAll();
+    }
+
+    public void delete(UserDayPass userDayPass) {
+        userDayPassRepository.delete(userDayPass);
+    }
 }

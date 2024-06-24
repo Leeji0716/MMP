@@ -7,10 +7,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -24,7 +24,7 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/user/**").permitAll().anyRequest().authenticated())
+                        .requestMatchers("/user/**", "/ttt").permitAll().anyRequest().authenticated())
 //                .formLogin((formLogin) -> formLogin
 //                        .loginPage("/user/login")
 //                        .defaultSuccessUrl("/"))
@@ -58,17 +58,14 @@ public class SecurityConfig {
                         new AntPathRequestMatcher("/weight/**"),
                         new AntPathRequestMatcher("/upload_image/**"),
                         new AntPathRequestMatcher("/ptGroup/**"),
-                        new AntPathRequestMatcher("/trainer/**"),
-                        new AntPathRequestMatcher("/coupon/**")
-                ));
-//                    .sessionManagement(sessionManagement -> sessionManagement
-//                            .maximumSessions(1) // 동시 세션 수를 1로 제한
-//                            .maxSessionsPreventsLogin(true) // 새로운 로그인 시도를 막음
-//                            .sessionRegistry(sessionRegistry())
-//                    );
-
+                        new AntPathRequestMatcher("/trainer/**")
+                ))
+                .sessionManagement(sessionManagement ->
+                        sessionManagement
+                                .maximumSessions(1));
         return http.build();
     }
+
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -81,7 +78,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SessionRegistryImpl sessionRegistry() {
-        return new SessionRegistryImpl();
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
+
 }

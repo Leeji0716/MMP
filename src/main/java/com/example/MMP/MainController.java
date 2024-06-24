@@ -7,9 +7,13 @@ import com.example.MMP.information.Information;
 import com.example.MMP.information.InformationService;
 import com.example.MMP.wod.OSType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -39,4 +43,29 @@ public class MainController {
         model.addAttribute ("presentCount", presentCount);
         return "schedule";
     }
+
+//    @GetMapping("ttt")
+//    @ResponseBody
+//    public List<SessionInformation> test() {
+//        List<SessionInformation> lists = getSessions("01043004893");
+//        List<Object> principals = sessionRegistry.getAllPrincipals();
+
+//        for (Object principal : principals) {
+//            if (principal instanceof UserDetails) {
+//                UserDetails userDetails = (UserDetails) principal;
+//                return sessionRegistry.getAllSessions(userDetails, false);
+//            }
+//        }
+
+//        for (Object principal : principals) {
+//            if (principal instanceof UserDetails) {
+//                UserDetails userDetails = (UserDetails) principal;
+//                return sessionRegistry.getAllSessions(userDetails, false);
+//                if (userDetails.getUsername().equals("01043004893")) {
+//                    return sessionRegistry.getAllSessions(userDetails, false);
+//                }
+//            }
+//        }
+//        return null;
+//    }
 }

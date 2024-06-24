@@ -48,4 +48,8 @@ public class UserPtPassService {
     public void delete(UserPtPass userPtPass) {
         userPtPassRepository.delete(userPtPass);
     }
+
+    public List<UserPtPass> findAll() {
+        return userPtPassRepository.findAll();
+    }
 }
