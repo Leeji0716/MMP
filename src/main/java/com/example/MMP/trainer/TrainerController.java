@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -141,7 +142,6 @@ public class TrainerController {
                 bindingResult.reject("fileUploadError", "이미지 업로드 중 오류가 발생했습니다.");
                 return "trainer/trainer_create";
             }
-            
         }else {
             fileName = trainer.getImagePath();
         }

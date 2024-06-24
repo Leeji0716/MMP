@@ -67,7 +67,6 @@ public class TrainerService {
                 // 필터링된 트레이너들을 리스트로 수집합니다.
                 .collect(Collectors.toList());
     }
-
     public Trainer findById(Long id) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow();
         return trainer;
