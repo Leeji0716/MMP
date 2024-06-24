@@ -1,46 +1,90 @@
-<html layout:decorate="~{layout}">
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="w-full bg-black text-white">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/4c7ae19c08.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"
+          integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+            integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body class="w-full bg-black text-white">
+<th:block layout:fragment="content"></th:block>
+<th:block layout:fragment="script"></th:block>
+
 <div layout:fragment="content" class="container-fluid my-3">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-            <div class="text-center text-2xl mb-4 text-black">유저 회원가입</div>
-            <!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
-            <form th:action="@{|/user/signup|}" th:object="${userDto}" class="space-y-4 text-black" method="post">
+            <div class="text-center text-2xl mb-4 text-white">유저 회원가입</div>
+            <form th:action="@{/user/signup}" th:object="${userDto}" class="space-y-4" method="post">
                 <input type="text" th:field="*{name}"
-<<<<<<< HEAD
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                    placeholder="Name">
+                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                       placeholder="Name">
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{number}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-=======
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded"
-                    placeholder="Name">
-                <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
-                <input type="text" th:field="*{number}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded"
->>>>>>> 5966fd799b1d920f0e23f9dcb5f9a6c22056cf01
-                    placeholder="Phone..">
+                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                       placeholder="Phone">
                 <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="text-red-500 text-sm"></p>
                 <label class="text-white">남자</label>
-                <input type="radio" th:field="*{gender}" value="man" class="radio radio-primary mr-2" />
+                <input type="radio" th:field="*{gender}" value="man" class="radio radio-primary mr-2"/>
                 <label class="text-white">여자</label>
-                <input type="radio" th:field="*{gender}" value="woman" class="radio radio-primary mr-2" />
+                <input type="radio" th:field="*{gender}" value="woman" class="radio radio-primary mr-2"/>
                 <input type="text" th:field="*{birthDate}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                    placeholder="BirthDay">
+                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                       placeholder="BirthDay">
                 <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{email}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                    placeholder="Email">
+                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                       placeholder="Email">
                 <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></p>
                 <label class="text-white">트레이너</label>
-                <input type="radio" th:field="*{userRole}" value="trainer" class="radio radio-primary mr-2" />
+                <input type="radio" th:field="*{userRole}" value="trainer" class="radio radio-primary mr-2" onclick="toggleSalaryField()"/>
                 <label class="text-white">회원</label>
-                <input type="radio" th:field="*{userRole}" value="user" class="radio radio-primary mr-2" />
+                <input type="radio" th:field="*{userRole}" value="user" class="radio radio-primary mr-2" onclick="toggleSalaryField()"/>
+
+                <div id="salaryField" class="hidden">
+                    <label for="salary" class="text-white">기본급</label>
+                    <input type="text" id="salary" th:field="*{salary}" class="input text-black">
+                </div>
+
+                <select id="referrerSelect" class="select select-bordered w-full max-w-xs text-black" th:field="*{referrerId}">
+                    <option value="" selected>추천인을 선택하세요</option>
+                    <option th:each="trainer : ${trainers}" th:value="${trainer.id}" th:text="${trainer.name}"></option>
+                </select>
+
+
                 <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
             </form>
         </div>
     </div>
 </div>
 
+<script>
+    function toggleSalaryField() {
+        var userRole = document.querySelector('input[name="userRole"]:checked').value;
+        var salaryField = document.getElementById('salaryField');
+        if (userRole === 'trainer') {
+            salaryField.classList.remove('hidden');
+        } else {
+            salaryField.classList.add('hidden');
+        }
+    }
+
+    window.addEventListener('load', function () {
+        toggleSalaryField();
+    });
+</script>
+
+
+</body>
 </html>

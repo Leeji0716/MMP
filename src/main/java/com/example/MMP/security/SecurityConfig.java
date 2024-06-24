@@ -23,63 +23,66 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/user/**", "/ttt").permitAll().anyRequest().authenticated())
+                .authorizeHttpRequests ((authorizeHttpRequests) -> authorizeHttpRequests
+                        .requestMatchers ("/user/**", "/ttt").permitAll ().anyRequest ().authenticated ())
 //                .formLogin((formLogin) -> formLogin
 //                        .loginPage("/user/login")
 //                        .defaultSuccessUrl("/"))
-                .formLogin(formLogin ->
-                        formLogin.loginPage("/user/login")
-                                .defaultSuccessUrl("/", true)
+                .formLogin (formLogin ->
+                        formLogin.loginPage ("/user/login")
+                                .defaultSuccessUrl ("/", true)
                 )
-                .logout((logout) -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/user/logout"))
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true))
-                .rememberMe((rememberMe) -> rememberMe
-                        .key("uniqueAndSecret")
-                        .tokenValiditySeconds(30 * 24 * 60 * 60) // 30 days
-                        .rememberMeParameter("remember-me")
-                        .userDetailsService(userDetailService))
-                .csrf(c -> c.ignoringRequestMatchers(
-                        new AntPathRequestMatcher("/pt/**"),
-                        new AntPathRequestMatcher("/totalPass/**"),
-                        new AntPathRequestMatcher("/day/**"),
-                        new AntPathRequestMatcher("/pt/**"),
-                        new AntPathRequestMatcher("/notice/**"),
-                        new AntPathRequestMatcher("/user/**"),
-                        new AntPathRequestMatcher("/challenge/**"),
-                        new AntPathRequestMatcher("/success"),
-                        new AntPathRequestMatcher("/attendance/**"),
-                        new AntPathRequestMatcher("/checkout"),
-                        new AntPathRequestMatcher("/success"),
-                        new AntPathRequestMatcher("/fail"),
-                        new AntPathRequestMatcher("/confirm"),
-                        new AntPathRequestMatcher("/weight/**"),
-                        new AntPathRequestMatcher("/upload_image/**"),
-                        new AntPathRequestMatcher("/ptGroup/**"),
-                        new AntPathRequestMatcher("/trainer/**")
+                .logout ((logout) -> logout
+                        .logoutRequestMatcher (new AntPathRequestMatcher ("/user/logout"))
+                        .logoutSuccessUrl ("/")
+                        .invalidateHttpSession (true))
+                .rememberMe ((rememberMe) -> rememberMe
+                        .key ("uniqueAndSecret")
+                        .tokenValiditySeconds (30 * 24 * 60 * 60) // 30 days
+                        .rememberMeParameter ("remember-me")
+                        .userDetailsService (userDetailService))
+                .csrf (c -> c.ignoringRequestMatchers (
+                        new AntPathRequestMatcher ("/pt/**"),
+                        new AntPathRequestMatcher ("/totalPass/**"),
+                        new AntPathRequestMatcher ("/day/**"),
+                        new AntPathRequestMatcher ("/pt/**"),
+                        new AntPathRequestMatcher ("/notice/**"),
+                        new AntPathRequestMatcher ("/user/**"),
+                        new AntPathRequestMatcher ("/challenge/**"),
+                        new AntPathRequestMatcher ("/success"),
+                        new AntPathRequestMatcher ("/attendance/**"),
+                        new AntPathRequestMatcher ("/checkout"),
+                        new AntPathRequestMatcher ("/success"),
+                        new AntPathRequestMatcher ("/fail"),
+                        new AntPathRequestMatcher ("/confirm"),
+                        new AntPathRequestMatcher ("/weight/**"),
+                        new AntPathRequestMatcher ("/upload_image/**"),
+                        new AntPathRequestMatcher ("/ptGroup/**"),
+
+                        new AntPathRequestMatcher ("/trainer/**"),
+                        new AntPathRequestMatcher ("/salary/**")
                 ))
-                .sessionManagement(sessionManagement ->
+                .sessionManagement (sessionManagement ->
                         sessionManagement
-                                .maximumSessions(1));
-        return http.build();
+                                .maximumSessions (1));
+
+        return http.build ();
     }
 
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return new BCryptPasswordEncoder ();
     }
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+        return authenticationConfiguration.getAuthenticationManager ();
     }
 
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
+        return new HttpSessionEventPublisher ();
     }
 
 }

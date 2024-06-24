@@ -29,4 +29,8 @@ public class UserDto {
 
     @NotEmpty(message = "권한은 필수입니다.")
     private String userRole;
+
+    private int salary;
+
+    private Long referrerId;
 }
