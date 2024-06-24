@@ -1,6 +1,6 @@
 <div class="h-full" th:fragment="wodCard(${wod})">
     <figure class="h-[85%] w-[100%] flex items-center rounded-lg">
-        <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD" class="w-full h-full object-cover">
+        <img th:src="@{/images/{filePath}(filePath=${wod.imagePath})}" alt="WOD" class="w-full h-full object-cover">
     </figure>
     <div class="flex h-[15%] w-[100%]">
         <a href="#" class="w-[10%] h-[100%] btn btn-sm btn-outline-secondary"

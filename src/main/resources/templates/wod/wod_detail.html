@@ -4,7 +4,7 @@
     <div class="w-full">
         <div class="flex justify-center items-center">
             <figure>
-                <img th:src="@{'/uploads/'+ ${wod.imagePath}}" alt="WOD">
+                <img th:src="@{/images/{filePath}(filePath=${wod.imagePath})}" alt="WOD">
             </figure>
         </div>
         <div class="flex justify-center items-center h-[50px]">

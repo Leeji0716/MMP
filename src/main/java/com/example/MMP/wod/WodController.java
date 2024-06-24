@@ -30,7 +30,13 @@ public class WodController {
     @GetMapping("/form")
     private String wod(Model model){
         List<Wod> wodList = wodService.getList();
+        // 현재 운영 체제에 따른 OSType 가져오기
+        OSType osType = OSType.getInstance();
+        // OSType에서 파일 저장 경로 가져오기
+        String filePath = osType.getPath();
+
         model.addAttribute("wodList", wodList);
+        model.addAttribute("filePath", filePath);
 
         return "wod/wod_form";
     }
@@ -74,6 +80,9 @@ public class WodController {
     @GetMapping("/detail/{id}")
     public String detail(@PathVariable("id") Long id, Model model){
         Wod wod = wodService.getWod(id);
+        OSType osType = OSType.getInstance();
+        String filePath = osType.getPath();
+        model.addAttribute("filePath", filePath);
         model.addAttribute("wod", wod);
         model.addAttribute("commentList", wod.getCommentList());
         for (int a=0; a<wod.getLikeList().size();a++){

@@ -52,10 +52,10 @@
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
                             th:href="@{/user/profile}">프로필</a>
                     </li>
-                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
+                    <!-- <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
                         tabindex="0">
                         <a href="/ptGroup/join">회원 추가하기</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/logout}">Logout</a>
                     </li>

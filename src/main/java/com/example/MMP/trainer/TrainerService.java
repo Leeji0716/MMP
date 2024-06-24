@@ -1,5 +1,6 @@
 package com.example.MMP.trainer;
 
+import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class TrainerService {
     private final TrainerRepository trainerRepository;
 
     public void create(String imagePath,
-                       String name,
+                       SiteUser userTrainer,
                        String introduce,
                        String gender,
                        String classType,
@@ -22,9 +23,8 @@ public class TrainerService {
 
         Trainer trainer = new Trainer();
         trainer.setImagePath(imagePath);
-        trainer.setTrainerName(name);
+        trainer.setUserTrainer(userTrainer);
         trainer.setIntroduce(introduce);
-        trainer.setGender(gender);
         trainer.setClassType(classType);
         trainer.setSpecialization(specialization);
 
@@ -49,54 +49,41 @@ public class TrainerService {
         return trainerRepository.findById(id).orElse(null);
     }
 
-    public void delete(Long id) {
-        trainerRepository.deleteById(id);
-    }
-
-    public void update(Long id, String introduce) {
-        Trainer trainer = trainerRepository.findById(id).orElse(null);
-        if (trainer != null) {
-            trainer.setIntroduce(introduce);
-            trainerRepository.save(trainer);
-        }
+    public void delete(Trainer trainer) {
+        trainerRepository.delete(trainer);
     }
 
     public List<Trainer> findAll() {
         return this.trainerRepository.findAll();
     }
 
-//    public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
-//        return trainers.stream()
-//                .filter(trainer -> filterRequest.getKeyword() == null
-//                        || filterRequest.getKeyword().isEmpty()
-//                        || Arrays.stream(trainer.getKeyword().split(",\\s*"))
-//                        .anyMatch(keyword -> filterRequest.getKeyword().contains(keyword)))
-//
-//                // 필터링된 트레이너들을 리스트로 수집합니다.
-//                .collect(Collectors.toList());
-//    }
-
     public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
-        List<String> filterKeywords = filterRequest.getKeyword();
-
-        if (filterKeywords == null || filterKeywords.isEmpty()) {
-            return trainers; // No filter applied
-        }
-
         return trainers.stream()
-                .filter(trainer -> {
-                    List<String> trainerKeywords = Arrays.asList(trainer.getKeyword().split(",\\s*"));
+                .filter(trainer -> filterRequest.getKeyword() == null
+                        || filterRequest.getKeyword().isEmpty()
+                        || Arrays.stream(trainer.getKeyword().split(",\\s*"))
+                        .anyMatch(keyword -> filterRequest.getKeyword().contains(keyword)))
 
-                    // Exact match for gender
-                    boolean exactGenderMatch = filterKeywords.contains(trainer.getGender().toLowerCase());
-
-                    // Other keyword filtering (excluding gender)
-                    boolean keywordMatches = filterKeywords.stream()
-                            .filter(keyword -> !keyword.equalsIgnoreCase("male") && !keyword.equalsIgnoreCase("female"))
-                            .anyMatch(trainerKeywords::contains);
-
-                    return exactGenderMatch || keywordMatches;
-                })
+                // 필터링된 트레이너들을 리스트로 수집합니다.
                 .collect(Collectors.toList());
+    }
+
+
+    public Trainer findById(Long id) {
+        Trainer trainer = trainerRepository.findById(id).orElseThrow();
+        return trainer;
+    }
+
+    public void update(Trainer trainer, String introduce, String classType, String specialization, String imagePath) {
+        trainer.setIntroduce(introduce);
+        trainer.setClassType(classType);
+        trainer.setSpecialization(specialization);
+
+        // keyword 생성 및 설정
+        String keyword = generateKeyword(trainer.getUserTrainer().getGender(), classType, specialization);
+        trainer.setKeyword(keyword);
+        trainer.setImagePath(imagePath);
+
+        trainerRepository.save(trainer);
     }
 }

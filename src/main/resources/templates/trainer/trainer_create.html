@@ -2,18 +2,16 @@
 <div layout:fragment="content" class="w-full my-3 flex justify-center text-white">
     <div class="h-screen flex items-center justify-center bg-black">
         <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-            <form action="/trainer/create" method="post" enctype="multipart/form-data">
+            <form id="trainerForm" action="/trainer/create" method="post" enctype="multipart/form-data">
                 <div class="pt-4">
-                    <label for="trainerName" class="flex flex-col">트레이너 이름</label>
-                    <input type="text" id="trainerName" name="trainerName" class="input" placeholder="이름을 입력하세요."
-                        required>
-                </div>
-                <div class="pt-4">
-                    <label class="flex flex-col">성별</label>
-                    <input type="radio" id="genderMale" name="gender" value="male" class="radio radio-primary mr-2">
-                    <label for="genderMale">남성</label>
-                    <input type="radio" id="genderFemale" name="gender" value="female" class="radio radio-primary mr-2">
-                    <label for="genderFemale">여성</label>
+                    <label for="userTrainer" class="form-label">트레이너 목록</label>
+                    <select id="userTrainer" name="userTrainerId"
+                        class="input input-bordered w-full max-w-xs text-black">
+                        <option value="" disabled selected>트레이너를 선택하세요.</option>
+                        <option th:each="userTrainer : ${userTrainerList}" th:value="${userTrainer.id}"
+                            th:text="${userTrainer.name}"></option>
+                    </select>
+                    <div id="errorMessage" class="text-red-500"></div>
                 </div>
                 <div class="pt-4">
                     <label class="flex flex-col">레슨 종류</label>
@@ -46,14 +44,147 @@
                 </div>
                 <div class="pt-4">
                     <label for="image" class="flex flex-col">이미지 업로드</label>
-                    <input type="file" id="image" name="image" accept="image/*" class="file-input file-input-bordered">
+                    <input type="file" id="image" name="image" accept="image/*"
+                        class="file-input file-input-bordered text-black">
                 </div>
                 <div class="pt-4">
-                    <button type="submit" class="btn btn-error w-full">등록</button>
+                    <button type="button" id="submitBtn" class="btn btn-error w-full">등록</button>
+                    <button type="button" id="updateBtn" class="btn btn-primary my-2"
+                        style="display: none;">수정</button>
+                    <button type="button" id="deleteBtn" class="delete btn btn btn-error my-2"
+                        style="display: none;">삭제</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var userTrainerSelect = document.getElementById("userTrainer");
+            var errorMessage = document.getElementById("errorMessage");
+            var submitBtn = document.getElementById("submitBtn");
+            var updateBtn = document.getElementById("updateBtn");
+            var deleteBtn = document.getElementById("deleteBtn");
+
+            userTrainerSelect.addEventListener("change", function () {
+                var trainerId = this.value;
+                checkDuplicateTrainer(trainerId);
+            });
+
+            function checkDuplicateTrainer(trainerId) {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/trainer/checkDuplicate/" + trainerId);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        if (xhr.responseText.trim() === '') {
+                            // 서버가 빈 응답을 보낸 경우
+                            clearFormFields(); // 폼 필드 초기화
+                            errorMessage.textContent = '';
+                            submitBtn.disabled = false; // 폼 제출 이벤트 활성화
+                        } else {
+                            try {
+                                var trainer = JSON.parse(xhr.responseText);
+                                if (trainer !== null) {
+                                    populateForm(trainer);
+                                    errorMessage.textContent = '이미 등록된 트레이너입니다.';
+                                    submitBtn.disabled = true; // 폼 제출 방지
+                                    console.log("true");
+                                    // updateBtn.setAttribute("data-id", trainer.id);
+                                    // deleteBtn.setAttribute("href", "/trainer/delete/" + trainer.id);
+                                } else {
+                                    clearFormFields(); // 폼 필드 초기화
+                                    errorMessage.textContent = '';
+                                    submitBtn.disabled = false; // 폼 제출 이벤트 활성화
+                                    console.log("false");
+                                }
+                            } catch (e) {
+                                console.error('Error parsing JSON:', e);
+                            }
+                        }
+                    } else {
+                        console.error('Request failed. Status:', xhr.status);
+                    }
+                };
+                xhr.onerror = function () {
+                    console.error('Error checking duplicate trainer');
+                };
+                xhr.send();
+            }
+
+            submitBtn.addEventListener("click", function (event) {
+                event.preventDefault(); // 기본 제출 이벤트 방지
+                document.getElementById("trainerForm").submit(); // 폼 수동 제출
+            });
+
+            function populateForm(trainer) {
+                // 이미지 업로드 제외한 나머지 필드들에 데이터 넣기
+                document.getElementById("introduce").value = trainer.introduce;
+                // 레슨 종류 체크박스 설정
+                setCheckboxValue("classTypeHealth", trainer.classType.includes("Health"));
+                setCheckboxValue("classTypePT", trainer.classType.includes("PT"));
+                setCheckboxValue("classTypePilates", trainer.classType.includes("Pilates"));
+
+                // 전문화 체크박스 설정
+                setCheckboxValue("specialization1to1", trainer.specialization.includes("1"));
+                setCheckboxValue("specialization1toN", trainer.specialization.includes("2"));
+                setCheckboxValue("specializationNtoN", trainer.specialization.includes("3"));
+
+
+                updateBtn.style.display = 'inline-block'; // 수정 버튼 표시
+                updateBtn.setAttribute("data-id", trainer.id);
+                deleteBtn.style.display = 'inline-block'; // 삭제 버튼 표시
+                deleteBtn.setAttribute("href", "/trainer/delete/" + trainer.id);
+            }
+
+            function submitUpdatedTrainer(trainerId) {
+                var formData = new FormData(document.getElementById("trainerForm"));
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/trainer/update/" + trainerId);
+                xhr.onload = function () {
+                    if (xhr.status === 200) {
+                        alert("트레이너 정보가 성공적으로 업데이트되었습니다.");
+                        window.location.href = "/trainer/list";
+                    } else {
+                        console.error("트레이너 업데이트 실패. Status:", xhr.status);
+                    }
+                };
+                xhr.onerror = function () {
+                    console.error("트레이너 업데이트 중 오류 발생");
+                };
+                xhr.send(formData);
+            }
+
+            function setCheckboxValue(checkboxId, isChecked) {
+                document.getElementById(checkboxId).checked = isChecked;
+            }
+
+            function clearFormFields() {
+                document.getElementById("introduce").value = '';
+                document.getElementById("classTypeHealth").checked = false;
+                document.getElementById("classTypePT").checked = false;
+                document.getElementById("classTypePilates").checked = false;
+                document.getElementById("specialization1to1").checked = false;
+                document.getElementById("specialization1toN").checked = false;
+                document.getElementById("specializationNtoN").checked = false;
+
+                updateBtn.style.display = 'none'; // 수정 버튼 숨김
+                deleteBtn.style.display = 'none'; // 삭제 버튼 숨김
+            }
+
+            updateBtn.addEventListener("click", function () {
+                var trainerId = updateBtn.getAttribute("data-id");
+                if (confirm("현재 데이터로 수정하시겠습니까?")) {
+                    submitUpdatedTrainer(trainerId);
+                }
+            });
+
+            deleteBtn.addEventListener("click", function () {
+                if (confirm("정말로 삭제하시겠습니까?")) {
+                    location.href = deleteBtn.getAttribute("href");
+                }
+            });
+        });
+    </script>
 </div>
 
 </html>

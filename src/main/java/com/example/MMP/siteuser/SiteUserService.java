@@ -116,6 +116,10 @@ public class SiteUserService {
         List<Lesson> lessonList = siteUser.getLessonList();
         return lessonList;
     }
+
+    public List<SiteUser> getTrainerList() {
+        return siteUserRepository.findByUserRole("trainer");
+    }
 }
 
 
