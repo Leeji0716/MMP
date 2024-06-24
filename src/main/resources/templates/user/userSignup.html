@@ -4,13 +4,13 @@
         <div class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
             <div class="text-center text-2xl mb-4 text-white">유저 회원가입</div>
             <!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
-            <form th:action="@{|/user/signup|}" th:object="${userDto}" class="space-y-4" method="post">
+            <form th:action="@{|/user/signup|}" th:object="${userDto}" class="space-y-4 text-black" method="post">
                 <input type="text" th:field="*{name}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-white"
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded"
                     placeholder="Name">
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{number}"
-                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-white"
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded"
                     placeholder="Phone..">
                 <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="text-red-500 text-sm"></p>
                 <label class="text-white">남자</label>

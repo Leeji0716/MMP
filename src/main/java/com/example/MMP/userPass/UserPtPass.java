@@ -24,7 +24,6 @@ public class UserPtPass {
 
     private int passPrice;
 
-
     private LocalDate passStart;
 
     private LocalDate passFinish;

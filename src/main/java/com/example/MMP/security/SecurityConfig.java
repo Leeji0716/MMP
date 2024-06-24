@@ -58,7 +58,8 @@ public class SecurityConfig {
                         new AntPathRequestMatcher("/weight/**"),
                         new AntPathRequestMatcher("/upload_image/**"),
                         new AntPathRequestMatcher("/ptGroup/**"),
-                        new AntPathRequestMatcher("/trainer/**")
+                        new AntPathRequestMatcher("/trainer/**"),
+                        new AntPathRequestMatcher("/coupon/**")
                 ));
 //                    .sessionManagement(sessionManagement -> sessionManagement
 //                            .maximumSessions(1) // 동시 세션 수를 1로 제한

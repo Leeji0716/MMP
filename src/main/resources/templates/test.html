@@ -1,40 +1,19 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>챌린지 생성</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.0/dist/full.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            text-align: center;
-        }
-    </style>
-</head>
-<div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center flex-wrap">
-<h1 class="text-4xl font-bold mb-8">챌린지 생성</h1>
-<form th:action="@{/coupon/create}" th:object="${couponForm}" method="post" class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-    <div class="form-group mb-4">
-        <label for="name" class="block text-lg mb-2">쿠폰 이름</label>
-        <input type="text" id="name" th:field="*{name}" class="input input-bordered w-full text-black" />
-        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500"></div>
+<div class="card-container">
+    <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
+        <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
+        <div class="card-body">
+            <h2 class="card-title" th:text="${pt.passName}"></h2>
+            <p th:text="${pt.passTitle}"></p>
+            <p th:text="'횟수 : '+${pt.passCount}"></p>
+            <p th:text="'가격 : '+${pt.passPrice}"></p>
+            <div class="card-actions justify-end">
+                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
+                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                    <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
+                    <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div class="form-group mb-4">
-        <label for="requiredPoint" class="block text-lg mb-2">구매 포인트</label>
-        <input type="number" id="requiredPoint" th:field="*{requiredPoint}" class="input input-bordered w-full text-black" />
-        <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}" class="text-red-500"></div>
-    </div>
-    <div class="form-group mb-4">
-        <label for="discountPay" class="block text-lg mb-2">할인 금액</label>
-        <input type="number" id="discountPay" th:field="*{discountPay}" class="input input-bordered w-full text-black" />
-        <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}" class="text-red-500"></div>
-    </div>
-    <div>
-        <button type="submit" class="btn btn- w-full">쿠폰 생성하기</button>
-    </div>
-</form>
-</body>
-</html>
+</div>

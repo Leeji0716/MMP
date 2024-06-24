@@ -21,14 +21,17 @@
 
     <div class="flex justify-center">
         <div class="card-container flex flex-wrap">
-            <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="coupon:${couponList}">
+            <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="coupon : ${couponList}">
                 <div class="card-body w-[300px] h-[200px]">
                     <h2 class="card-title" th:text="${coupon.name}"></h2>
                     <p th:text="${#numbers.formatInteger(coupon.point, 0, 'COMMA')} + ' 포인트'"></p>
                     <p th:text="${#numbers.formatInteger(coupon.discount, 0, 'COMMA')} + ' 원'"></p>
                     <div class="card-actions justify-end">
-                        <a th:dataset-uri="@{|/coupon/purchase/${coupon.id}|}" th:data-points="${points}"
-                            th:data-coupon-point="${coupon.point}" class="btn btn-primary purchase">쿠폰 구매</a>
+                        <a th:dataset-uri="@{|/coupon/purchase/${coupon.id}|}" th:data-points="${points}" th:data-coupon-point="${coupon.point}" class="btn btn-primary purchase">쿠폰 구매</a>
+                        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                            <a th:href="@{|/coupon/update/${coupon.id}|}" class="btn btn-primary text-black">수정</a>
+                             <a th:href="@{|/coupon/delete/${coupon.id}|}" class="btn btn-error text-black">삭제</a>
+                        </div>
                     </div>
                 </div>
             </div>

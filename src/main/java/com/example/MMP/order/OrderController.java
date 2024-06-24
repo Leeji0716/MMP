@@ -1,11 +1,7 @@
 package com.example.MMP.order;
 
-import com.example.MMP.coupon.Coupon;
-import com.example.MMP.coupon.CouponService;
 import com.example.MMP.daypass.DayPass;
 import com.example.MMP.daypass.DayPassService;
-import com.example.MMP.point.Point;
-import com.example.MMP.point.PointService;
 import com.example.MMP.ptpass.PtPass;
 import com.example.MMP.ptpass.PtPassService;
 import com.example.MMP.security.UserDetail;
@@ -15,6 +11,8 @@ import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.userPass.UserPtPassService;
+import com.example.MMP.usercoupon.UserCoupon;
+import com.example.MMP.usercoupon.UserCouponService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.json.JSONParser;
@@ -47,7 +45,7 @@ public class OrderController {
     private final UserPtPassService userPtPassService;
     private final DayPassService dayPassService;
     private final UserDayPassService userDayPassService;
-    private final CouponService couponService;
+    private final UserCouponService userCouponService;
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -126,12 +124,12 @@ public class OrderController {
             UserDayPass userDayPass = userDayPassService.UserDayadd(dayPass.getPassName(), dayPass.getPassTitle(), dayPass.getPassPrice(), dayPass.getPassDays(), siteUser);
         }
         if(coupon == 1){
-            Coupon useCoupon = couponService.getCoupon(coupon);
-            useCoupon.getUsers().remove(siteUser);
+            UserCoupon userCoupon = userCouponService.findById(coupon);
 
-            siteUser.getCouponList().remove(useCoupon);
+
+            siteUser.getUserCouponList().remove(userCoupon);
             siteUserService.save(siteUser);
-            couponService.save(useCoupon);
+            userCouponService.delete(userCoupon);
         }
         return "order/success";
     }
@@ -146,7 +144,7 @@ public class OrderController {
             model.addAttribute("Pass", dayPass);
         }
         SiteUser siteUser = siteUserService.findByUserName(userDetail.getUsername());
-        List<Coupon> couponList = siteUser.getCouponList();
+        List<UserCoupon> couponList = siteUser.getUserCouponList();
         if(couponList.isEmpty()){
             model.addAttribute("couponList",null);
         }

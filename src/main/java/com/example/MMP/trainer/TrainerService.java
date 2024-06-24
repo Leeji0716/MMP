@@ -64,14 +64,39 @@ public class TrainerService {
     public List<Trainer> findAll() {
         return this.trainerRepository.findAll();
     }
-    public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
-        return trainers.stream()
-                .filter(trainer -> filterRequest.getKeyword() == null
-                        || filterRequest.getKeyword().isEmpty()
-                        || Arrays.stream(trainer.getKeyword().split(",\\s*"))
-                        .anyMatch(keyword -> filterRequest.getKeyword().contains(keyword)))
 
-                // 필터링된 트레이너들을 리스트로 수집합니다.
+//    public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
+//        return trainers.stream()
+//                .filter(trainer -> filterRequest.getKeyword() == null
+//                        || filterRequest.getKeyword().isEmpty()
+//                        || Arrays.stream(trainer.getKeyword().split(",\\s*"))
+//                        .anyMatch(keyword -> filterRequest.getKeyword().contains(keyword)))
+//
+//                // 필터링된 트레이너들을 리스트로 수집합니다.
+//                .collect(Collectors.toList());
+//    }
+
+    public List<Trainer> filterTrainers(List<Trainer> trainers, FilterRequest filterRequest) {
+        List<String> filterKeywords = filterRequest.getKeyword();
+
+        if (filterKeywords == null || filterKeywords.isEmpty()) {
+            return trainers; // No filter applied
+        }
+
+        return trainers.stream()
+                .filter(trainer -> {
+                    List<String> trainerKeywords = Arrays.asList(trainer.getKeyword().split(",\\s*"));
+
+                    // Exact match for gender
+                    boolean exactGenderMatch = filterKeywords.contains(trainer.getGender().toLowerCase());
+
+                    // Other keyword filtering (excluding gender)
+                    boolean keywordMatches = filterKeywords.stream()
+                            .filter(keyword -> !keyword.equalsIgnoreCase("male") && !keyword.equalsIgnoreCase("female"))
+                            .anyMatch(trainerKeywords::contains);
+
+                    return exactGenderMatch || keywordMatches;
+                })
                 .collect(Collectors.toList());
     }
 }

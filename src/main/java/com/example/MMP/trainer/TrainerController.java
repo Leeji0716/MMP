@@ -28,11 +28,6 @@ public class TrainerController {
         return "trainer/trainer_form";
     }
 
-    @GetMapping("/category")
-    private String category() {
-        return "trainer/categoryFilter";
-    }
-
     @GetMapping("/create")
     private String createTrainer(TrainerForm trainerForm) {
         return "trainer/trainer_create";
@@ -59,29 +54,23 @@ public class TrainerController {
                 return "trainer/trainer_create";
             }
 
+            // Trainer 객체 생성 및 저장
             trainerService.create(fileName, trainerForm.getTrainerName(), trainerForm.getIntroduce(),
                     trainerForm.getGender(), trainerForm.getClassType(), trainerForm.getSpecialization());
         }
-
+        // Trainer 목록을 다시 불러와서 모델에 추가
         List<Trainer> trainerList = trainerService.getList();
         model.addAttribute("trainerList", trainerList);
 
         return "redirect:/";
     }
 
+
     @GetMapping("/list")
     public String TrainerList(Model model) {
         List<Trainer> trainerList = trainerService.findAll();
         model.addAttribute("trainerList", trainerList);
         return "trainer/trainer_list";
-    }
-
-    @GetMapping("/detail/{id}")
-    public String detail(@PathVariable("id") Long id,
-                         Model model) {
-        Trainer trainer = trainerService.getTrainer(id);
-        model.addAttribute("trainer", trainer);
-        return "trainer/trainer_detail";
     }
 
     @PostMapping("/delete/{id}")
@@ -114,7 +103,8 @@ public class TrainerController {
     @PostMapping("/filter")
     public ResponseEntity<List<Trainer>> filterTrainers(@RequestBody FilterRequest filterRequest) {
         List<Trainer> trainerList = trainerService.findAll();
-        List<Trainer> filteredTrainers = trainerService.filterTrainers(trainerList, filterRequest);
+        List<Trainer> filteredTrainers;
+        filteredTrainers = trainerService.filterTrainers(trainerList, filterRequest);
 
         return ResponseEntity.ok(filteredTrainers);
     }

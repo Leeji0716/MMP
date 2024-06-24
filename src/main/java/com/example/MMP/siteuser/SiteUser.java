@@ -5,7 +5,6 @@ import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
-import com.example.MMP.coupon.Coupon;
 import com.example.MMP.homeTraining.HomeTraining;
 import com.example.MMP.lesson.Lesson;
 import com.example.MMP.point.Point;
@@ -13,6 +12,7 @@ import com.example.MMP.ptGroup.PtGroup;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserPtPass;
+import com.example.MMP.usercoupon.UserCoupon;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -127,12 +127,6 @@ public class SiteUser {
     @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_coupon",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "coupon_id")
-    )
-    @JsonBackReference
-    private List<Coupon> couponList = new ArrayList<>();
+    @OneToMany
+    private List<UserCoupon> userCouponList = new ArrayList<>();
 }

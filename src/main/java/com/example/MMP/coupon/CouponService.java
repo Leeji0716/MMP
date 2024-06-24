@@ -35,4 +35,8 @@ public class CouponService {
     public void save(Coupon useCoupon) {
         couponRepository.save(useCoupon);
     }
+
+    public Coupon findById(Long id) {
+        return couponRepository.findById(id).orElseThrow();
+    }
 }
