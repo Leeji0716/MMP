@@ -1,5 +1,7 @@
 package com.example.MMP.usercoupon;
 
+import com.example.MMP.coupon.Coupon;
+import com.example.MMP.siteuser.SiteUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,4 +20,14 @@ public class UserCouponService {
     public void delete(UserCoupon userCoupon) {
         userCouponRepository.delete(userCoupon);
     }
+
+    public void create(Coupon coupon, SiteUser siteUser){
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setName(coupon.getName());
+        userCoupon.setPoint(coupon.getPoint());
+        userCoupon.setDiscount(coupon.getDiscount());
+        userCoupon.setSiteUser(siteUser);
+        userCouponRepository.save(userCoupon);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.MMP.usercoupon;
 
+import com.example.MMP.siteuser.SiteUser;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,4 +20,7 @@ public class UserCoupon {
     private int point;
 
     private int discount;
+
+    @ManyToOne
+    private SiteUser siteUser;
 }

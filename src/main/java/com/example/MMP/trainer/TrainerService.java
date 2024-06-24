@@ -68,7 +68,6 @@ public class TrainerService {
                 .collect(Collectors.toList());
     }
 
-
     public Trainer findById(Long id) {
         Trainer trainer = trainerRepository.findById(id).orElseThrow();
         return trainer;

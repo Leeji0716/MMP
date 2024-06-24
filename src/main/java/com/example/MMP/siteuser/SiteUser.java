@@ -127,6 +127,6 @@ public class SiteUser {
     @JsonBackReference
     private List<ChallengeUser> challengeUsers = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(mappedBy = "siteUser",cascade = CascadeType.REMOVE)
     private List<UserCoupon> userCouponList = new ArrayList<>();
 }

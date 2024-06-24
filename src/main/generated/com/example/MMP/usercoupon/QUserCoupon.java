@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QUserCoupon extends EntityPathBase<UserCoupon> {
 
     private static final long serialVersionUID = -1797112609L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QUserCoupon userCoupon = new QUserCoupon("userCoupon");
 
@@ -27,16 +30,27 @@ public class QUserCoupon extends EntityPathBase<UserCoupon> {
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
+    public final com.example.MMP.siteuser.QSiteUser siteUser;
+
     public QUserCoupon(String variable) {
-        super(UserCoupon.class, forVariable(variable));
+        this(UserCoupon.class, forVariable(variable), INITS);
     }
 
     public QUserCoupon(Path<? extends UserCoupon> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QUserCoupon(PathMetadata metadata) {
-        super(UserCoupon.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QUserCoupon(PathMetadata metadata, PathInits inits) {
+        this(UserCoupon.class, metadata, inits);
+    }
+
+    public QUserCoupon(Class<? extends UserCoupon> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.siteUser = inits.isInitialized("siteUser") ? new com.example.MMP.siteuser.QSiteUser(forProperty("siteUser"), inits.get("siteUser")) : null;
     }
 
 }

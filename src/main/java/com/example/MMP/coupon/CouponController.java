@@ -8,6 +8,7 @@ import com.example.MMP.usercoupon.UserCouponService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -80,16 +81,22 @@ public class CouponController {
         SiteUser siteUser = siteUserService.findByUserName(principal.getName());
         String points = String.valueOf(siteUser.getPoint().getPoints());
         List<UserCoupon> userCouponList = siteUser.getUserCouponList();
-
+        if(userCouponList.isEmpty()){
+            model.addAttribute("couponList", null);
+        }else {
+            model.addAttribute("myCoupon", userCouponList);
+        }
         model.addAttribute("couponList", couponList);
-        model.addAttribute("userCouponList", userCouponList);
         model.addAttribute("points", points);
-        System.out.println(userCouponList.size());
         return "coupon/coupon_list";
     }
 
+    @Transactional
     @GetMapping("/purchase/{id}")
-    public String purchase(@PathVariable("id") Long id, Model model, Principal principal) {
+    public String purchase(@PathVariable("id") Long id,
+                           Model model,
+                           Principal principal) {
+
         Coupon coupon = couponService.getCoupon(id);
         List<Coupon> couponList = couponService.getAll();
         SiteUser siteUser = siteUserService.findByUserName(principal.getName());
@@ -98,17 +105,14 @@ public class CouponController {
         siteUser.getPoint().setPoints(a);
         String points = String.valueOf(siteUser.getPoint().getPoints());
 
-        UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setName(coupon.getName());
-        userCoupon.setPoint(coupon.getPoint());
-        userCoupon.setDiscount(coupon.getDiscount());
-        userCouponService.save(userCoupon);
+        userCouponService.create(coupon,siteUser);
 
-        siteUser.getUserCouponList().add(userCoupon);
-        siteUserService.save(siteUser);
+
+
 
         model.addAttribute("couponList", couponList);
         model.addAttribute("points", points);
+
         return "redirect:/coupon/list";
     }
 }

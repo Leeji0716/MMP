@@ -13,7 +13,7 @@
         <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg bg-red-600 transition-colors duration-300">보유 쿠폰 목록</button>
         <div id="dropdownContent"
              class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
-            <span th:each="userCop : ${userCouponList}"
+            <span th:if="${!#lists.isEmpty(myCoupon)}" th:each="userCop : ${myCoupon}"
                   class="block py-2 px-4 text-black no-underline border-b border-gray-500 hover:bg-black hover:text-white transition-colors duration-300"
                   th:text="${userCop.name}"></span>
         </div>
