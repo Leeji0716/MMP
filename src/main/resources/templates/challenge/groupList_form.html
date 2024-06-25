@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full text-white">
+
+    <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    </head>
 
     <body>
     <div class="container mx-auto p-4 mt-10">
@@ -52,20 +55,20 @@
                     </td>
                     <td th:text="${challengeGroup.members.size()}">0</td>
                     <td>
-<!--                        <div th:if="${leaderStatus.name == user.name}">-->
-<!--                            &lt;!&ndash; 리더인 경우 보여줄 내용 &ndash;&gt;-->
-<!--                        </div>-->
-<!--                        <div th:unless="${leaderStatus.name == user.name}">-->
-                            <!-- 리더가 아닌 경우 보여줄 내용 -->
-                            <div th:if="${#lists.contains(challengeGroup.members, user)}">
-                                <a class="btn btn-ghost btn-xs" href="#"
-                                   th:onclick="'leaveGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 탈퇴</a>
-                            </div>
-                            <div th:unless="${#lists.contains(challengeGroup.members, user)}">
-                                <a class="btn btn-ghost btn-xs" href="#"
-                                   th:onclick="'joinGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 가입</a>
-                            </div>
-<!--                        </div>-->
+                        <!--                        <div th:if="${leaderStatus.name == user.name}">-->
+                        <!--                            &lt;!&ndash; 리더인 경우 보여줄 내용 &ndash;&gt;-->
+                        <!--                        </div>-->
+                        <!--                        <div th:unless="${leaderStatus.name == user.name}">-->
+                        <!-- 리더가 아닌 경우 보여줄 내용 -->
+                        <div th:if="${#lists.contains(challengeGroup.members, user)}">
+                            <a class="btn btn-ghost btn-xs" href="#"
+                               th:onclick="'leaveGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 탈퇴</a>
+                        </div>
+                        <div th:unless="${#lists.contains(challengeGroup.members, user)}">
+                            <a class="btn btn-ghost btn-xs" href="#"
+                               th:onclick="'joinGroup(' + ${challengeGroup.id} + ', ' + ${user.id} + ')'">그룹 가입</a>
+                        </div>
+                        <!--                        </div>-->
                     </td>
                 </tr>
                 </tbody>
@@ -101,6 +104,8 @@
                 if (modal) {
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
+                    console.log(123123);
+                    document.body.style.overflow = 'hidden'; // 스크롤 비활성화
                 }
             }
 
@@ -109,6 +114,7 @@
                 if (modal) {
                     modal.classList.add('hidden');
                     modal.classList.remove('flex');
+                    document.body.style.overflow = 'auto'; // 스크롤 활성화
                 }
             }
 

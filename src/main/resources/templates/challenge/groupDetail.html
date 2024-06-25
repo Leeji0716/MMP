@@ -96,17 +96,17 @@
                 <a href="#my_modal_8" class="btn">태그추가</a>
 
                 <!-- Put this part before </body> tag -->
-                <div class="modal" role="dialog" id="my_modal_8">
+                <div class="modal" role="dialog" id="my_modal_8" style="overflow: hidden;">
                     <div class="modal-box">
-                        <h3 class="font-bold text-lg">태그 추가</h3>
+                        <h3 class="font-bold text-lg text-black">태그 추가</h3>
                         <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
                             <input type="text" id="tagInput" name="name"
                                    class="input text-black input-bordered w-full mb-2"
                                    placeholder="태그 이름">
                             <button type="submit" class="btn btn-primary w-full text-black">태그 추가</button>
                         </form>
-                        <h3 class="font-bold text-lg mt-4">태그 목록</h3>
-                        <ul class="list-disc pl-5 mt-10">
+                        <h3 class="font-bold text-lg mt-4 text-black">태그 목록</h3>
+                        <ul class="list-disc pl-5 mt-10 text-black">
                             <li th:each="tag : ${tags}">
                                 <span th:text="${tag.name}" th:attr="data-tag-name=${tag.name}"></span>
                             </li>
@@ -129,6 +129,8 @@
                         <th class="text-white">멤버 이름</th>
                         <th class="text-white">멤버 가입일</th>
                         <th class="text-white">오늘의 운동 시간</th>
+                        <!-- 조건부로 리더 권한 위임 칼럼을 추가 -->
+                        <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -140,6 +142,13 @@
                         <td th:text="${member.name}">Name Placeholder</td>
                         <td th:text="${member.createDate}">Date Placeholder</td>
                         <td th:text="${totalTimeByMember[member.id]}">Attendance Placeholder</td>
+                        <td th:if="${isLeader}">
+                            <form th:action="@{/groupChallenge/changeLeader}" method="post">
+                                <input type="hidden" name="groupId" th:value="${group.id}"/>
+                                <input type="hidden" name="newLeaderId" th:value="${member.id}"/>
+                                <button type="submit" class="btn btn-neutral">권한 위임</button>
+                            </form>
+                        </td>
                     </tr>
                     </tr>
                     </tbody>

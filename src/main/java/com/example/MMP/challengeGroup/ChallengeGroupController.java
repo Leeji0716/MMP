@@ -1,8 +1,12 @@
 package com.example.MMP.challengeGroup;
 
+import com.example.MMP.Tag.Tag;
+import com.example.MMP.Tag.TagRepository;
 import com.example.MMP.challenge.attendance.Attendance;
 import com.example.MMP.challenge.attendance.AttendanceRepository;
 import com.example.MMP.challenge.challengeUser.ChallengeUser;
+import com.example.MMP.challengeGroup.GroupTag.GroupTagRepository;
+import com.example.MMP.challengeGroup.GroupTag.GroupTagService;
 import com.example.MMP.chat.ChatMessageService;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomService;
@@ -36,6 +40,8 @@ public class ChallengeGroupController {
     private final ChatRoomService chatRoomService;
     private final SiteUserRepository siteUserRepository;
     private final ChatMessageService chatMessageService;
+    private final GroupTagService tagService;
+    private final TagRepository tagRepository;
 
     @GetMapping("/edit/{groupId}")
     public String editGroup(@PathVariable Long groupId, Model model, Principal principal) {
@@ -159,7 +165,10 @@ public class ChallengeGroupController {
                             Collectors.summingLong(Attendance::getTotalTime)
                     ));
 
+            List<Tag> tags = tagRepository.findAll ();
 
+
+            model.addAttribute ("tags",tags);
             model.addAttribute ("group", group);
             model.addAttribute ("isLeader", isLeader);
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
@@ -190,8 +199,6 @@ public class ChallengeGroupController {
         model.addAttribute("memberNumber",memberNumber);
 
 
-
-
         return "chat/groupchat";
     }
 
@@ -200,6 +207,12 @@ public class ChallengeGroupController {
         ChallengeGroup challengeGroup = groupService.getGroup (groupId);
         groupService.deleteGroup (challengeGroup);
         return "redirect:/groupChallenge/list";
+    }
+
+    @PostMapping("/changeLeader")
+    public String changeLeader(@RequestParam("groupId") Long groupId, @RequestParam("newLeaderId") Long newLeaderId) {
+       groupService.changeLeader(groupId, newLeaderId);
+        return "redirect:/groupChallenge/detail/" + groupId; // 그룹 상세 페이지로 리디렉션
     }
 }
 

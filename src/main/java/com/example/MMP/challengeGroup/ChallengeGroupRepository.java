@@ -15,5 +15,7 @@ public interface ChallengeGroupRepository extends JpaRepository<ChallengeGroup,L
     List<ChallengeGroup> findByMembersContaining(SiteUser siteUser);
 
     ChallengeGroup findByName(String cName);
+
+
 }
 

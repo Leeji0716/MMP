@@ -8,6 +8,7 @@ import com.example.MMP.chat.ChatRoomService;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import com.example.MMP.siteuser.SiteUserService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,8 @@ public class ChallengeGroupService {
     private final SiteUserRepository userRepository;
     private final SiteUserService userService;
     private final ChatRoomService chatRoomService;
-    private final ChatMessageService chatMessageService;
     private final AttendanceRepository attendanceRepository;
+
 
     // GroupService에 추가
     public boolean isLeader(Long groupId, String username) {
@@ -192,6 +193,15 @@ public class ChallengeGroupService {
 
     public ChallengeGroup findByName(String cName) {
         return groupRepository.findByName (cName);
+    }
+
+    public ChallengeGroup changeLeader(Long groupId, Long newLeaderId) {
+
+        ChallengeGroup group = groupRepository.findById(groupId).orElseThrow(() -> new EntityNotFoundException("그룹을 찾을 수 없습니다."));
+        SiteUser newLeader = userRepository.findById(newLeaderId).orElseThrow(() -> new EntityNotFoundException ("유저를 찾을 수 없습니다."));
+        group.setLeader(newLeader);
+
+        return groupRepository.save(group);
     }
 }
 

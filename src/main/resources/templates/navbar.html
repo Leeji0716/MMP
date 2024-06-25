@@ -69,6 +69,9 @@
                         <a href="/ptGroup/join">회원 추가하기</a>
                     </li>
                     <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
+                        <a th:href="@{/user/changePassword}">비밀번호 변경</a>
+                    </li>
+                    <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/logout}">Logout</a>
                     </li>
                 </ul>
