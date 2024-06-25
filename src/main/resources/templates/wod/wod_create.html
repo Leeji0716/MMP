@@ -7,7 +7,7 @@
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 
                 <!-- 프로필 이미지 출력 (조건부) -->
-                <img th:if="${wod != null}" th:src="@{'/uploads/'+ ${wodForm.imagePath}}" alt="프로필 사진">
+                <img th:if="${wod != null}" th:src="@{/images/{filePath}(filePath=${wod.imagePath})}" alt="프로필 사진">
                 
                 <!-- 프로필 이미지 업로드 입력 -->
                 <div class="mb-3 w-full">
