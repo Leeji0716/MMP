@@ -192,14 +192,14 @@ public class SiteUserController {
     public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter", defaultValue = "send") String passFilter) {
 
         try {
-            SiteUser user = this.siteUserService.getUser (principal.getName ());
-            List<Wod> wodList = wodService.findByUserWod (user);
+            SiteUser user = this.siteUserService.getUser(principal.getName ());
+            List<Wod> wodListAll = wodService.getWodListByCreateDateDesc(user);
             List<HomeTraining> saveTraining = homeTrainingService.getSaveTraining (user);
             int points = user.getPoint ().getPoints ();
 
             List<Comment> commentList;
             List<Comment> topComment = new ArrayList<> ();
-            for (Wod wod : wodList) {
+            for (Wod wod : wodListAll) {
                 commentList = commentService.getCommentsByWodOrderByCreateDateDesc (wod);
                 topComment.addAll (commentList);
             }
@@ -236,7 +236,7 @@ public class SiteUserController {
             }
 
 
-            model.addAttribute ("wodList", wodList);
+            model.addAttribute ("topTenWodList", wodService.getTop10Wods(wodListAll));
             model.addAttribute ("saveTraining", saveTraining);
             model.addAttribute ("user", user);
             model.addAttribute ("points", points);

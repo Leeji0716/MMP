@@ -1,5 +1,6 @@
 package com.example.MMP.wod;
 
+import com.example.MMP.Comment.Comment;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +76,16 @@ public class WodService {
         return wod.getLikeList().size();
     }
 
-    public List<Wod> findByUserWod(SiteUser siteUser){
-        return wodRepository.findByUserWod(siteUser);
+    public List<Wod> getWodListByCreateDateDesc(SiteUser user) {
+        return wodRepository.findByWriterOrderByCreateDateDesc(user);
+    }
+
+    public List<Wod> getTop10Wods(List<Wod> wodListAll) {
+        return wodListAll.stream()
+                .limit(10)
+                .collect(Collectors.toList());
+    }
+    public List<Wod> getAllWodsByCreateDateDesc() {
+        return wodRepository.findAllByOrderByCreateDateDesc();
     }
 }

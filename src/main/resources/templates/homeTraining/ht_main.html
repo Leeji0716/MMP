@@ -1,23 +1,31 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full h-[90%] overflow-y-auto my-3 flex justify-center items-center flex-col">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <div class="flex my-3 h-[10%]">
-        <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
-        <div th:each="category : ${categoryList}">
-            <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home?categoryId=${category.id}|}"
-                th:text="${category.name}"></a>
-        </div>
-        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+<div layout:fragment="content" class="w-full h-[880px] overflow-y-auto my-3 flex justify-start items-center flex-col">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <div class="my-3 w-full flex">
+        <div class="w-[5%]" th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a th:href="@{|/category/create|}" class="btn btn-primary">카테고리 추가</a>
-            <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">추가</a>
+        </div>
+        <div class="w-[95%] flex justify-center">
+            <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
+            <div th:each="category : ${categoryList}">
+                <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home?categoryId=${category.id}|}"
+                    th:text="${category.name}"></a>
+            </div>
         </div>
     </div>
-    <div class="col-6 text-black h-[5%]">
-        <form th:action="@{/homeTraining/home}" method="get">
-            <input type="text" id="search_kw" name="kw" class="input" th:value="${kw}" placeholder="검색어를 입력하세요.">
-            <input class="btn btn-error" type="submit" id="btn_search" value="찾기">
-        </form>
+
+    <div class="my-3 w-full flex">
+        <div class="w-[5%]" th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
+            <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">홈트영상 추가</a>
+        </div>
+        <div class="w-[95%] flex justify-center">
+            <form th:action="@{/homeTraining/home}" method="get">
+                <input type="text" id="search_kw" name="kw" class="input" th:value="${kw}" placeholder="검색어를 입력하세요.">
+                <input class="btn btn-error" type="submit" id="btn_search" value="찾기">
+            </form>
+        </div>
     </div>
+    
     <div>
         <div class="flex w-full justify-center flex-wrap">
             <div class="card w-96 bg-base-100 shadow-xl m-4 block" th:each="homeTraining:${homeTrainingList}">

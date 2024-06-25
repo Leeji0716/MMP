@@ -7,7 +7,7 @@
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
             <!-- 헬스장 로고 이미지 출력 -->
-            <img th:src="@{'/uploads/'+ ${informationForm.imagePath}}" alt="헬스장 로고 사진">
+            <img th:src="@{/images/{filePath}(filePath=${informationForm.imagePath})}" alt="헬스장 로고 사진">
 
             <!-- 헬스장 로고 업로드 입력 -->
             <div class="mb-3 w-full">
