@@ -9,7 +9,7 @@
             <h1 class="mb-5 text-5xl font-bold">로그인</h1>
             <div layout:fragment="content" class="w-full my-3">
                 <form th:action="@{/user/login}" method="post" class="w-[400px]">
-                    <div th:if="${param.error}">
+                    <div class="mb-3" th:if="${param.error}">
                         <div role="alert" class="alert alert-error">
                             <svg
                             xmlns="http://www.w3.org/2000/svg"

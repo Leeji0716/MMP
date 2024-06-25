@@ -60,6 +60,10 @@ dependencies {
 	//bluetooth
 	implementation 'io.ultreia:bluecove:2.1.1'
 
+	// https://mvnrepository.com/artifact/org.commonmark/commonmark-parent
+	implementation 'org.commonmark:commonmark:0.18.0'
+
+
 }
 
 tasks.named('test') {
