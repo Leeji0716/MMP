@@ -33,7 +33,7 @@
                    class="input input-bordered w-full p-2 border border-gray-300 rounded"
                    placeholder="Email">
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></p>
-            <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
+            <input type="submit" class="w-full btn btn-error p-2 text-black rounded" value="만들기">
         </form>
     </div>
 </div>

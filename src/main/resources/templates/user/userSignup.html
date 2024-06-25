@@ -29,7 +29,7 @@
             <form th:action="@{/user/signup}" th:object="${userDto}" class="space-y-4" method="post">
                 <input type="text" th:field="*{name}"
                        class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                       placeholder="Name">
+                    placeholder="Name">
                 <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{number}"
                        class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
@@ -40,12 +40,12 @@
                 <label class="text-white">여자</label>
                 <input type="radio" th:field="*{gender}" value="woman" class="radio radio-primary mr-2"/>
                 <input type="text" th:field="*{birthDate}"
-                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                       placeholder="BirthDay">
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                    placeholder="BirthDay">
                 <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-red-500 text-sm"></p>
                 <input type="text" th:field="*{email}"
-                       class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
-                       placeholder="Email">
+                    class="input input-bordered w-full p-2 border border-gray-300 rounded text-black"
+                    placeholder="Email">
                 <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></p>
                 <label class="text-white">트레이너</label>
                 <input type="radio" th:field="*{userRole}" value="trainer" class="radio radio-primary mr-2" onclick="toggleSalaryField()"/>
@@ -63,7 +63,7 @@
                 </select>
 
 
-                <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
+                <input type="submit" class="w-full btn btn-error p-2 text-black rounded" value="만들기">
             </form>
         </div>
     </div>

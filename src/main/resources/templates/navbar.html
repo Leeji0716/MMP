@@ -54,19 +54,19 @@
                     </li>
 
                     <!-- 추후 막을 예정-->
-                    <li class="nav-item">
+                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}" class="nav-item">
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
                            th:href="@{/user/userList}">회원 리스트</a>
                     </li>
-                    <li class="nav-item">
+                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}" class="nav-item">
                         <a class="nav-link" tabindex="0" sec:authorize="isAuthenticated()"
-                           th:href="@{/user/trainerList}">회원 리스트</a>
+                           th:href="@{/user/trainerList}">트레이너 리스트</a>
                     </li>
 
-                    <!-- <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
+                    <li th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}"
                         tabindex="0">
                         <a href="/ptGroup/join">회원 추가하기</a>
-                    </li> -->
+                    </li>
                     <li class="nav-item" tabindex="0" sec:authorize="isAuthenticated()">
                         <a th:href="@{/user/logout}">Logout</a>
                     </li>
