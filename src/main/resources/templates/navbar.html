@@ -129,7 +129,10 @@
 
         function showAlarm(alarmDto) {
             let alarmDetails = document.getElementById('dropdown');
-            alarmDetails.setAttribute('open', true);
+            console.log(alarmDetails);
+            if (alarmDetails !== null) {
+                alarmDetails.setAttribute('open', true);
+            }
             const gotalk = document.querySelectorAll('.gotalk')
             gotalk.forEach((talk) => {
                 const maxLength = 5;
@@ -145,7 +148,7 @@
 
                     const alarm = talk.querySelector('.alarm');
                     const alarmMessage = alarm.querySelector(".alarmMessage");
-                    const fommatAlarm = truncateString(alarmDto.message,maxLength);
+                    const fommatAlarm = truncateString(alarmDto.message, maxLength);
                     alarmMessage.innerText = fommatAlarm;
 
                     let alarmCnt = alarm.querySelector(".alarmCnt");
@@ -160,8 +163,10 @@
                 }
 
             });
+            const toastMessageLength = 5;
+            const toastMessage = truncateString(alarmDto.message, toastMessageLength);
             $("#toast").append(
-                toastr.info(alarmDto.sender + '님의 메세지 : ' + alarmDto.message)
+                toastr.info(alarmDto.sender + '님의 메세지 : ' + toastMessage)
             );
         }
 
