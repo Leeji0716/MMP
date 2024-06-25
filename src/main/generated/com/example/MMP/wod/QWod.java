@@ -22,7 +22,7 @@ public class QWod extends EntityPathBase<Wod> {
 
     public static final QWod wod = new QWod("wod");
 
-    public final ListPath<com.example.MMP.Comment.Comment, com.example.MMP.Comment.QComment> commentList = this.<com.example.MMP.Comment.Comment, com.example.MMP.Comment.QComment>createList("commentList", com.example.MMP.Comment.Comment.class, com.example.MMP.Comment.QComment.class, PathInits.DIRECT2);
+    public final ListPath<com.example.MMP.wod.Comment.Comment, com.example.MMP.wod.Comment.QComment> commentList = this.<com.example.MMP.wod.Comment.Comment, com.example.MMP.wod.Comment.QComment>createList("commentList", com.example.MMP.wod.Comment.Comment.class, com.example.MMP.wod.Comment.QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 

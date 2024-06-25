@@ -1,42 +1,39 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
-<div layout:fragment="content" class="w-full text-white">
-    <head>
-        <meta charset="UTF-8">
-        <title>유저 List</title>
-        <link rel="stylesheet" type="text/css" href="/css/style.css">
-    </head>
-    <body>
-    <div class="container mx-auto p-4 mt-10">
+<div layout:fragment="content" class="w-full h-[880px] text-white">
+    <div class="container mx-auto p-4">
+
         <div class="flex justify-center">
             <h1 class="text-2xl font-bold">유저 리스트</h1>
         </div>
-        <br>
-        <br>
+        <form action="/ptGroup/join" method="post">
+            <p th:if="${error}" th:text="${error}" class="text-red-500 text-sm mt-4"></p>
+            <input type="text" id="userNumber" class="input input-bordered text-black w-[10%]" placeholder="회원번호" name="number">
+            <input type="submit" class="btn btn-error" value="회원 추가하기">
+        </form>
         <div class="overflow-x-auto">
             <table class="table">
                 <thead>
-                <tr>
-                    <th class="text-white">순번</th>
-                    <th class="text-white">아이디</th>
-                    <th class="text-white">이름</th>
-                    <th class="text-white">핸드폰번호</th>
-                    <th class="text-white">이메일</th>
-                </tr>
+                    <tr>
+                        <th class="text-white">순번</th>
+                        <th class="text-white">아이디</th>
+                        <th class="text-white">이름</th>
+                        <th class="text-white">핸드폰번호</th>
+                        <th class="text-white">이메일</th>
+                    </tr>
                 </thead>
                 <tbody>
-                <tr th:each="user, iterStat : ${users}">
-                    <td th:text="${iterStat.index + 1}">1</td>
-                    <td th:text="${user.userId}">ID</td>
-                    <td th:text="${user.name}">Username</td>
-                    <td th:text="${user.number}">PhoneNumber</td>
-                    <td th:text="${user.email}">Email</td>
-                </tr>
+                    <tr th:each="user, iterStat : ${users}">
+                        <td th:text="${iterStat.index + 1}">1</td>
+                        <td th:text="${user.userId}">ID</td>
+                        <td th:text="${user.name}">Username</td>
+                        <td th:text="${user.number}">PhoneNumber</td>
+                        <td th:text="${user.email}">Email</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    </body>
 </div>
-</div>
+
 </html>

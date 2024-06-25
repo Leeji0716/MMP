@@ -5,18 +5,28 @@
         <div th:if="${dayPass != null}" class="text-center text-2xl mb-4 text-white">요일권 수정하기</div>
         <a th:if="${dayPass == null}" href="/pt/add" class="btn">PT회원권 만들기</a>
         <form th:object="${dayPassDto}" class="space-y-4 text-black" method="post">
-            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassName}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
-            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassName}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
+            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassName}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
+            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassName}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 이름..">
             <p th:if="${#fields.hasErrors('dayPassName')}" th:errors="*{dayPassName}" class="text-red-500 text-sm"></p>
-            <textarea th:if="${dayPass == null}" placeholder="회원권 설명.." th:field="*{dayPassTitle}" class="textarea textarea-bordered textarea-lg w-full max-w-xs" ></textarea>
-            <textarea th:if="${dayPass != null}" placeholder="회원권 설명.." th:field="*{dayPassTitle}" class="textarea textarea-bordered textarea-lg w-full max-w-xs" ></textarea>
-            <p th:if="${#fields.hasErrors('dayPassTitle')}" th:errors="*{dayPassTitle}" class="text-red-500 text-sm"></p>
-            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassDays}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 일수..">
-            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassDays}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 일수..">
-            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassPrice}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
-            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassPrice}" class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
+            <textarea th:if="${dayPass == null}" placeholder="회원권 설명.." th:field="*{dayPassTitle}"
+                class="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+            <textarea th:if="${dayPass != null}" placeholder="회원권 설명.." th:field="*{dayPassTitle}"
+                class="textarea textarea-bordered textarea-lg w-full max-w-xs"></textarea>
+            <p th:if="${#fields.hasErrors('dayPassTitle')}" th:errors="*{dayPassTitle}" class="text-red-500 text-sm">
+            </p>
+            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassDays}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 일수..">
+            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassDays}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 일수..">
+            <input th:if="${dayPass == null}" type="text" th:field="*{dayPassPrice}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
+            <input th:if="${dayPass != null}" type="text" th:field="*{dayPassPrice}"
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="회원권 가격..">
             <input type="submit" class="btn w-full p-2 bg-red-500 text-black rounded hover:bg-red-500" value="만들기">
         </form>
     </div>
 </div>
+
 </html>

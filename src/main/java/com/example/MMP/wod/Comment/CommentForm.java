@@ -1,4 +1,4 @@
-package com.example.MMP.Comment;
+package com.example.MMP.wod.Comment;
 
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;

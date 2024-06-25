@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml"
-      xmlns:layout="http://www.w3.org/1999/xhtml">
+    xmlns:layout="http://www.w3.org/1999/xhtml">
 <div layout:fragment="content" class="w-full h-[880px] my-3 flex text-black flex-wrap gap-2 flex-col justify-start">
     <div class="flex items-center space-x-2 mt-2">
         <li class="flex border-2 items-center rounded-full bg-white p-2">
@@ -10,12 +10,14 @@
     </div>
 
     <div class="relative inline-block">
-        <button id="toggleDropdown" class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg bg-red-600 transition-colors duration-300">보유 쿠폰 목록</button>
+        <button id="toggleDropdown"
+            class="dropbtn bg-black text-white text-lg py-2 px-4 rounded-lg bg-red-600 transition-colors duration-300">보유
+            쿠폰 목록</button>
         <div id="dropdownContent"
-             class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
+            class="dropdown-content absolute hidden bg-white text-black shadow-lg rounded-lg mt-2 w-52">
             <span th:if="${!#lists.isEmpty(myCoupon)}" th:each="userCop : ${myCoupon}"
-                  class="block py-2 px-4 text-black no-underline border-b border-gray-500 hover:bg-black hover:text-white transition-colors duration-300"
-                  th:text="${userCop.name}"></span>
+                class="block py-2 px-4 text-black no-underline border-b border-gray-500 hover:bg-black hover:text-white transition-colors duration-300"
+                th:text="${userCop.name}"></span>
         </div>
     </div>
 
@@ -27,10 +29,12 @@
                     <p th:text="${#numbers.formatInteger(coupon.point, 0, 'COMMA')} + ' 포인트'"></p>
                     <p th:text="${#numbers.formatInteger(coupon.discount, 0, 'COMMA')} + ' 원'"></p>
                     <div class="card-actions justify-end">
-                        <a th:dataset-uri="@{|/coupon/purchase/${coupon.id}|}" th:data-points="${points}" th:data-coupon-point="${coupon.point}" class="btn btn-primary purchase">쿠폰 구매</a>
-                        <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                        <a th:dataset-uri="@{|/coupon/purchase/${coupon.id}|}" th:data-points="${points}"
+                            th:data-coupon-point="${coupon.point}" class="btn btn-primary purchase">쿠폰 구매</a>
+                        <div
+                            th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
                             <a th:href="@{|/coupon/update/${coupon.id}|}" class="btn btn-primary text-black">수정</a>
-                             <a th:href="@{|/coupon/delete/${coupon.id}|}" class="btn btn-error text-black">삭제</a>
+                            <a th:href="@{|/coupon/delete/${coupon.id}|}" class="btn btn-error text-black">삭제</a>
                         </div>
                     </div>
                 </div>
@@ -64,6 +68,5 @@
         });
     </script>
 </div>
-
 
 </html>

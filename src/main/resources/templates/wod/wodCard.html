@@ -4,11 +4,12 @@
     </figure>
     <div class="flex h-[15%] w-[100%]">
         <a href="#" class="w-[10%] h-[100%] btn btn-sm btn-outline-secondary"
-           th:onclick="'toggleIcon(event, ' + ${wod.id} + ')'">
+            th:onclick="'toggleIcon(event, ' + ${wod.id} + ')'">
             <i class="fa-regular fa-heart" th:id="heartIcon- + ${wod.id}"></i>
             <span class="badge bg-error" th:id="likeCountSpan- + ${wod.id}" th:text="${wod.likeCount}"></span>
             <div class="hidden" th:data-wod-id="${wod.id}"></div>
-            <a th:href="@{|/wod/detail/${wod.id}|}" class="w-[80%] flex text-black justify-center font-bold items-center" th:text="${wod.content}"></a>
+            <a th:href="@{|/wod/detail/${wod.id}|}"
+                class="w-[80%] flex text-black justify-center font-bold items-center" th:text="${wod.content}"></a>
         </a>
     </div>
 </div>

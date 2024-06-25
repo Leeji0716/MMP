@@ -3,11 +3,10 @@ package com.example.MMP.siteuser;
 
 //import com.example.MMP.mail.MailService;
 
-import com.example.MMP.Comment.Comment;
-import com.example.MMP.Comment.CommentService;
+import com.example.MMP.wod.Comment.Comment;
+import com.example.MMP.wod.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
-import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.chat.ChatRoom;
 import com.example.MMP.chat.ChatRoomDto;
 import com.example.MMP.chat.ChatRoomService;
@@ -19,7 +18,6 @@ import com.example.MMP.ptGroup.PtGroupRepository;
 import com.example.MMP.security.UserDetail;
 import com.example.MMP.siteuser.salary.Salary;
 import com.example.MMP.siteuser.salary.SalaryRepository;
-import com.example.MMP.siteuser.salary.SalaryService;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.transPass.TransPassService;
 import com.example.MMP.wod.Wod;
@@ -31,15 +29,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller

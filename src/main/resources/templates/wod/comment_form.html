@@ -5,16 +5,18 @@
             <form th:object="${commentForm}" method="post">
                 <!-- CSRF 토큰 입력 -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                
+
                 <!-- 글 작성 입력 -->
                 <div class="mb-3 w-full">
-                    <input type="text" class="input w-full input-bordered text-black" th:field="*{content}" placeholder="글 작성">
+                    <input type="text" class="input w-full input-bordered text-black" th:field="*{content}"
+                        placeholder="글 작성">
                 </div>
-                
+
                 <!-- 수정 완료 버튼 -->
                 <button type="submit" class="btn btn-primary">수정</button>
             </form>
         </div>
     </div>
 </div>
+
 </html>

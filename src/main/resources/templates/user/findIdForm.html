@@ -10,45 +10,51 @@
 </head>
 
 <body>
-<div class="hero min-h-screen" style="background-color:black;">
-    <div class="hero-overlay bg-opacity-60"></div>
-    <div class="hero-content text-center text-neutral-content">
-        <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">아이디 찾기</h1>
-            <div class="w-full my-3">
-                <form th:action="@{/user/findId}" th:object="${findIdDto}" method="post">
-                    <div class="mb-4">
-                        <label class="input input-bordered flex items-center gap-3 text-gray-500" for="name">
-                            이름
-                            <input type="text" class="grow text-gray-500" name="name" id="name" th:field="*{name}" placeholder="이름을 입력하세요">
-                        </label>
-                        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500">이름을 찾을 수 없습니다.</div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="input input-bordered flex items-center gap-2 text-gray-500" for="birthDate">
-                            생년월일
-                            <input type="text" class="grow text-gray-500" name="birthDate" id="birthDate" th:field="*{birthDate}" placeholder="생년월일(6자리)을 입력하세요">
-                        </label>
-                        <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-red-500">생년월일을 확인해주세요.</div>
-                    </div>
-                    <div class="mb-4">
-                        <label class="input input-bordered flex items-center gap-2 text-gray-500" for="email">
-                            이메일
-                            <input type="email" class="grow text-gray-500" name="email" id="email" th:field="*{email}" placeholder="등록된 이메일을 입력하세요">
-                        </label>
-                        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500">이메일을 확인해주세요.</div>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary">아이디 찾기</button>
-                    </div>
-                    <div th:if="${errorMessage}" class="text-red-500 mt-4">
-                        <p th:text="${errorMessage}">아이디 찾기 실패: [[${errorMessage}]]</p>
-                    </div>
-                </form>
+    <div class="hero min-h-screen" style="background-color:black;">
+        <div class="hero-overlay bg-opacity-60"></div>
+        <div class="hero-content text-center text-neutral-content">
+            <div class="max-w-md">
+                <h1 class="mb-5 text-5xl font-bold">아이디 찾기</h1>
+                <div class="w-full my-3">
+                    <form th:action="@{/user/findId}" th:object="${findIdDto}" method="post">
+                        <div class="mb-4">
+                            <label class="input input-bordered flex items-center gap-3 text-gray-500" for="name">
+                                이름
+                                <input type="text" class="grow text-gray-500" name="name" id="name" th:field="*{name}"
+                                    placeholder="이름을 입력하세요">
+                            </label>
+                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500">이름을 찾을 수
+                                없습니다.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="input input-bordered flex items-center gap-2 text-gray-500" for="birthDate">
+                                생년월일
+                                <input type="text" class="grow text-gray-500" name="birthDate" id="birthDate"
+                                    th:field="*{birthDate}" placeholder="생년월일(6자리)을 입력하세요">
+                            </label>
+                            <div th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}"
+                                class="text-red-500">생년월일을 확인해주세요.</div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="input input-bordered flex items-center gap-2 text-gray-500" for="email">
+                                이메일
+                                <input type="email" class="grow text-gray-500" name="email" id="email"
+                                    th:field="*{email}" placeholder="등록된 이메일을 입력하세요">
+                            </label>
+                            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500">이메일을
+                                확인해주세요.</div>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">아이디 찾기</button>
+                        </div>
+                        <div th:if="${errorMessage}" class="text-red-500 mt-4">
+                            <p th:text="${errorMessage}">아이디 찾기 실패: [[${errorMessage}]]</p>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </body>
 
 </html>

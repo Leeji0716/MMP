@@ -1,6 +1,6 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,24 +15,21 @@
 
         <!--    <p th:if="${#fields.hasErrors('signupFailed')}" th:errors="*{signupFailed}" class="text-red-500 text-sm"></p>-->
         <form th:action="@{|/user/adminSignup|}" th:object="${adminDto}" class="space-y-4 text-black" method="post">
-            <input type="text" th:field="*{name}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Name">
+            <input type="text" th:field="*{name}" class="input input-bordered w-full p-2 border border-gray-300 rounded"
+                placeholder="Name">
             <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500 text-sm"></p>
             <input type="text" th:field="*{number}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded"
-                   placeholder="Phone..">
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Phone..">
             <p th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="text-red-500 text-sm"></p>
             <label class="text-white">남자</label>
-            <input type="radio" th:field="*{gender}" value="man" class="radio radio-primary mr-2"/>
+            <input type="radio" th:field="*{gender}" value="man" class="radio radio-primary mr-2" />
             <label class="text-white">여자</label>
-            <input type="radio" th:field="*{gender}" value="woman" class="radio radio-primary mr-2"/>
+            <input type="radio" th:field="*{gender}" value="woman" class="radio radio-primary mr-2" />
             <input type="text" th:field="*{birthDate}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded"
-                   placeholder="BirthDay">
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="BirthDay">
             <p th:if="${#fields.hasErrors('birthDate')}" th:errors="*{birthDate}" class="text-red-500 text-sm"></p>
             <input type="text" th:field="*{email}"
-                   class="input input-bordered w-full p-2 border border-gray-300 rounded"
-                   placeholder="Email">
+                class="input input-bordered w-full p-2 border border-gray-300 rounded" placeholder="Email">
             <p th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-red-500 text-sm"></p>
             <input type="submit" class="w-full btn btn-error p-2 text-black rounded" value="만들기">
         </form>
@@ -40,4 +37,3 @@
 </div>
 
 </html>
-

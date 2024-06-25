@@ -1,10 +1,7 @@
 package com.example.MMP.wod;
 
-import com.example.MMP.Comment.Comment;
+import com.example.MMP.wod.Comment.Comment;
 import com.example.MMP.siteuser.SiteUser;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

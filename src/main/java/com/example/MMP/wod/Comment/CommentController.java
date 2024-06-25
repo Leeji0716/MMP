@@ -1,14 +1,12 @@
-package com.example.MMP.Comment;
+package com.example.MMP.wod.Comment;
 
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
-import jakarta.persistence.Version;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,7 +27,7 @@ public class CommentController {
 
     @GetMapping("/create")
     public String createComment(CommentForm commentForm) {
-        return "comment_form";
+        return "wod/comment_form";
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -59,14 +57,14 @@ public class CommentController {
     public String delete(@PathVariable("id") Long id, CommentForm commentForm){
         Comment comment = commentService.getComment(id);
         commentForm.setContent(comment.getContent());
-        return "comment_form";
+        return "wod/comment_form";
     }
 
     @PostMapping("/update/{id}")
     public String delete(@PathVariable("id") Long id, @Valid CommentForm commentForm, BindingResult bindingResult){
         Comment comment = commentService.getComment(id);
         if(bindingResult.hasErrors()){
-            return "comment_form";
+            return "wod/comment_form";
         }
 
         Wod wod = comment.getWod();

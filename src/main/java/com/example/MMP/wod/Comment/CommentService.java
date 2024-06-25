@@ -1,4 +1,4 @@
-package com.example.MMP.Comment;
+package com.example.MMP.wod.Comment;
 
 import com.example.MMP.DataNotFoundException;
 import com.example.MMP.siteuser.SiteUser;

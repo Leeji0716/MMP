@@ -1,4 +1,6 @@
-<html lang="en" layout:decorate="~{layout}"></html>
+<html lang="en" layout:decorate="~{layout}">
+
+</html>
 <div layout:fragment="content" class="w-full mx-auto h-[880px] relative overflow-y-auto">
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <div class="w-full">
@@ -13,7 +15,8 @@
                 <span class="badge bg-error" id="likeCountSpan" th:text="${wod.likeCount}"></span>
                 <div class="hidden" th:data-wod-id="${wod.id}"></div>
             </a>
-            <div class="h-full bg-white rounded-lg border border-gray-300 w-[80%] flex text-black justify-center font-bold items-center" th:utext="${wod.content}">
+            <div class="h-full bg-white rounded-lg border border-gray-300 w-[80%] flex text-black justify-center font-bold items-center"
+                th:utext="${wod.content}">
             </div>
             <div class="h-full bg-white text-black rounded-lg border border-gray-300 w-[10%]">
                 <span th:if="${wod.writer != null}" th:text="${wod.writer.name}"></span>
@@ -145,4 +148,5 @@
         });
     </script>
 </div>
+
 </html>

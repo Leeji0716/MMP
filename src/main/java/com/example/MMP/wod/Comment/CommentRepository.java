@@ -1,4 +1,4 @@
-package com.example.MMP.Comment;
+package com.example.MMP.wod.Comment;
 
 import com.example.MMP.wod.Wod;
 import org.springframework.data.jpa.repository.JpaRepository;

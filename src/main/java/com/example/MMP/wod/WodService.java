@@ -1,6 +1,5 @@
 package com.example.MMP.wod;
 
-import com.example.MMP.Comment.Comment;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserRepository;
 import lombok.RequiredArgsConstructor;

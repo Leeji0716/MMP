@@ -1,17 +1,17 @@
 <html layout:decorate="~{layout}">
-<div layout:fragment="content" class="w-full my-3 ">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-    <input type="hidden" id="userId" th:value="${#authentication.principal.id}"/>
+<div layout:fragment="content" class="w-full my-3">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
     <div class="flex items-center text-black flex justify-center items-center">
         <form action="/totalPass/transfer/success">
             <label class="input input-bordered flex items-center gap-2">
-                <input type="text" class="grow text-black" placeholder="Number" name="number"/>
+                <input type="text" class="grow text-black" placeholder="Number" name="number" />
             </label>
             <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black" name="pass">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
-                <option th:each="pt : ${user.userPtPassList}"  th:value="${pt.passName}" th:text="${pt.passName}">
+                <option th:each="pt : ${user.userPtPassList}" th:value="${pt.passName}" th:text="${pt.passName}">
                 </option>
-                <option th:each="day : ${user.userDayPassList}"  th:value="${day.passName}" th:text="${day.passName}">
+                <option th:each="day : ${user.userDayPassList}" th:value="${day.passName}" th:text="${day.passName}">
                 </option>
             </select>
             <input type="submit" class="btn" value="양도하기">
@@ -40,105 +40,104 @@
                         },
                         body: JSON.stringify({ passName: selectedPassName })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.passCount != null){
-                        const cardContainer = document.getElementById('cardContainer');
-                        cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.passCount != null) {
+                                const cardContainer = document.getElementById('cardContainer');
+                                cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
 
-                        // 새로운 카드를 생성
-                        const card = document.createElement('div');
-                        card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
+                                // 새로운 카드를 생성
+                                const card = document.createElement('div');
+                                card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
 
-                        const figure = document.createElement('figure');
-                        const img = document.createElement('img');
-                        img.src = 'https://i.imgur.com/kW3S5se.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
-                        img.alt = 'PT';
-                        figure.appendChild(img);
+                                const figure = document.createElement('figure');
+                                const img = document.createElement('img');
+                                img.src = 'https://i.imgur.com/kW3S5se.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
+                                img.alt = 'PT';
+                                figure.appendChild(img);
 
-                        const cardBody = document.createElement('div');
-                        cardBody.className = 'card-body';
+                                const cardBody = document.createElement('div');
+                                cardBody.className = 'card-body';
 
-                        const cardTitle = document.createElement('h2');
-                        cardTitle.className = 'card-title';
-                        cardTitle.innerText = data.passName; // 받아온 데이터 사용
-
-
-
-                        const cardCount = document.createElement('p');
-                        cardCount.innerText = `횟수 : ${data.passCount}`; // 받아온 데이터 사용
-
-                        const cardStart = document.createElement('p');
-                        cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
-
-                        const cardFinish = document.createElement('p');
-                        cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
-
-
-                        const cardActions = document.createElement('div');
-                        cardActions.className = 'card-actions justify-end';
+                                const cardTitle = document.createElement('h2');
+                                cardTitle.className = 'card-title';
+                                cardTitle.innerText = data.passName; // 받아온 데이터 사용
 
 
 
-                        cardBody.appendChild(cardTitle);
-                        cardBody.appendChild(cardCount);
-                        cardBody.appendChild(cardStart);
-                        cardBody.appendChild(cardFinish);
-                        cardBody.appendChild(cardActions);
+                                const cardCount = document.createElement('p');
+                                cardCount.innerText = `횟수 : ${data.passCount}`; // 받아온 데이터 사용
 
-                        card.appendChild(figure);
-                        card.appendChild(cardBody);
+                                const cardStart = document.createElement('p');
+                                cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
 
-                        cardContainer.appendChild(card);
-                        }else{
-                            const cardContainer = document.getElementById('cardContainer');
-                cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
-
-                // 새로운 카드를 생성
-                const card = document.createElement('div');
-                card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
-
-                const figure = document.createElement('figure');
-                const img = document.createElement('img');
-                img.src = 'https://i.imgur.com/VFPjR6P.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
-                img.alt = 'Day';
-                figure.appendChild(img);
-
-                const cardBody = document.createElement('div');
-                cardBody.className = 'card-body';
-
-                const cardTitle = document.createElement('h2');
-                cardTitle.className = 'card-title';
-                cardTitle.innerText = data.passName; // 받아온 데이터 사용
+                                const cardFinish = document.createElement('p');
+                                cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
 
 
-                const cardStart = document.createElement('p');
-                cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
-
-                const cardFinish = document.createElement('p');
-                cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
-
-                const cardActions = document.createElement('div');
-                cardActions.className = 'card-actions justify-end';
+                                const cardActions = document.createElement('div');
+                                cardActions.className = 'card-actions justify-end';
 
 
-                cardBody.appendChild(cardTitle);
-                cardBody.appendChild(cardStart);
-                cardBody.appendChild(cardFinish);
-                cardBody.appendChild(cardActions);
 
-                card.appendChild(figure);
-                card.appendChild(cardBody);
+                                cardBody.appendChild(cardTitle);
+                                cardBody.appendChild(cardCount);
+                                cardBody.appendChild(cardStart);
+                                cardBody.appendChild(cardFinish);
+                                cardBody.appendChild(cardActions);
 
-                cardContainer.appendChild(card);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+                                card.appendChild(figure);
+                                card.appendChild(cardBody);
+
+                                cardContainer.appendChild(card);
+                            } else {
+                                const cardContainer = document.getElementById('cardContainer');
+                                cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
+
+                                // 새로운 카드를 생성
+                                const card = document.createElement('div');
+                                card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
+
+                                const figure = document.createElement('figure');
+                                const img = document.createElement('img');
+                                img.src = 'https://i.imgur.com/VFPjR6P.png'; // 이미지 URL을 동적으로 설정할 수도 있습니다.
+                                img.alt = 'Day';
+                                figure.appendChild(img);
+
+                                const cardBody = document.createElement('div');
+                                cardBody.className = 'card-body';
+
+                                const cardTitle = document.createElement('h2');
+                                cardTitle.className = 'card-title';
+                                cardTitle.innerText = data.passName; // 받아온 데이터 사용
+
+
+                                const cardStart = document.createElement('p');
+                                cardStart.innerText = `이용시작일 : ${data.passStart}`; // 받아온 데이터 사용
+
+                                const cardFinish = document.createElement('p');
+                                cardFinish.innerText = `이용종료일 : ${data.passFinish}`; // 받아온 데이터 사용
+
+                                const cardActions = document.createElement('div');
+                                cardActions.className = 'card-actions justify-end';
+
+
+                                cardBody.appendChild(cardTitle);
+                                cardBody.appendChild(cardStart);
+                                cardBody.appendChild(cardFinish);
+                                cardBody.appendChild(cardActions);
+
+                                card.appendChild(figure);
+                                card.appendChild(cardBody);
+
+                                cardContainer.appendChild(card);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
                 }
             });
         });
     </script>
 </div>
+
 </html>
-
-

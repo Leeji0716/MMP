@@ -1,4 +1,4 @@
-package com.example.MMP.Comment;
+package com.example.MMP.wod.Comment;
 
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.wod.Wod;
@@ -32,10 +32,4 @@ public class Comment {
     @ManyToOne
     @JsonBackReference
     private SiteUser writer;
-//
-//    @ManyToMany
-//    Set<SiteUser> likeList;
-
-//    @Column(nullable = false)
-//    private Long likeCount; // 투표한 사용자 수를 나타내는 필드
 }

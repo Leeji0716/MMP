@@ -1,42 +1,77 @@
-<!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<head>
-    <meta charset="UTF-8">
-    <title>공지사항 상세 보기</title>
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css">
-    <style>
-        .container {
-            color: black; /* 텍스트 색상을 검은색으로 설정 */
-            background-color: #f0f0f0; /* 배경색을 밝은 회색으로 설정 */
-            padding: 20px;
-            border-radius: 10px;
-        }
-        h2 {
-            color: black; /* 제목 텍스트 색상을 검은색으로 설정 */
-        }
-    </style>
-</head>
-<body>
-    <div layout:fragment="content" class="container-fluid my-3">
-        <div class="container mx-auto my-10 p-8 bg-white shadow-lg rounded-lg">
-            <h1 class="text-2xl font-bold mb-6 text-center text-black">공지사항 상세 보기</h1>
-            <div id="editor" style="height: 500px;"></div>
-        </div>
+<div layout:fragment="content" class="container-fluid my-3">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    <div class="container mx-auto my-10 p-8 bg-white shadow-lg rounded-lg">
+        <h1 class="text-2xl font-bold mb-6 text-center text-black">공지사항 작성</h1>
+        <form action="/notice/create" method="post" onsubmit="syncContent()">
+            <!-- CSRF 토큰 입력 -->
+            <input type="hidden" id="csrfParameterName" th:value="${_csrf.parameterName}" />
+            <input type="hidden" id="csrfToken" th:value="${_csrf.token}" />
 
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const noticeContent = /*[[${notice.content}]]*/ 'Fallback content if template processing fails';
+            <div class="mb-4">
+                <input type="text" id="title" name="title" required class="text-black input input-bordered w-full"
+                    placeholder="제목을 입력하세요">
+                <span class="text-red-500 text-sm mt-1"></span>
+            </div>
 
-                const editor = new toastui.Editor({
-                    el: document.querySelector('#editor'),
-                    initialValue: noticeContent, // notice.content를 설정
-                    height: '500px',
-                    initialEditType: 'markdown', // 초기 입력 모드는 Markdown
-                    previewStyle: 'vertical', // 미리보기 스타일은 수직으로
-                    viewer: true // 편집 기능이 없는 뷰어 모드로 설정
-                });
-            });
-        </script>
+            <div class="mb-4">
+                <div id="editor" style="height: 500px;"></div>
+                <input type="hidden" id="content" name="content">
+                <span class="text-red-500 text-sm mt-1"></span>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">저장</button>
+            </div>
+        </form>
     </div>
-</body>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Thymeleaf로부터 CSRF 토큰 관련 정보를 JavaScript로 가져오기
+            const csrfParameterName = document.getElementById('csrfParameterName').value;
+            const csrfToken = document.getElementById('csrfToken').value;
+
+            // toastui.Editor 설정
+            window.editor = new toastui.Editor({
+                el: document.querySelector('#editor'),
+                initialEditType: 'markdown',
+                previewStyle: 'vertical',
+                height: '500px',
+                hooks: {
+                    addImageBlobHook: async function (blob, callback) {
+                        const formData = new FormData();
+                        formData.append('file', blob);
+
+                        try {
+                            const response = await fetch('/notice/upload', {
+                                method: 'POST',
+                                headers: {
+                                    [csrfParameterName]: csrfToken // Thymeleaf에서 가져온 CSRF 토큰 사용
+                                },
+                                body: formData
+                            });
+                            const data = await response.json();
+                            if (response.ok) {
+                                console.log(response);
+                                callback(data.url, 'alt text');
+                            } else {
+                                alert('이미지 업로드 실패: ' + data.message);
+                            }
+                        } catch (error) {
+                            console.error('이미지 업로드 오류:', error);
+                            alert('이미지 업로드 실패');
+                        }
+                    }
+                }
+            });
+        });
+
+        function syncContent() {
+            const contentInput = document.querySelector('#content');
+            contentInput.value = window.editor.getMarkdown();
+        }
+    </script>
+</div>
+
 </html>
