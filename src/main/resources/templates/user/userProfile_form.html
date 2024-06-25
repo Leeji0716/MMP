@@ -163,8 +163,7 @@
                     <div class="flex items-center space-x-2 mt-2">
                         <li class="flex border-y py-2">
                             <span class="font-bold w-auto text-white inline-block">Name : </span>
-                            <span class="text-white" sec:authorize="isAuthenticated()"
-                                th:text="${user.name}"></span>
+                            <span class="text-white" sec:authorize="isAuthenticated()" th:text="${user.name}"></span>
                         </li>
                     </div>
                     <div class="flex items-center space-x-2 mt-2">
@@ -186,7 +185,7 @@
                 </div>
                 <div class="flex-1 flex flex-row items-center lg:items-end justify-start px-8 mt-2 text-black">
                     <div class="flex items-center space-x-4 mt-2">
-                        <details class="dropdown">
+                        <details class="dropdown" id="dropdown">
                             <summary class="m-1 btn">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20"
                                     fill="currentColor">
@@ -196,7 +195,7 @@
                                 </svg>
                                 <span>Message</span>
                             </summary>
-                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52 text-black">
+                            <ul class="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-60 text-black">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
                                         class="gotalk">
@@ -666,6 +665,45 @@
                     window.location.href = talkUrl;
                 });
             })
+        </script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const drop = document.querySelector("#dropdown");
+                console.log(drop);
+                drop.addEventListener('toggle', function () {
+                    console.log('11111111111');
+                    if (drop.open) {
+
+                        const maxLength = 5;
+
+                        const talks = drop.querySelectorAll('.gotalk');
+                        console.log(talks);
+                        talks.forEach((talk) => {
+                            const nameTag = talk.querySelector('.talk-url');
+                            const name = truncateString(nameTag.innerText, maxLength);
+                            console.log(name);
+                            nameTag.innerText = name;
+
+                            const message = talk.querySelector('.alarmMessage');
+                            const messageContent = truncateString(message.innerText, maxLength);
+                            console.log(messageContent);
+                            message.innerText = messageContent;
+                        });
+                    }
+                });
+
+
+
+
+                function truncateString(str, maxLength) {
+                    if (str.length > maxLength) {
+                        return str.substring(0, maxLength) + "...";
+                    } else {
+                        return str;
+                    }
+                }
+
+            });
         </script>
     </div>
 </body>

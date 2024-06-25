@@ -52,9 +52,9 @@ public class ChatRoomService {
         List<ChatRoomDto> chatRoomOneList = new ArrayList<>();
         List<ChatRoomDto> chatRoomManyList = new ArrayList<>();
         Map<String, List<ChatRoomDto>> chatMap = new HashMap<>();
+        int groupCnt = 0;
         for (ChatRoom chatRoom : chatRoomList) {
             int cnt = 0;
-            int groupCnt = 0;
             ChatRoomDto chatRoomDto = new ChatRoomDto();
 
             ChatMessage chatMessage = chatRoom.getChatMessageList().get(chatRoom.getChatMessageList().size() - 1);
@@ -90,6 +90,7 @@ public class ChatRoomService {
             chatRoomDto.setAlarmCnt(cnt);
             if (chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
                 if(chatRoomDto.getSort().equals("many")) {
+                    groupCnt++;
                     chatRoomManyList.add(chatRoomDto);
                 }else{
                     chatRoomOneList.add(chatRoomDto);

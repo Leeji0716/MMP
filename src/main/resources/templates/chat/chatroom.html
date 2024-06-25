@@ -67,7 +67,7 @@
         <!--    </div>-->
         <script th:inline="javascript">
             function connect() {
-                var socket = new SockJS("http://43.202.255.109:8088/ws-stomp");
+                var socket = new SockJS("http://localhost:8088/ws-stomp");
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
