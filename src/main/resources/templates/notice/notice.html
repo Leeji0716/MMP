@@ -3,23 +3,22 @@
     <div class="overflow-x-auto">
         <table class="table mt-32">
             <thead class="table-dark text-white">
-            <tr class="text-center">
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성일시</th>
-                <th>조회수</th>
-            </tr>
+                <tr class="text-center">
+                    <th>번호</th>
+                    <th>제목</th>
+                    <th>작성일시</th>
+                    <th>조회수</th>
+                </tr>
             </thead>
             <tbody>
-            <tr class="text-center" th:each="notice, loop : ${paging}">
-                <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
-                <td class="text-start">
-                    <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}"></a>
-                </td>
-<!--                <td><span th:if="${notice.author != null}" th:text="${notice.author.name}"></span></td>-->
-                <td th:text="${#temporals.format(notice.notificationDate, 'yyyy-MM-dd HH:mm')}"></td>
-                <td th:text="${notice.hit}"></td>
-            </tr>
+                <tr class="text-center" th:each="notice, loop : ${paging}">
+                    <td th:text="${paging.getTotalElements - (paging.number * paging.size) - loop.index}"></td>
+                    <td class="text-start">
+                        <a th:href="@{|/notice/detail/${notice.id}|}" th:text="${notice.title}"></a>
+                    </td>
+                    <td th:text="${#temporals.format(notice.notificationDate, 'yyyy-MM-dd HH:mm')}"></td>
+                    <td th:text="${notice.hit}"></td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -30,7 +29,8 @@
             <!-- 이전 버튼 -->
             <a class="page-link" th:if="${paging.number > 0}" th:href="@{|?page=${paging.number - 1}|}">
                 <svg class="w-8 h-8 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z"/>
+                    <path
+                        d="M12.79 5.23a.75.75 0 01-.02 1.06L8.832 10l3.938 3.71a.75.75 0 11-1.04 1.08l-4.5-4.25a.75.75 0 010-1.08l4.5-4.25a.75.75 0 011.06.02z" />
                 </svg>
             </a>
             <!-- 페이지 번호 -->
@@ -40,20 +40,21 @@
                     th:classappend="${page == paging.number ? 'bg-indigo-600 text-white' : 'text-gray-500'}"
                     class="relative">
                     <a class="page-link w-12 h-12 flex items-center justify-center px-4 py-2 inline-block font-semibold hover:bg-gray-200 focus:outline-none"
-                       th:href="@{|?page=${page}|}" th:text="${page + 1}"></a>
+                        th:href="@{|?page=${page}|}" th:text="${page + 1}"></a>
                 </li>
             </ul>
             <!-- 다음 버튼 -->
             <a class="page -link" th:if="${paging.number < paging.totalPages - 1}"
-               th:href="@{|?page=${paging.number + 1}|}">
+                th:href="@{|?page=${paging.number + 1}|}">
                 <svg class="w-8 h-8 fill-current text-gray-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"/>
+                    <path
+                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" />
                 </svg>
             </a>
         </div>
     </nav>
     <!-- 페이징처리 끝 -->
 
-
 </div>
+
 </html>

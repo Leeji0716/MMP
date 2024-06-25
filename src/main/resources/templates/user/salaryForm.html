@@ -1,151 +1,72 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>급여 정산</title>
-    <!-- Tailwind CSS CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #1a202c;
-            color: #cbd5e0;
-            font-family: 'Roboto', sans-serif;
-            padding: 20px;
-            text-align: center;
-        }
-        .form-container {
-            background-color: #2d3748;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 800px; /* Increased width */
-            margin: auto; /* Center the form */
-        }
-        .form-title {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-        .form-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 6px;
-            color: #cbd5e0;
-        }
-        .form-input {
-            width: calc(100% - 2 * 1.25rem);
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #4a5568;
-            background-color: #4a5568;
-            color: #cbd5e0;
-            transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: #cbd5e0;
-            background-color: #2d3748;
-        }
-        .form-submit {
-            padding: 12px 24px;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 600;
-            background-color: #2b6cb0;
-            color: #fff;
-            border: 1px solid #2b6cb0;
-            transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-        }
-        .form-submit:hover {
-            background-color: #2c5282;
-            border-color: #2c5282;
-        }
-        .form-error {
-            color: #f56565;
-            font-size: 0.875rem;
-            margin-top: 8px;
-        }
-        .flex-row {
-            display: flex;
-            flex-wrap: wrap; /* Adjusts layout to accommodate more horizontal space */
-        }
-        .flex-col {
-            flex: 1;
-            margin-right: 20px; /* Spacing between inputs */
-        }
-    </style>
-</head>
-<body class="min-h-screen flex flex-col justify-center items-center bg-gray-800">
-<div class="form-container">
-    <h1 class="form-title mb-6 text-white">급여 정산</h1>
-    <form action="/user/createSalary" method="post" class="space-y-4">
-        <div class="flex-row">
-            <div class="flex-col">
-                <label for="name" class="form-label">유저 이름</label>
-                <input type="text" id="name" name="name" th:value="${userName}"
-                       class="form-input bg-gray-700" readonly>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full h-[880px] flex items-center my-3">
+    <div class="bg-gray-700 rounded-lg p-8 shadow-lg w-full max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-6 text-center text-white">급여 정산</h1>
+        <form action="/user/createSalary" method="post" class="space-y-6">
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="name" class="block text-sm font-medium mb-2">유저 이름</label>
+                    <input type="text" id="name" name="name" th:value="${userName}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="number" class="block text-sm font-medium mb-2">유저 핸드폰번호</label>
+                    <input type="text" id="number" name="number" th:value="${number}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
             </div>
-            <div class="flex-col">
-                <label for="number" class="form-label">유저 핸드폰번호</label>
-                <input type="text" id="number" name="number" th:value="${number}"
-                       class="form-input bg-gray-700" readonly>
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="salary" class="block text-sm font-medium mb-2">기본급</label>
+                    <input type="text" id="salary" name="salary" th:value="${siteUser.salary}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="기본급을 입력하세요">
+                </div>
+                <div class="w-full sm:w-1/2 px-4 mb-4">
+                    <label for="bonus" class="block text-sm font-medium mb-2">상여금</label>
+                    <input type="text" id="bonus" name="bonus" th:value="${lastSalary.bonus}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="상여금을 입력하세요">
+                </div>
             </div>
-        </div>
-
-
-            <div class="flex-col">
-                <label for="salary" class="form-label">기본급</label>
-                <input type="text" id="salary" name="salary" th:value="${siteUser.salary}"
-                       class="form-input" placeholder="기본급을 입력하세요">
+            <div class="flex flex-wrap -mx-4">
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="referralCount" class="block text-sm font-medium mb-2">추천인 수</label>
+                    <input type="text" id="referralCount" name="referralCount" th:value="${referralCount}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" readonly>
+                </div>
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="incentive" class="block text-sm font-medium mb-2">인센티브</label>
+                    <input type="text" id="incentive" name="incentive" th:value="${lastSalary.incentive}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="인센티브를 입력하세요">
+                </div>
+                <div class="w-full sm:w-1/3 px-4 mb-4">
+                    <label for="performancePay" class="block text-sm font-medium mb-2">성과금</label>
+                    <input type="text" id="performancePay" name="performancePay" th:value="${performancePay}"
+                        class="w-full p-2.5 bg-gray-800 border border-gray-600 rounded-md" placeholder="성과금을 입력하세요">
+                </div>
             </div>
-            <div class="flex-col">
-                <label for="bonus" class="form-label">상여금</label>
-                <input type="text" id="bonus" name="bonus" th:value="${lastSalary.bonus}"
-                       class="form-input" placeholder="상여금을 입력하세요">
-            </div>
+            <button type="submit"
+                class="w-full py-3 bg-error hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300">
+                제출
+            </button>
+        </form>
+        <p th:if="${error}" th:text="${error}" class="text-red-500 text-sm mt-4"></p>
+    </div>
 
-        <div class="flex-row">
-            <div class="flex-col">
-                <label for="referralCount" class="form-label">추천인 수</label>
-                <input type="text" id="referralCount" name="referralCount" th:value="${referralCount}"
-                       class="form-input bg-gray-700" readonly>
-            </div>
-            <div class="flex-col">
-                <label for="incentive" class="form-label">인센티브</label>
-                <input type="text" id="incentive" name="incentive" th:value="${lastSalary.incentive}"
-                       class="form-input" placeholder="인센티브를 입력하세요">
-            </div>
-            <div class="flex-col">
-                <label for="performancePay" class="form-label">성과금</label>
-                <input type="text" id="performancePay" name="performancePay" th:value="${performancePay}"
-                       class="form-input" placeholder="성과금을 입력하세요">
-            </div>
-        </div>
-        <br>
-        <br>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function calculatePerformancePay() {
+                var referralCount = document.getElementById('referralCount').value || 0;
+                var incentive = document.getElementById('incentive').value || 0;
+                var performancePay = referralCount * incentive;
+                document.getElementById('performancePay').value = performancePay;
+            }
 
-        <button type="submit" class="form-submit">
-            제출
-        </button>
+            document.getElementById('referralCount').addEventListener('input', calculatePerformancePay);
+            document.getElementById('incentive').addEventListener('input', calculatePerformancePay);
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                function calculatePerformancePay() {
-                    var referralCount = document.getElementById('referralCount').value || 0; // 값이 없으면 0을 사용
-                    var incentive = document.getElementById('incentive').value || 0; // 값이 없으면 0을 사용
-                    var performancePay = referralCount * incentive;
-                     document.getElementById('performancePay').value = performancePay;
-                }
-
-                // 'input' 이벤트는 사용자가 입력을 변경할 때마다 발생
-                document.getElementById('referralCount').addEventListener('input', calculatePerformancePay);
-                document.getElementById('incentive').addEventListener('input', calculatePerformancePay);
-
-                calculatePerformancePay(); // 페이지 로드 시 성과금 초기 계산
-            });
-        </script>
-    </form>
-    <p th:if="${error}" th:text="${error}" class="form-error mt-4"></p>
+            calculatePerformancePay();
+        });
+    </script>
 </div>
-</body>
+
 </html>

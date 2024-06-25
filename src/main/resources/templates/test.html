@@ -1,19 +1,19 @@
-<div class="card-container">
-    <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
-        <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
-        <div class="card-body">
-            <h2 class="card-title" th:text="${pt.passName}"></h2>
-            <p th:text="${pt.passTitle}"></p>
-            <p th:text="'횟수 : '+${pt.passCount}"></p>
-            <p th:text="'가격 : '+${pt.passPrice}"></p>
-            <div class="card-actions justify-end">
-                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
-                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-                    <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
-                    <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
-                </div>
-            </div>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full h-screen my-3 flex justify-center text-black items-center">
+    <form th:object="${couponForm}" method="post" class="w-[20%] bg-gray-800 p-6 rounded-lg max-w-lg mx-auto text-white">
+        <h1 class="text-center text-2xl mb-4 text-white">보너스와 인센티브 업데이트</h1>
+        <div class="form-group mb-4">
+            <label for="name" class="block text-lg mb-2">보너스</label>
+            <input type="number" id="bonus" name="bonus" class="input text-black input-bordered w-full p-2 border border-gray-300 rounded" required>
         </div>
-
-    </div>
+        <div class="form-group mb-4">
+            <label for="point" class="block text-lg mb-2">구매 포인트</label>
+            <input type="number" id="incentive" name="incentive" class="input text-black input-bordered w-full p-2 border border-gray-300 rounded" required>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-error w-full">업데이트</button>
+        </div>
+    </form>
+    <p th:text="${message}"></p>
 </div>
+</html>
