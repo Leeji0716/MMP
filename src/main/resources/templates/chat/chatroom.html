@@ -29,7 +29,8 @@
                                 <div class="flex items-center">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -41,7 +42,8 @@
                                 <div class="flex">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -86,7 +88,7 @@
             //html 에서 입력값, roomId 를 받아서 Controller 로 전달
             function sendChat() {
                 const aa = [[${ chatRoom.id }]];
-                const sender = [[${me.number}]];
+                const sender = [[${ me.number }]];
                 const name = [[${ me.name }]];
                 const number = [[${ you.number }]];
 
@@ -101,7 +103,7 @@
                             'name': name,
                             'message': $("#message").val(),
                             'sendTime': formattedDate,
-                            'sort' : "one"
+                            'sort': "one"
                         }));
 
                     stompClient.send("/pub/alarm/" + number, {},
@@ -110,9 +112,9 @@
                             'acceptUser': number,
                             'message': $("#message").val(),
                             'sendTime': formattedDate,
-                            'chatroomId' : aa,
-                            'alarmCnt' : '0',
-                            'sort' : "one"
+                            'chatroomId': aa,
+                            'alarmCnt': '0',
+                            'sort': "one"
                         }));
                 }
                 $("#message").val('');
@@ -120,13 +122,20 @@
 
             function showChat(chatMessageDto) {
                 const sender = [[${ me.name }]];
-                if (chatMessageDto.name == sender) {
+                const formattedTime = formatTime(chatMessageDto.sendTime);
+                if (chatMessageDto.name === sender) {
                     $("#greetings").append(
-                        "<div class = 'chat chat-end  flex flex-col items-end'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble mr-2'>" + chatMessageDto.message + "</div></div>"
+                        `<div class="chat chat-end flex flex-col items-end">
+                <div class="chat-header">${chatMessageDto.name} <time class="text-xs opacity-50">${formattedTime}</time></div>
+                <div class="chat-bubble mr-2">${chatMessageDto.message}</div>
+             </div>`
                     );
                 } else {
                     $("#greetings").append(
-                        "<div class = 'chat chat-start flex flex-col items-start'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble ml-2'>" + chatMessageDto.message + "</div></div>"
+                        `<div class="chat chat-start flex flex-col items-start">
+                <div class="chat-header">${chatMessageDto.name} <time class="text-xs opacity-50">${formattedTime}</time></div>
+                <div class="chat-bubble ml-2">${chatMessageDto.message}</div>
+             </div>`
                     );
                 }
                 var messageContainer = document.getElementById("messages");
@@ -151,6 +160,24 @@
                 // 스크롤을 아래로 이동시킵니다.
                 messageContainer.scrollTop = messageContainer.scrollHeight;
             });
+
+            function formatTime(sendTime) {
+                const date = new Date(sendTime); // sendTime은 Date 형식으로 파싱 가능해야 합니다.
+
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+
+                // 오전/오후 구분
+                const ampm = hours >= 12 ? '오후' : '오전';
+
+                // 12시간 형식으로 변환
+                const formattedHours = hours % 12 || 12;
+
+                // 분이 한 자리일 경우 두 자리로 포맷
+                const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+                return `${ampm} ${formattedHours}:${formattedMinutes}`;
+            }
         </script>
     </div>
 </body>

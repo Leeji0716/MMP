@@ -203,9 +203,8 @@
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
-                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
-                                            </p>
+                                            <p th:text="${#temporals.format(chatroom.sendDate, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(chatroom.sendDate, 'a HH:mm') : #temporals.format(chatroom.sendDate, 'yyyy-MM-dd')}"
+                                                class="talk-time font-bold justify-end"></p>
                                         </div>
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
@@ -217,15 +216,14 @@
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
                                         class="gotalk">
                                         <div class="flex gap-10">
-                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}" th:text="${chatroom.you}"
-                                                class="talk-url font-bold justify-start"></a>
-                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
-                                            </p>
+                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}"
+                                                th:text="${chatroom.you}" class="talk-url font-bold justify-start"></a>
+                                            <p th:text="${#temporals.format(chatroom.sendDate, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(chatroom.sendDate, 'a HH:mm') : #temporals.format(chatroom.sendDate, 'yyyy-MM-dd')}"
+                                                class="talk-time font-bold justify-end"></p>
                                         </div>
                                         <div class="alarm flex gap-10">
-                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
-                                            </p>
+                                            <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500"></p>
+
                                             <p class="alarmCnt notification-badge" th:if="${chatroom.alarmCnt != 0}"
                                                 th:text="${chatroom.alarmCnt}"></p>
                                         </div>
@@ -237,9 +235,9 @@
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
-                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
-                                            </p>
+                                            <p th:text="${#temporals.format(chatroom.sendDate, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(chatroom.sendDate, 'a HH:mm') : #temporals.format(chatroom.sendDate, 'yyyy-MM-dd')}"
+                                                class="talk-time font-bold justify-end"></p>
+
                                         </div>
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
@@ -251,11 +249,10 @@
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
                                         class="gotalk">
                                         <div class="flex gap-10">
-                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}" th:text="${chatroom.you}"
-                                                class="talk-url font-bold justify-start"></a>
-                                            <p th:with="formattedDate=${#temporals.format(chatroom.sendDate, 'a HH:mm')}"
-                                                th:text="${formattedDate}" class="talk-time font-bold justify-end">
-                                            </p>
+                                            <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}"
+                                                th:text="${chatroom.you}" class="talk-url font-bold justify-start"></a>
+                                            <p th:text="${#temporals.format(chatroom.sendDate, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(chatroom.sendDate, 'a HH:mm') : #temporals.format(chatroom.sendDate, 'yyyy-MM-dd')}"
+                                                class="talk-time font-bold justify-end"></p>
                                         </div>
                                         <div class="alarm flex gap-10">
                                             <p th:text="${chatroom.lastMessage}" class="alarmMessage text-gray-500">
@@ -436,13 +433,12 @@
                             </a>
                         </div>
                         <!-- 스크롤링을 위해 최대 높이와 오버플로우 설정 -->
-                        <div class="relative px-4" style="max-height: 400px; overflow-y: auto;">
+                        <div class="relative px-4" style="max-height: 400px;">
                             <button class="scroll-button3 " id="ptScrollLeftButton3">&#8249;</button>
                             <button class="scroll-button3 " id="ptScrollRightButton3">&#8250;</button>
-                            <div class="flex w-full card-container3 border-gray-300">
+                            <div class="w-full card-container3 border-gray-300">
                                 <!-- ptPassList 요소들 -->
-                                <div th:replace="~{pass/passDto :: passDto(${user})}"
-                                    class="card w-60 h-60 bg-base-100 shadow-2xl m-4 block h-[300px] w-[300px]"></div>
+                                <div th:replace="~{pass/passDto :: passDto(${user})}"></div>
                             </div>
                         </div>
                     </div>

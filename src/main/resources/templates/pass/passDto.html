@@ -1,5 +1,5 @@
-<div th:fragment="passDto(${user})" class="text-black flex flex-wrap space-x-4">
-    <div th:if="${!#lists.isEmpty(user.userPtPassList)}">
+<div th:fragment="passDto(${user})" class="text-black flex flex-row space-x-4">
+    <div th:if="${!#lists.isEmpty(user.userPtPassList)}" class="flex flex-row">
         <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]" th:each="pt:${user.userPtPassList}">
             <figure class="h-[60%] w-full"><img src="https://i.imgur.com/kW3S5se.png" alt="PT"
                     class="h-[80%] w-[80%] mx-auto" /></figure>
@@ -11,7 +11,7 @@
             </div>
         </div>
     </div>
-    <div th:if="${!#lists.isEmpty(user.userDayPassList)}">
+    <div th:if="${!#lists.isEmpty(user.userDayPassList)}" class="flex flex-row">
         <div class="card bg-base-100 shadow-2xl m-4 text-block h-[300px] w-[250px]"
             th:each="day:${user.userDayPassList}">
             <figure class="h-[60%] w-full"><img src="https://i.imgur.com/VFPjR6P.png" alt="Day"

@@ -29,7 +29,7 @@
                                 <div class="flex items-center">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -41,7 +41,7 @@
                                 <div class="flex">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${list.sendTime}"></time>
+                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -72,15 +72,15 @@
                     const aa = [[${ chatRoom.id }]];
                     const members = [[${ memberNumber }]];
                     const menunmber = [[${ me.number }]];
-                    console.log('컨트롤러에서 넘어온 맴버 : '+members);
-                    console.log('맴버타입 : '+typeof(members));
+                    console.log('컨트롤러에서 넘어온 맴버 : ' + members);
+                    console.log('맴버타입 : ' + typeof (members));
                     //구독
                     stompClient.subscribe('/sub/talk/' + aa, function (chatMessageDto) {
                         showChat(JSON.parse(chatMessageDto.body));
                     });
                     members.forEach((member) => {
-                        console.log('member: '+member);
-                        console.log('맴버타입 : '+typeof(members));
+                        console.log('member: ' + member);
+                        console.log('맴버타입 : ' + typeof (members));
                         if (member !== menunmber) {
                             stompClient.subscribe('/sub/groupAlarm/' + member, function (alarmDto) {
                             });
@@ -135,13 +135,20 @@
 
             function showChat(chatMessageDto) {
                 const sender = [[${ me.name }]];
-                if (chatMessageDto.name == sender) {
+                const formattedTime = formatTime(chatMessageDto.sendTime);
+                if (chatMessageDto.name === sender) {
                     $("#greetings").append(
-                        "<div class = 'chat chat-end  flex flex-col items-end'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble mr-2'>" + chatMessageDto.message + "</div></div>"
+                        `<div class="chat chat-end flex flex-col items-end">
+                <div class="chat-header">${chatMessageDto.name} <time class="text-xs opacity-50">${formattedTime}</time></div>
+                <div class="chat-bubble mr-2">${chatMessageDto.message}</div>
+             </div>`
                     );
                 } else {
                     $("#greetings").append(
-                        "<div class = 'chat chat-start flex flex-col items-start'><div class = 'chat-header'>" + chatMessageDto.name + " <time class='text-xs opacity-50'>" + chatMessageDto.sendTime + "</time></div><div class = 'chat-bubble ml-2'>" + chatMessageDto.message + "</div></div>"
+                        `<div class="chat chat-start flex flex-col items-start">
+                <div class="chat-header">${chatMessageDto.name} <time class="text-xs opacity-50">${formattedTime}</time></div>
+                <div class="chat-bubble ml-2">${chatMessageDto.message}</div>
+             </div>`
                     );
                 }
                 var messageContainer = document.getElementById("messages");
@@ -165,7 +172,29 @@
 
                 // 스크롤을 아래로 이동시킵니다.
                 messageContainer.scrollTop = messageContainer.scrollHeight;
+
             });
+
+            function formatTime(sendTime) {
+                const date = new Date(sendTime); // sendTime은 Date 형식으로 파싱 가능해야 합니다.
+
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+
+                // 오전/오후 구분
+                const ampm = hours >= 12 ? '오후' : '오전';
+
+                // 12시간 형식으로 변환
+                const formattedHours = hours % 12 || 12;
+
+                // 분이 한 자리일 경우 두 자리로 포맷
+                const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+
+                return `${ampm} ${formattedHours}:${formattedMinutes}`;
+            }
+
+        
+
         </script>
     </div>
 </body>
