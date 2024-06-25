@@ -10,6 +10,7 @@ import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,31 +39,39 @@ public class PtGroupController {
     }
 
     @PostMapping("/join")
-    public String joinUser(@AuthenticationPrincipal UserDetail userDetail, @RequestParam("number")String number){
+    public String joinUser(@AuthenticationPrincipal UserDetail userDetail, @RequestParam("number")String number, Model model){
         boolean isTrainer = userDetail.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TRAINER"));
         if(!isTrainer)
             return "redirect:/";
 
         SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
-        PtGroup ptGroup = ptGroupService.findByTrainer(siteUser);
         SiteUser member = siteUserService.getUser(number);
-        ptGroup.getMembers().add(member);
-        ptGroupService.save(ptGroup);
-        member.getPtGroupUser().add(ptGroup);
 
-        ChatRoom chatRoom = new ChatRoom();
-        chatRoom.setSort("one");
-        chatRoomService.save(chatRoom);
-        chatRoom.getUserList().add(siteUser);
-        chatRoom.getUserList().add(member);
+        PtGroup ptGroup1 = ptGroupService.ifJoin(siteUser,member);
+        if(ptGroup1 == null){
+            PtGroup ptGroup = ptGroupService.findByTrainer(siteUser);
+            ptGroup.getMembers().add(member);
+            ptGroupService.save(ptGroup);
+            member.getPtGroupUser().add(ptGroup);
 
-        siteUser.getChatRoomList().add(chatRoom);
-        member.getChatRoomList().add(chatRoom);
+            ChatRoom chatRoom = new ChatRoom();
+            chatRoom.setSort("one");
+            chatRoomService.save(chatRoom);
+            chatRoom.getUserList().add(siteUser);
+            chatRoom.getUserList().add(member);
 
-        chatMessageService.firstChatMessage(siteUser,chatRoom);
+            siteUser.getChatRoomList().add(chatRoom);
+            member.getChatRoomList().add(chatRoom);
 
-        siteUserService.save(member);
-        return "redirect:/";
+            chatMessageService.firstChatMessage(siteUser,chatRoom);
+
+            siteUserService.save(member);
+            return "redirect:/";
+        }else{
+
+            model.addAttribute("error","이미 등록된 회원입니다.");
+            return "ptGroup/ptgroupjoin";
+        }
     }
 }
