@@ -15,4 +15,6 @@ public interface SiteUserRepository extends JpaRepository<SiteUser,Long> ,SiteUs
     long countByReferrer(SiteUser referrer); // 추가된 메서드
     List<SiteUser> findByUserRole(String useRole);
 
+    Optional<SiteUser> findByEmail(String email);
+
 }

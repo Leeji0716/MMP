@@ -9,6 +9,7 @@ import com.example.MMP.point.Point;
 import com.example.MMP.siteuser.salary.SalaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -153,7 +154,16 @@ public class SiteUserService {
 
     public List<SiteUser> getTrainerList() {
         return siteUserRepository.findByUserRole ("trainer");
+    }
 
+    public void findId(String userName, String birthDate, String email) {
+        Optional<SiteUser> siteUserOptional = siteUserRepository.findByEmail (email);
+        if (siteUserOptional.isPresent () && siteUserOptional.get ().getName ().equals (userName) && siteUserOptional.get ().getBirthDate ().equals (birthDate)) {
+            SiteUser user = siteUserOptional.get ();
+            String userId = user.getUserId ();
+
+            mailService.mailSend (user.getEmail (), "아이디 찾기", "아이디 : " + userId);
+        }
     }
 }
 

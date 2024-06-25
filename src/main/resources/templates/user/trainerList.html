@@ -13,9 +13,16 @@
         </div>
         <br>
         <br>
+<<<<<<< HEAD
+        <div class="flex justify-end">
+            <a href="/salary/create" class="btn">성과금, 인센티브 설정</a>
+        </div>
+        <br>
+=======
         <div class="flex justify-center">
             <a href="/salary/create" class="btn">성과금, 인센티브 설정</a>
         </div>
+>>>>>>> 3579a71ebb86ddf89d9ceeed6a477bc32d0b94b0
         <div class="overflow-x-auto">
             <table class="table">
                 <thead>
@@ -25,6 +32,7 @@
                     <th class="text-white">이름</th>
                     <th class="text-white">핸드폰번호</th>
                     <th class="text-white">이메일</th>
+                    <th class="text-white">기본 급여</th>
                     <th class="text-white">급여</th>
                     <th class="text-white">급여 정산</th>
                     <th class="text-white">급여 명세서</th>
@@ -37,7 +45,7 @@
                     <td th:text="${user.name}">Username</td>
                     <td th:text="${user.number}">PhoneNumber</td>
                     <td th:text="${user.email}">Email</td>
-                    <td th:if="${user.userRole} == 'trainer'" th:text="${user.salary}">userSalary</td>
+                    <td th:if="${user.userRole} == 'trainer'" th:text="${#numbers.formatCurrency(user.salary)}">급여</td>
                     <td>
                         <a th:if="${user.userRole == 'trainer'}" th:href="@{/user/salaryForm(number=${user.number})}">급여정산</a>
                     </td>

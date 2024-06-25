@@ -117,8 +117,8 @@ public class SiteUserController {
     @GetMapping("/signup")
     public String userSignup(UserDto userDto, Model model) {
         List<SiteUser> trainers = siteUserRepository.findByUserRole ("trainer");
-        model.addAttribute ("trainers",trainers);
-        model.addAttribute ("userDto",userDto);
+        model.addAttribute ("trainers", trainers);
+        model.addAttribute ("userDto", userDto);
 
         return "user/userSignup";
     }
@@ -129,8 +129,8 @@ public class SiteUserController {
             return "user/userSignup";
         }
         try {
-            SiteUser siteUser = siteUserService.userSignup (userDto.getName (), userDto.getNumber (), userDto.getGender (), userDto.getBirthDate (), userDto.getEmail (), userDto.getUserRole (),  userDto.getSalary(),
-                    userDto.getReferrerId());
+            SiteUser siteUser = siteUserService.userSignup (userDto.getName (), userDto.getNumber (), userDto.getGender (), userDto.getBirthDate (), userDto.getEmail (), userDto.getUserRole (), userDto.getSalary (),
+                    userDto.getReferrerId ());
             if (siteUser.getUserRole ().equals ("user")) {
                 mailService.mailSend (siteUser.getEmail (), " [MMP] 회원가입을 환영합니다!", "MMP의 회원이 되어주셔서 감사합니다!! 아이디는 전화번호, 비밀번호는 생년월일입니다..! 당신의 건강한 득근을 기원합니다 :)");
             } else if (siteUser.getUserRole ().equals ("trainer")) {
@@ -304,20 +304,20 @@ public class SiteUserController {
 
         SiteUser siteUser = optionalSiteUser.get ();
 
-        long referralCount = siteUserRepository.countByReferrer(siteUser);
+        long referralCount = siteUserRepository.countByReferrer (siteUser);
 
-        List<Salary> salaries = salaryRepository.findAll();
+        List<Salary> salaries = salaryRepository.findAll ();
 
         Salary lastSalary = null;
-        if (!salaries.isEmpty()) {
-            lastSalary = salaries.get(salaries.size() - 1);
+        if (!salaries.isEmpty ()) {
+            lastSalary = salaries.get (salaries.size () - 1);
         }
 
-        model.addAttribute ("siteUser",siteUser);
-        model.addAttribute ("number",siteUser.getNumber ());
+        model.addAttribute ("siteUser", siteUser);
+        model.addAttribute ("number", siteUser.getNumber ());
         model.addAttribute ("userName", siteUser.getName ());
-        model.addAttribute("referralCount", referralCount);
-        model.addAttribute("lastSalary", lastSalary);
+        model.addAttribute ("referralCount", referralCount);
+        model.addAttribute ("lastSalary", lastSalary);
 
         return "user/salaryForm";
     }
@@ -327,12 +327,12 @@ public class SiteUserController {
         int performancePay = referralCount * incentive;
 
         Long id = siteUserService.findByNumber (number).getId ();
-        SiteUser sumSalary = siteUserService.updateSalary (id, salary,bonus,performancePay);
+        SiteUser sumSalary = siteUserService.updateSalary (id, salary, bonus, performancePay);
 
         SiteUser siteUser = siteUserService.findById (id);
 
-        model.addAttribute ("number",siteUser.getNumber ());
-        model.addAttribute ("sumSalary",sumSalary);
+        model.addAttribute ("number", siteUser.getNumber ());
+        model.addAttribute ("sumSalary", sumSalary);
         model.addAttribute ("user", siteUser);
         return "redirect:/user/salaryDetail?number=" + number;
     }
@@ -342,14 +342,35 @@ public class SiteUserController {
 
         SiteUser siteUser = siteUserService.findByNumber (number);
 
-        long referralCount = siteUserRepository.countByReferrer(siteUser);
+        long referralCount = siteUserRepository.countByReferrer (siteUser);
 
-        long sumSalary = siteUser.getSalary() + siteUser.getBonus() + (referralCount * siteUser.getPerformancePay());
+        long sumSalary = siteUser.getSalary () + siteUser.getBonus () + (referralCount * siteUser.getPerformancePay ());
 
-        model.addAttribute("sumSalary", sumSalary);
-        model.addAttribute("referralCount", referralCount);
-        model.addAttribute("user", siteUser);
+        model.addAttribute ("sumSalary", sumSalary);
+        model.addAttribute ("referralCount", referralCount);
+        model.addAttribute ("user", siteUser);
         return "user/salaryDetail";
+    }
+
+    @GetMapping("/findId")
+    public String findId(Model model) {
+        model.addAttribute ("findIdDto", new FindIdDto ());
+        return "user/findIdForm";
+    }
+
+    @PostMapping("/findId")
+    public String findId(@Valid FindIdDto findIdDto, BindingResult bindingResult, Authentication authentication, Model model) {
+        if (bindingResult.hasErrors ()) {
+            return "user/findIdForm";
+        }
+        try {
+            siteUserService.findId (findIdDto.getName (),findIdDto.getBirthDate (),findIdDto.getEmail ());
+        } catch (Exception e) {
+            bindingResult.reject ("findIdDto", e.getMessage ());
+            model.addAttribute ("errorMessage", e.getMessage ());
+            return "user/findIdForm";
+        }
+        return "redirect:/";
     }
 
 }
