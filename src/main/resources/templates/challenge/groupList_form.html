@@ -140,12 +140,12 @@
                     } else {
                         response.text().then(text => {
                             console.error('Failed to create group:', text);
-                            alert('Failed to create group.');
+                            alert('그룹 생성에 실패했습니다.\n그룹 이름이 다른 그룹과 중복되지 않는지 확인해주세요.\n계속 문제가 지속된다면 관리자에게 문의 바랍니다.');
                         });
                     }
                 }).catch(error => {
                     console.error('Error:', error);
-                    alert('Failed to create group.');
+                    alert('그룹 생성에 실패했습니다.\n그룹 이름이 다른 그룹과 중복되지 않는지 확인해주세요.\n계속 문제가 지속된다면 관리자에게 문의 바랍니다.');
                 });
             });
 

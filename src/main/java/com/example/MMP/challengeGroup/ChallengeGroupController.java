@@ -74,14 +74,14 @@ public class ChallengeGroupController {
     @PostMapping("/create")
     public ResponseEntity<ChallengeGroup> createGroup(@RequestParam String name, Principal principal) {
         try {
-            SiteUser siteUser = siteUserService.getUser(principal.getName());
-            ChatRoom chatRoom = new ChatRoom();
-            chatRoom.setSort("many");
-            chatRoomService.save(chatRoom);
-            chatRoom.getUserList().add(siteUser);
-            siteUser.getChatRoomList().add(chatRoom);
-            ChallengeGroup group = groupService.createGroup (name, principal,chatRoom);
-            chatMessageService.firstGroupChatMessage(siteUser,chatRoom,group.getName());
+            SiteUser siteUser = siteUserService.getUser (principal.getName ());
+            ChatRoom chatRoom = new ChatRoom ();
+            chatRoom.setSort ("many");
+            chatRoomService.save (chatRoom);
+            chatRoom.getUserList ().add (siteUser);
+            siteUser.getChatRoomList ().add (chatRoom);
+            ChallengeGroup group = groupService.createGroup (name, principal, chatRoom);
+            chatMessageService.firstGroupChatMessage (siteUser, chatRoom, group.getName ());
             return ResponseEntity.ok (group);
         } catch (Exception e) {
             // 예외가 발생하면 로그를 남기고 500 에러를 반환
@@ -115,15 +115,15 @@ public class ChallengeGroupController {
         Optional<SiteUser> siteUsers = siteUserRepository.findByUserId (username);
         SiteUser user = siteUsers.orElse (null);
 
-        List<Boolean> leaderStatus = new ArrayList<>();
+        List<Boolean> leaderStatus = new ArrayList<> ();
 
         for (ChallengeGroup challengeGroup : groups) {
-            boolean isCurrentUserLeader = challengeGroup.getLeader().getId () != null && challengeGroup.getLeader().getId ().equals(id);
-            leaderStatus.add(isCurrentUserLeader);
+            boolean isCurrentUserLeader = challengeGroup.getLeader ().getId () != null && challengeGroup.getLeader ().getId ().equals (id);
+            leaderStatus.add (isCurrentUserLeader);
         }
 
         model.addAttribute ("groups", groups);
-        model.addAttribute("leaderStatus", leaderStatus);
+        model.addAttribute ("leaderStatus", leaderStatus);
         model.addAttribute ("user", user);
 
         return "challenge/groupList_form";
@@ -161,30 +161,36 @@ public class ChallengeGroupController {
                             .thenComparing (SiteUser::getUserId, Comparator.nullsLast (Comparator.naturalOrder ())))
                     .collect (Collectors.toList ());
 
+
+// 리더를 맨 위로 올리기 위해서 멤버 리스트에서 리더를 분리하고 맨 앞에 추가
+            SiteUser leader = group.getLeader ();
+            sortedMembers.removeIf (member -> member.getId ().equals (leader.getId ()));
+            sortedMembers.add (0, leader);
+
             // 모든 출석 기록을 포함할 리스트 초기화
-            List<Attendance> allAttendances = new ArrayList<>();
+            List<Attendance> allAttendances = new ArrayList<> ();
 
             // 각 멤버별 출석 기록 조회 및 추가
             for (SiteUser siteUser : sortedMembers) {
-                List<Attendance> attendances = attendanceRepository.findBySiteUserId(siteUser.getId());
-                allAttendances.addAll(attendances); // 조회된 출석 기록을 전체 리스트에 추가
+                List<Attendance> attendances = attendanceRepository.findBySiteUserId (siteUser.getId ());
+                allAttendances.addAll (attendances); // 조회된 출석 기록을 전체 리스트에 추가
             }
 
-            Map<Long, Long> totalTimeByMember = allAttendances.stream()
-                    .collect(Collectors.groupingBy(
-                            attendance -> attendance.getSiteUser().getId(),
-                            Collectors.summingLong(Attendance::getTotalTime)
+            Map<Long, Long> totalTimeByMember = allAttendances.stream ()
+                    .collect (Collectors.groupingBy (
+                            attendance -> attendance.getSiteUser ().getId (),
+                            Collectors.summingLong (Attendance::getTotalTime)
                     ));
 
             List<Tag> tags = tagRepository.findAll ();
 
 
-            model.addAttribute ("tags",tags);
+            model.addAttribute ("tags", tags);
             model.addAttribute ("group", group);
             model.addAttribute ("isLeader", isLeader);
             model.addAttribute ("sortedMembers", sortedMembers); // 정렬된 멤버 리스트 추가
             model.addAttribute ("groupLeader", group.getLeader ());
-            model.addAttribute("totalTimeByMember", totalTimeByMember);
+            model.addAttribute ("totalTimeByMember", totalTimeByMember);
 
             return "challenge/groupDetail";
         } else {
@@ -193,21 +199,21 @@ public class ChallengeGroupController {
     }
 
     @GetMapping("/groupTalk/{id}")
-    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model){
-        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
-        ChallengeGroup challengeGroup = groupService.getGroup(id);
-        List<SiteUser> memberList = new ArrayList<>(challengeGroup.getMembers());
-        List<String> memberNumber = new ArrayList<>();
-        for(SiteUser siteUser1 : memberList){
-            memberNumber.add(siteUser1.getNumber());
+    public String groupTalk(@PathVariable("id") Long id, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        SiteUser siteUser = siteUserService.getUser (userDetail.getUsername ());
+        ChallengeGroup challengeGroup = groupService.getGroup (id);
+        List<SiteUser> memberList = new ArrayList<> (challengeGroup.getMembers ());
+        List<String> memberNumber = new ArrayList<> ();
+        for (SiteUser siteUser1 : memberList) {
+            memberNumber.add (siteUser1.getNumber ());
         }
-        ChatRoom chatRoom = chatRoomService.findById(challengeGroup.getChatRoom().getId());
+        ChatRoom chatRoom = chatRoomService.findById (challengeGroup.getChatRoom ().getId ());
 
-        chatRoomService.deleteGroupAlarm(challengeGroup,siteUser);
-        model.addAttribute("challengeGroup",challengeGroup);
-        model.addAttribute("me",siteUser);
-        model.addAttribute("chatRoom",chatRoom);
-        model.addAttribute("memberNumber",memberNumber);
+        chatRoomService.deleteGroupAlarm (challengeGroup, siteUser);
+        model.addAttribute ("challengeGroup", challengeGroup);
+        model.addAttribute ("me", siteUser);
+        model.addAttribute ("chatRoom", chatRoom);
+        model.addAttribute ("memberNumber", memberNumber);
 
 
         return "chat/groupchat";
@@ -223,7 +229,7 @@ public class ChallengeGroupController {
 
     @PostMapping("/changeLeader")
     public String changeLeader(@RequestParam("groupId") Long groupId, @RequestParam("newLeaderId") Long newLeaderId) {
-       groupService.changeLeader(groupId, newLeaderId);
+        groupService.changeLeader (groupId, newLeaderId);
         return "redirect:/groupChallenge/detail/" + groupId; // 그룹 상세 페이지로 리디렉션
     }
 }

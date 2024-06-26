@@ -40,6 +40,12 @@ public class ChallengeGroupService {
     }
 
     public ChallengeGroup createGroup(String name, Principal principal, ChatRoom chatRoom) {
+
+        ChallengeGroup existingGroup = groupRepository.findByName(name);
+        if (existingGroup != null) {
+            throw new IllegalArgumentException("이미 존재하는 그룹 이름입니다.");
+        }
+
         String username = principal.getName ();
         Optional<SiteUser> siteUsers = userRepository.findByUserId (username);
 

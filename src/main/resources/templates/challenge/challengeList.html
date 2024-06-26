@@ -22,44 +22,44 @@
                                     분류</span></p>
                             <p class="text-black"><strong>내 달성률: </strong>
                                 <span th:each="challengeUser : ${challengeUsers}"
-                                    th:if="${challengeUser.challenge.id == challenge.id}"
-                                    th:text="${#numbers.formatDecimal(challengeUser.achievementRate, 1, 1)} + '%'">달성률</span>
+                                      th:if="${challengeUser.challenge.id == challenge.id}"
+                                      th:text="${#numbers.formatDecimal(challengeUser.achievementRate, 1, 1)} + '%'">달성률</span>
                             </p>
                             <!-- 달성률에 따른 이미지 표시 -->
                             <div class="achievement-image-container">
                                 <!-- 기본 이미지 -->
                                 <img th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
-                                    class="achievement-image">
+                                     class="achievement-image">
                                 <!-- 참여자가 있는 경우 대체 이미지 표시 -->
                                 <div th:each="challengeUser : ${challengeUsers}"
-                                    th:if="${challengeUser.challenge.id == challenge.id}">
+                                     th:if="${challengeUser.challenge.id == challenge.id}">
                                     <img th:if="${challengeUser.achievementRate <= 0}"
-                                        th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}"
-                                        th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 25}"
-                                        th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate < 50}"
-                                        th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 50}"
-                                        th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}"
-                                        th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 75}"
-                                        th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}"
-                                        th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate >= 100}"
-                                        th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
-                                        class="achievement-image">
+                                         th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
+                                         class="achievement-image">
                                 </div>
                             </div>
 
@@ -75,7 +75,7 @@
                     <form th:action="@{/challenge/delete/{id}(id=${challenge.id})}" method="post" class="inline-block">
                         <button type="submit" class="btn btn-danger mt-4 p-0">
                             <img src="https://i.imgur.com/OD5BCwu.png" alt="삭제"
-                                class="w-6 h-6 inline-block align-middle">
+                                 class="w-6 h-6 inline-block align-middle">
                         </button>
                     </form>
                     <h2 class="card-title text-black" th:text="${challenge.name}">챌린지 이름</h2>
@@ -89,81 +89,83 @@
                     </p>
                     <p class="text-black"><strong>보상: </strong><span th:text="${challenge.requiredPoint}">보상
                             포인트</span></p>
-                    <p class="text-black"><strong>분류: </strong><span th:text="${challenge.type}">챌린지 분류</span>
                     </p>
-                    <p class="text-black"><strong>내 달성률: </strong>
-                        <span th:each="challengeUser : ${challengeUsers}"
-                            th:if="${challengeUser.challenge.id == challenge.id}"
-                            th:text="${#numbers.formatDecimal(challengeUser.achievementRate, 1, 1)} + '%'">달성률</span>
-                    </p>
+                    <div th:each="challengeUser : ${challengeUsers}"
+                         th:if="${challengeUser.challenge.id == challenge.id}">
+                        <p class="text-black"><strong>내 달성률: </strong>
+                            <span th:each="challengeUser : ${challengeUsers}"
+                                  th:if="${challengeUser.challenge.id == challenge.id}"
+                                  th:text="${#numbers.formatDecimal(challengeUser.achievementRate, 1, 1)} + '%'">달성률</span>
+                        </p>
+                    </div>
                     <!-- 달성률에 따른 이미지 표시 -->
                     <div class="achievement-image-container">
-                        <!-- 기본 이미지 -->
-                        <img th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
-                            class="achievement-image">
+                        <!--                        &lt;!&ndash; 기본 이미지 &ndash;&gt;-->
+                        <!--                        <img th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"-->
+                        <!--                            class="achievement-image">-->
                         <!-- 참여자가 있는 경우 대체 이미지 표시 -->
                         <div th:each="challengeUser : ${challengeUsers}"
-                            th:if="${challengeUser.challenge.id == challenge.id}">
+                             th:if="${challengeUser.challenge.id == challenge.id}">
                             <img th:if="${challengeUser.achievementRate <= 0}"
-                                th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}"
-                                th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate == 25}"
-                                th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate < 50}"
-                                th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate == 50}"
-                                th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}"
-                                th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate == 75}"
-                                th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}"
-                                th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                             <img th:if="${challengeUser.achievementRate >= 100}"
-                                th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
-                                class="achievement-image">
+                                 th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
+                                 class="achievement-image">
                         </div>
                     </div>
                     <div class="button-group">
                         <form th:action="@{/challenge/participate}" method="post" class="inline-block">
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-error mt-4"
-                                th:if="${participatedChallengeIds != null and not #lists.contains(participatedChallengeIds, challenge.id)}"
-                                th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
+                                    th:if="${participatedChallengeIds != null and not #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
                                 참여
                             </button>
                             <button type="button" class="btn btn-success mt-4"
-                                th:if="${participatedChallengeIds != null and #lists.contains(participatedChallengeIds, challenge.id)}"
-                                th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
+                                    th:if="${participatedChallengeIds != null and #lists.contains(participatedChallengeIds, challenge.id)}"
+                                    th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
                                 참여 중
                             </button>
                             <button type="button" class="btn btn-primary mt-4"
-                                th:if="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
+                                    th:if="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
                                 달성 완료
                             </button>
                         </form>
                         <form th:action="@{/challenge/updateWeight}" method="get" class="inline-block"
-                            th:if="${challenge.type == 'weight'}"
-                            th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
+                              th:if="${challenge.type == 'weight'}"
+                              th:unless="${challengeAchievementRates[challenge.id] != null and challengeAchievementRates[challenge.id] >= 100}">
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-warning mt-4">몸무게 업데이트</button>
                         </form>
                         <form th:action="@{/challenge/expiration}" method="post" class="inline-block"
-                            th:if="${challenge.expiration == false}">
+                              th:if="${challenge.expiration == false}">
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-warning mt-4">만료</button>
                         </form>
                         <form th:action="@{/challenge/expiration}" method="post" class="inline-block"
-                            th:if="${challenge.expiration == true}">
+                              th:if="${challenge.expiration == true}">
                             <input type="hidden" name="challengeId" th:value="${challenge.id}">
                             <button type="submit" class="btn btn-warning mt-4">만료완료</button>
                         </form>

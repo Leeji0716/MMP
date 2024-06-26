@@ -50,6 +50,7 @@ public class AttendanceController {
     // 출석 캘린더 페이지를 반환
     @GetMapping("/calendar")
     public String getCalendarPage(Authentication authentication, Model model,Principal principal) {
+
         UserDetail userDetail = (UserDetail) authentication.getPrincipal();
         Long userId = userDetail.getId(); // 사용자 ID를 가져옵니다.
         List<Attendance> attendanceList = attendanceService.getUserAttendance(userId);

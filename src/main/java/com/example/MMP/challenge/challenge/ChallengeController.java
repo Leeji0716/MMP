@@ -148,6 +148,7 @@ public class ChallengeController {
                 case "exerciseTime":
                     // 초기 운동 시간을 0으로 설정
                     challengeService.participateInChallengeWithExerciseTime(challengeId, principal, 0);
+                    break;
                 case "attendance":
                     challengeService.participateInChallenge (challengeId,principal);
                     break;

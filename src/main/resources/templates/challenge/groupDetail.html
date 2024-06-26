@@ -3,18 +3,22 @@
     <title th:text="${group.name} + ' 그룹'">그룹 디테일</title>
     <main class="container mt-10 mx-auto p-4 text-white border border-gray-300">
         <div class="mb-10">
-            <div class="flex w-full justify-center">
+            <div class="flex w-full justify-center mb-3">
 
                 <div class="flex justify-start w-full">
-                    <td th:text="${group.name} + ' 그룹'"></td>
+                    <a href="/groupChallenge/list">
+                        <img src="https://i.imgur.com/sbW4NR5.png" class="w-[30px] h-[30px] mr-1" />
+                    </a>
+                </div>
+
+                <div class="flex justify-center w-full">
+                    <div class="text-2xl font-semibold" th:text="${group.name} + ' 그룹'"></div>
                 </div>
 
                 <div class="divider divider-horizontal"></div>
 
                 <div class="flex justify-end w-full">
-                    <a href="/groupChallenge/list">
-                        <img src="https://i.imgur.com/sbW4NR5.png" class="w-[30px] h-[30px] mr-1" />
-                    </a>
+
                     <a th:if="${isLeader}" th:href="@{/groupChallenge/edit/{groupId}(groupId=${group.id})}">
                         <img src="https://i.imgur.com/0NUoX8j.png" class="w-[30px] h-[30px] mr-1" />
                     </a>
@@ -59,15 +63,13 @@
                         <div class="stat-title font-semibold mb-2">오늘의 그룹순위</div>
 
                         <div class="stat-value" th:text="${group.rank}"></div>
-
-                        <div class="stat-desc">↘︎ 90 (14%)</div>
                     </div>
                 </div>
                 <p>*오늘의 그룹순위는 그룹 회원들의 운동 평균 시간으로 따집니다</p>
                 </br>
                 </br>
                 <h2 class="text-2xl font-semibold mb-2">태그 목록</h2>
-                <ul class="list-none pl-5 flex justify-end w-full flex-wrap">
+                <ul class="list-none pl-5 flex justify-start w-full flex-wrap">
                     <li th:each="groupTag : ${group.groupTagList}" class="mr-4 mb-2">
                         <span class="badge badge-ghost badge-lm">#<span th:text="${groupTag.tag.name}"></span></span>
                         <form
@@ -125,7 +127,7 @@
                         <td th:text="${member.createDate}">Date Placeholder</td>
                         <td th:attr="data-time=${totalTimeByMember[member.id]}" class="time-cell">기본 텍스트</td>
                         <td th:if="${isLeader}">
-                            <form th:action="@{/groupChallenge/changeLeader}" method="post">
+                            <form th:if="${member.id != group.leader.id}" th:action="@{/groupChallenge/changeLeader}" method="post">
                                 <input type="hidden" name="groupId" th:value="${group.id}"/>
                                 <input type="hidden" name="newLeaderId" th:value="${member.id}"/>
                                 <button type="submit" class="btn btn-neutral">권한 위임</button>
