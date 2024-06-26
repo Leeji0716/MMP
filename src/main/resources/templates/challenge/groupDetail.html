@@ -55,7 +55,8 @@
                         </div>
                         <div class="stat-title font-semibold mb-2">그룹 시작일</div>
                         <div class="stat-value" id="dDay"></div>
-                        <div class="stat-desc" th:text="${#temporals.format(group.createDate, 'yyyy-MM-dd a HH:mm')}"></div>
+                        <div class="stat-desc" th:text="${#temporals.format(group.createDate, 'yyyy-MM-dd a HH:mm')}">
+                        </div>
                     </div>
                     <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
                         <div class="stat-figure text-secondary">
@@ -72,11 +73,12 @@
                 <ul class="list-none pl-5 flex justify-start w-full flex-wrap">
                     <li th:each="groupTag : ${group.groupTagList}" class="mr-4 mb-2">
                         <span class="badge badge-ghost badge-lm">#<span th:text="${groupTag.tag.name}"></span></span>
-                        <form
-                            th:action="@{/groupChallenge/{groupId}/tags/{groupTagId}/delete(groupId=${group.id}, groupTagId=${groupTag.id})}"
+                        <!-- <form
+                            th:action="@{/groupChallenge/${group.id}/tags/${groupTag.id}/delete}"
                             method="post" class="inline">
                             <button type="submit" class="btn btn-error btn-xs">삭제</button>
-                        </form>
+                        </form> -->
+                        <a th:href="@{|/groupChallenge/${group.id}/tags/${groupTag.id}/delete|}" class="btn btn-error btn-xs">삭제</a>
                     </li>
                 </ul>
                 <a href="#my_modal_8" class="btn">태그추가</a>
@@ -91,11 +93,11 @@
                             <button type="submit" class="btn btn-primary w-full text-black">태그 추가</button>
                         </form>
                         <h3 class="font-bold text-lg mt-4 text-black">태그 목록</h3>
-                        <ul class="list-disc pl-5 mt-10 text-black">
-                            <li th:each="tag : ${tags}">
-                                <span th:text="${tag.name}" th:attr="data-tag-name=${tag.name}"></span>
-                            </li>
-                        </ul>
+                        <div class="flex gap-2 w-full h-[100px] overflow-y-auto border-4 rounded-lg">
+                            <div th:each="tag : ${tags}">
+                                <a href="#" class="btn btn-xs giveTag" th:text="'#'+ ${tag.name}" th:data-id="${tag.id}"></a>
+                            </div>
+                        </div>
                         <div class="modal-action">
                             <a href="#" class="btn">닫기</a>
                         </div>
@@ -109,13 +111,13 @@
                 <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
                 <table class="table w-full">
                     <thead>
-                    <tr>
-                        <th class="text-white">역할</th>
-                        <th class="text-white">멤버 이름</th>
-                        <th class="text-white">멤버 가입일</th>
-                        <th class="text-white">오늘의 운동 시간</th>
-                        <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
-                    </tr>
+                        <tr>
+                            <th class="text-white">역할</th>
+                            <th class="text-white">멤버 이름</th>
+                            <th class="text-white">멤버 가입일</th>
+                            <th class="text-white">오늘의 운동 시간</th>
+                            <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
+                        </tr>
                     </thead>
                     <tbody>
                     <tr th:each="member : ${sortedMembers}">
@@ -142,7 +144,26 @@
     </main>
     </br>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function () {
+            $(".giveTag").click(function (event) {
+                event.preventDefault(); // a 태그 기본 동작 방지
+                var tagId = $(this).attr("data-id");
+
+                $.ajax({
+                    url: "/tags/getTagName", // 컨트롤러의 엔드포인트
+                    type: "GET",
+                    data: { id: tagId },
+                    success: function (response) {
+                        $("#tagInput").val(response.name); // 서버로부터 받은 태그 이름을 입력 필드에 설정
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX 요청 실패:", error);
+                    }
+                });
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
             function calculateDday(createDate) {
                 const today = new Date();
                 // 오늘 날짜에서 시간, 분, 초, 밀리초를 제거
@@ -179,19 +200,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-      const timeCells = document.querySelectorAll('.time-cell');
-      timeCells.forEach(cell => {
-          const totalSeconds = parseInt(cell.getAttribute('data-time'), 10);
-          const hours = Math.floor(totalSeconds / 3600);
-          const minutes = Math.floor((totalSeconds % 3600) / 60);
-          const seconds = totalSeconds % 60;
-          if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
-              cell.textContent = `${hours}시 ${minutes}분 ${seconds}초`;
-          } else {
-              cell.textContent = '0시 0분 0초'; // 데이터가 없거나 유효하지 않은 경우
-          }
-      });
-  });
+            const timeCells = document.querySelectorAll('.time-cell');
+            timeCells.forEach(cell => {
+                const totalSeconds = parseInt(cell.getAttribute('data-time'), 10);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                if (!isNaN(hours) && !isNaN(minutes) && !isNaN(seconds)) {
+                    cell.textContent = `${hours}시 ${minutes}분 ${seconds}초`;
+                } else {
+                    cell.textContent = '0시 0분 0초'; // 데이터가 없거나 유효하지 않은 경우
+                }
+            });
+        });
     </script>
 
 

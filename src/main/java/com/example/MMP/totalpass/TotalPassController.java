@@ -107,13 +107,13 @@ public class TotalPassController {
     }
 
     @PostMapping("/change/{id}")
-    public String changePt(@RequestParam("change") String change,@PathVariable("id")Long id ) {
-        if(change.equals("accept")){
+    public String changePt(@RequestParam("change") String change, @PathVariable("id") Long id) {
+        if (change.equals("accept")) {
             TransPass transPass = transPassService.findById(id);
             transPass.setConsent(true);
             transPassService.save(transPass);
             return "redirect:/user/profile";
-        }else{
+        } else {
             TransPass transPass = transPassService.findById(id);
             transPassService.delete(transPass);
             return "redirect:/user/profile";
@@ -121,27 +121,27 @@ public class TotalPassController {
     }
 
     @GetMapping("/admin/stand")
-    public String adminStand (Model model,@RequestParam(value = "page", defaultValue = "0") int page,@RequestParam(value = "sort",defaultValue = "pt")String sort){
-        if(sort.equals("pt")) {
+    public String adminStand(Model model, @RequestParam(value = "page", defaultValue = "0") int page, @RequestParam(value = "sort", defaultValue = "pt") String sort) {
+        if (sort.equals("pt")) {
             Page<TransPass> paging = transPassService.AllPtStandPass(page);
             model.addAttribute("paging", paging);
             return "pass/standpass";
-        }else{
+        } else {
             Page<TransPass> paging = transPassService.AllDayStandPass(page);
-            model.addAttribute("paging",paging);
+            model.addAttribute("paging", paging);
             return "pass/standpass";
         }
     }
 
     @GetMapping("/admin/agree/{id}")
-    public String adminAgree(@PathVariable("id")Long id){
+    public String adminAgree(@PathVariable("id") Long id) {
         TransPass transPass = transPassService.findById(id);
-        if(transPass.getUserPtPass() != null) {
+        if (transPass.getUserPtPass() != null) {
             transPass.getUserPtPass().setSiteUser(transPass.getAcceptUser());
             userPtPassService.save(transPass.getUserPtPass());
             transPassService.delete(transPass);
             return "redirect:/totalPass/admin/stand";
-        }else{
+        } else {
             transPass.getUserDayPass().setSiteUser(transPass.getAcceptUser());
             userDayPassService.save(transPass.getUserDayPass());
             transPassService.delete(transPass);
@@ -151,7 +151,7 @@ public class TotalPassController {
     }
 
     @GetMapping("/admin/reject/{id}")
-    public String adminReject(@PathVariable("id")Long id){
+    public String adminReject(@PathVariable("id") Long id) {
         TransPass transPass = transPassService.findById(id);
         transPassService.delete(transPass);
 

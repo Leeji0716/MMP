@@ -22,6 +22,15 @@ public class GroupTagService {
         ChallengeGroup group = groupService.getGroup(groupId);
         Tag tag = tagService.create(name);
 
+        // 그룹에 해당 태그가 이미 존재하는지 확인
+        for (GroupTag existingGroupTag : group.getGroupTagList()) {
+            if (existingGroupTag.getTag().getName().equals(name)) {
+                // 이미 존재하면 반환
+                return existingGroupTag;
+            }
+        }
+
+        // 존재하지 않으면 새로운 GroupTag 추가
         GroupTag groupTag = new GroupTag();
         groupTag.setGroup(group);
         groupTag.setTag(tag);
@@ -29,8 +38,8 @@ public class GroupTagService {
         return groupTagRepository.save(groupTag);
     }
 
-    public void delete(Long groupTagId) {
-        groupTagRepository.deleteById(groupTagId);
+    public void delete(GroupTag groupTag) {
+        groupTagRepository.delete(groupTag);
     }
 }
 

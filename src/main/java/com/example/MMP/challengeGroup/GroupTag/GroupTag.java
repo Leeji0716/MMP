@@ -22,7 +22,7 @@ public class GroupTag {
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = false)
+    @JoinColumn(name = "challenge_group_id", nullable = false)
     @JsonBackReference
     private ChallengeGroup group;
 }

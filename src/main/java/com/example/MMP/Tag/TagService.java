@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,9 +16,15 @@ public class TagService {
     }
 
     public Tag create(String name) {
-        Tag tag = new Tag();
-        tag.setName(name);
-        return tagRepository.save(tag);
+        Optional<Tag> existingTag = tagRepository.findByName(name);
+
+        if (existingTag.isPresent()) {
+            return existingTag.get();
+        } else {
+            Tag tag = new Tag();
+            tag.setName(name);
+            return tagRepository.save(tag);
+        }
     }
 
     public List<Tag> getTagList() {

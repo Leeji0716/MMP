@@ -4,12 +4,17 @@ package com.example.MMP.Tag;
 
 import com.example.MMP.challengeGroup.ChallengeGroup;
 import com.example.MMP.challengeGroup.ChallengeGroupService;
+import com.example.MMP.challengeGroup.GroupTag.GroupTag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -68,6 +73,16 @@ public class TagController {
         return "redirect:/tags";
     }
 
-
+    @GetMapping("/getTagName")
+    public ResponseEntity<Map<String, String>> getTagName(@RequestParam Long id) {
+        Tag tag = tagService.getTag(id); // 태그를 ID로 조회
+        if (tag != null) {
+            Map<String, String> response = new HashMap<>();
+            response.put("name", tag.getName());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
 }

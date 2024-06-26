@@ -380,9 +380,9 @@
                     <div class="flex-1 bg-gray-800 rounded-lg shadow-xl p-8">
                         <h2 class="text-white">양도 List</h2>
                         <form action="/user/profile">
-                            <input type="submit" value="send" name="passFilter" class="btn">
-                            <input type="submit" value="accept" name="passFilter" class="btn">
-                            <input type="submit" value="stand" name="passFilter" class="btn">
+                            <input type="submit" value="양도 신청 리스트" name="passFilter" class="btn">
+                            <input type="submit" value="양도 머기 리스트" name="passFilter" class="btn">
+                            <input type="submit" value="관리자 승인" name="passFilter" class="btn">
                         </form>
                         <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}" class="flex">
                             <div th:if="${send.userPtPass != null}">
