@@ -3,15 +3,18 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
     <div class="flex items-center text-black flex justify-center items-center">
+        <p th:if="${error != null}" th:text="${error}" class="text-red-500"></p>
         <form action="/totalPass/transfer/success">
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text" class="grow text-black" placeholder="Number" name="number" />
             </label>
+            <label class="input input-bordered flex items-center gap-2 hidden" id="labelInput">
+            </label>
             <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black" name="pass">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
-                <option th:each="pt : ${user.userPtPassList}" th:value="${pt.passName}" th:text="${pt.passName}">
+                <option th:each="pt : ${user.userPtPassList}" th:value="${pt.id}" th:text="${pt.passName}" class="Pt">
                 </option>
-                <option th:each="day : ${user.userDayPassList}" th:value="${day.passName}" th:text="${day.passName}">
+                <option th:each="day : ${user.userDayPassList}" th:value="${day.id}" th:text="${day.passName}" class="Day">
                 </option>
             </select>
             <input type="submit" class="btn" value="양도하기">
@@ -31,6 +34,9 @@
 
             passSelect.addEventListener('change', function () {
                 const selectedPassName = passSelect.value;
+                let selectedOption = passSelect.options[passSelect.selectedIndex];
+                let targetNo = selectedOption.value;
+                let targetSort = selectedOption.getAttribute("class");
                 if (selectedPassName) {
                     fetch(`/totalPass/transfer/${userId}`, {
                         method: 'POST',
@@ -38,14 +44,21 @@
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]').value // CSRF 토큰 필요시
                         },
-                        body: JSON.stringify({ passName: selectedPassName })
+                        body: JSON.stringify({ passSort: targetSort,passId: targetNo })
                     })
                         .then(response => response.json())
                         .then(data => {
-                            if (data.passCount != null) {
+                            if (data.passSort === "Pt") {
                                 const cardContainer = document.getElementById('cardContainer');
                                 cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
+                                // 새로운 인풋 생성(컨트롤러에서 Pt인지 Day인지 구분을 위해)
+                                const inputSort = document.createElement('input');
+                                inputSort.type = 'hidden';
+                                inputSort.value = 'Pt';
+                                inputSort.name = 'sort';
 
+                                const labelInput = document.getElementById('labelInput');
+                                labelInput.appendChild(inputSort);
                                 // 새로운 카드를 생성
                                 const card = document.createElement('div');
                                 card.className = 'card bg-base-100 shadow-xl m-2 pt-2.5 text-black';
@@ -93,6 +106,17 @@
                             } else {
                                 const cardContainer = document.getElementById('cardContainer');
                                 cardContainer.innerHTML = ''; // 기존 내용을 지우고 새로 추가
+                                
+                                 // 새로운 인풋 생성(컨트롤러에서 Pt인지 Day인지 구분을 위해)
+                                 const deleteInput = document.getElementById('delete');
+                                deleteInput.innerHTML = '';
+                                const inputSort = document.createElement('input');
+                                inputSort.type = 'hidden';
+                                inputSort.value = 'Day';
+                                inputSort.name = 'sort';
+
+                                const labelInput = document.getElementById('labelInput');
+                                labelInput.appendChild(inputSort);
 
                                 // 새로운 카드를 생성
                                 const card = document.createElement('div');

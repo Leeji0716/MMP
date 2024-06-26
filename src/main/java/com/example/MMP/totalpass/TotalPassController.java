@@ -13,7 +13,6 @@ import com.example.MMP.userPass.UserDayPass;
 import com.example.MMP.userPass.UserDayPassService;
 import com.example.MMP.userPass.UserPtPass;
 import com.example.MMP.userPass.UserPtPassService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +20,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.rmi.StubNotFoundException;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -64,42 +62,68 @@ public class TotalPassController {
 
     @PostMapping("/transfer/{id}")
     public ResponseEntity<?> handlePassSelection(@RequestBody Map<String, String> payload, @PathVariable("id") Long id) {
-        String passName = payload.get("passName");
-        UserPtPass userPtPass = userPtPassService.findByPassName(passName);
+        String passSort = payload.get("passSort");
+        Long passId = Long.valueOf(payload.get("passId"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (userPtPass == null) {
-            UserDayPass userDayPass = userDayPassService.findByPassName(passName);
-            Map<String, String> response = new HashMap<>();
-            response.put("passName", userDayPass.getPassName());
-            response.put("passStart", userDayPass.getPassStart().format(formatter));
-            response.put("passFinish", userDayPass.getPassFinish().format(formatter));
-
-            return ResponseEntity.ok().body(response);
-        } else {
+        if(passSort.equals("Pt")){
+            UserPtPass userPtPass = userPtPassService.findByPassId(passId);
             Map<String, String> response = new HashMap<>();
             response.put("passName", userPtPass.getPassName());
             response.put("passCount", Integer.toString(userPtPass.getPassCount()));
             response.put("passStart", userPtPass.getPassStart().format(formatter));
             response.put("passFinish", userPtPass.getPassFinish().format(formatter));
-
+            response.put("passSort",passSort);
+            return ResponseEntity.ok().body(response);
+        }else{
+            UserDayPass userDayPass = userDayPassService.findById(passId);
+            Map<String, String> response = new HashMap<>();
+            response.put("passName", userDayPass.getPassName());
+            response.put("passStart", userDayPass.getPassStart().format(formatter));
+            response.put("passFinish", userDayPass.getPassFinish().format(formatter));
+            response.put("passSort",passSort);
             return ResponseEntity.ok().body(response);
         }
-
     }
 
     @GetMapping("/transfer/success")
-    public String agree(@RequestParam("number") String number, @RequestParam("pass") String pass, @AuthenticationPrincipal UserDetail userDetail) {
+    public String agree(@RequestParam(value = "number",defaultValue = "error") String number, @RequestParam(value = "pass",defaultValue = "0") Long pass, @RequestParam(value = "sort",defaultValue = "error") String sort, @AuthenticationPrincipal UserDetail userDetail, RedirectAttributes redirectAttributes) {
         SiteUser sendUser = siteUserService.getUser(userDetail.getUsername());
+        if(number.equals("error")){
+            redirectAttributes.addFlashAttribute("error","양도받을 회원을 선택해주세요.");
+            return "redirect:/totalPass/transfer/%d".formatted(sendUser.getId());
+        } else if (pass == 0) {
+            redirectAttributes.addFlashAttribute("error","양도할 이용권을 선택해주세요.");
+            return "redirect:/totalPass/transfer/%d".formatted(sendUser.getId());
+        } else if(sort.equals("error")){
+            redirectAttributes.addFlashAttribute("error","양도할 이용권을 선택해주세요.");
+            return "redirect:/totalPass/transfer/%d".formatted(sendUser.getId());
+        }
         SiteUser acceptUser = siteUserService.getUser(number);
-        UserPtPass userPtPass = userPtPassService.findByPassName(pass);
-        if (userPtPass != null) {
+
+
+        if(sort.equals("Pt")){
+            UserPtPass userPtPass = userPtPassService.findByPassId(pass);
             TransPass transPass = TransPass.builder().sendUser(sendUser).acceptUser(acceptUser).build();
             transPass.setUserPtPass(userPtPass);
+            List<TransPass> transPassList = transPassService.MySendPass(sendUser);
+            for(TransPass transPass1 : transPassList){
+                if(transPass1.getUserPtPass() == transPass.getUserPtPass() ){
+                    redirectAttributes.addFlashAttribute("error","이미 양도신청한 이용권입니다.");
+                    return "redirect:/totalPass/transfer/%d".formatted(sendUser.getId());
+                }
+            }
             transPassService.save(transPass);
-        } else {
-            UserDayPass userDayPass = userDayPassService.findByPassName(pass);
+        }else{
+            UserDayPass userDayPass = userDayPassService.findById(pass);
             TransPass transPass = TransPass.builder().sendUser(sendUser).acceptUser(acceptUser).build();
             transPass.setUserDayPass(userDayPass);
+            List<TransPass> transPassList = transPassService.MySendPass(sendUser);
+            for(TransPass transPass1 : transPassList){
+                if(transPass1.getUserDayPass() == transPass.getUserDayPass()){
+                    redirectAttributes.addFlashAttribute("error","이미 양도신청한 이용권입니다.");
+                    return "redirect:/totalPass/transfer/%d".formatted(sendUser.getId());
+                }
+            }
             transPassService.save(transPass);
         }
 

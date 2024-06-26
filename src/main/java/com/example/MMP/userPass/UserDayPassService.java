@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,5 +44,9 @@ public class UserDayPassService {
 
     public void delete(UserDayPass userDayPass) {
         userDayPassRepository.delete(userDayPass);
+    }
+
+    public UserDayPass findById(Long passId) {
+        return userDayPassRepository.findById(passId).orElseThrow();
     }
 }

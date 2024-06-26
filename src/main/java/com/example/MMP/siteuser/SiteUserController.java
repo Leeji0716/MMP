@@ -3,8 +3,6 @@ package com.example.MMP.siteuser;
 
 //import com.example.MMP.mail.MailService;
 
-import com.example.MMP.wod.Comment.Comment;
-import com.example.MMP.wod.Comment.CommentService;
 import com.example.MMP.challenge.challenge.Challenge;
 import com.example.MMP.challenge.challenge.ChallengeService;
 import com.example.MMP.chat.ChatRoom;
@@ -20,6 +18,8 @@ import com.example.MMP.siteuser.salary.Salary;
 import com.example.MMP.siteuser.salary.SalaryRepository;
 import com.example.MMP.transPass.TransPass;
 import com.example.MMP.transPass.TransPassService;
+import com.example.MMP.wod.Comment.Comment;
+import com.example.MMP.wod.Comment.CommentService;
 import com.example.MMP.wod.Wod;
 import com.example.MMP.wod.WodService;
 import jakarta.validation.Valid;
@@ -184,7 +184,7 @@ public class SiteUserController {
     }
 
     @GetMapping("/profile")
-    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter", defaultValue = "send") String passFilter) {
+    public String getUserProfile(Model model, Principal principal, @RequestParam(value = "passFilter", defaultValue = "양도 신청 리스트") String passFilter) {
 
         try {
             SiteUser user = this.siteUserService.getUser(principal.getName ());
@@ -205,19 +205,19 @@ public class SiteUserController {
             List<Challenge> failedChallenges = challengesByStatus.get ("failed");
             int challengeCount = ongoingChallenges.size () + successfulChallenges.size () + failedChallenges.size ();
 
-            if (passFilter.equals ("send")) {
+            if (passFilter.equals ("양도 신청 리스트")) {
                 List<TransPass> MySendPass = transPassService.MySendPass (user);
                 if (MySendPass.isEmpty ()) {
                     model.addAttribute ("MySendPass", null);
                 }
                 model.addAttribute ("MySendPass", MySendPass);
-            } else if (passFilter.equals ("accept")) {
+            } else if (passFilter.equals ("양도 머기 리스트")) {
                 List<TransPass> MyAcceptPass = transPassService.MyAcceptPass (user);
                 if (MyAcceptPass.isEmpty ()) {
                     model.addAttribute ("MyAcceptPass", null);
                 }
                 model.addAttribute ("MyAcceptPass", MyAcceptPass);
-            } else if (passFilter.equals ("stand")) {
+            } else if (passFilter.equals ("관리자 승인")) {
                 List<TransPass> MyStandPass = transPassService.MyStandPass (user);
                 if (MyStandPass.isEmpty ()) {
                     model.addAttribute ("MyStandPass", null);
