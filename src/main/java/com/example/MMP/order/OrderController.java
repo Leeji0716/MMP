@@ -113,7 +113,9 @@ public class OrderController {
 
 
     @RequestMapping(value = "/success/{name}", method = RequestMethod.GET)
-    public String paymentRequest(HttpServletRequest request, Model model, @PathVariable("name") String name, @AuthenticationPrincipal UserDetail userDetail, @RequestParam(value = "coupon") Long coupon) throws Exception {
+    public String paymentRequest(@PathVariable("name") String name,
+                                 @AuthenticationPrincipal UserDetail userDetail,
+                                 @RequestParam(value = "coupon") Long coupon) throws Exception {
 
         SiteUser siteUser = siteUserService.findByUserName(userDetail.getUsername());
         PtPass ptPass = ptPassService.findByName(name);
@@ -123,9 +125,8 @@ public class OrderController {
             DayPass dayPass = dayPassService.findByName(name);
             UserDayPass userDayPass = userDayPassService.UserDayadd(dayPass.getPassName(), dayPass.getPassTitle(), dayPass.getPassPrice(), dayPass.getPassDays(), siteUser);
         }
-        if(coupon == 1){
+        if(coupon != 0){
             UserCoupon userCoupon = userCouponService.findById(coupon);
-
 
             siteUser.getUserCouponList().remove(userCoupon);
             siteUserService.save(siteUser);
