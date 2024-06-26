@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,6 +98,9 @@ public class ChallengeGroupController {
 
     @PostMapping("/{groupId}/leave")
     public ResponseEntity<Void> leaveGroup(@PathVariable Long groupId, @RequestParam Long userId) {
+        // 만약 리더가 탈퇴를 하려고 하면 그룹 삭제가 되는 기능 구현해야 돼 !
+
+
         groupService.removeGroup (groupId, userId);
         return ResponseEntity.ok ().build ();
     }
@@ -107,13 +111,14 @@ public class ChallengeGroupController {
         List<ChallengeGroup> groups = groupService.getGroupRanks ();
         // 로그인된 사용자 정보 추가
         String username = principal.getName ();
+        Long id = siteUserService.findByUserName (username).getId ();
         Optional<SiteUser> siteUsers = siteUserRepository.findByUserId (username);
         SiteUser user = siteUsers.orElse (null);
 
         List<Boolean> leaderStatus = new ArrayList<>();
 
         for (ChallengeGroup challengeGroup : groups) {
-            boolean isCurrentUserLeader = challengeGroup.getLeader() != null && challengeGroup.getLeader().getName ().equals(username);
+            boolean isCurrentUserLeader = challengeGroup.getLeader().getId () != null && challengeGroup.getLeader().getId ().equals(id);
             leaderStatus.add(isCurrentUserLeader);
         }
 
@@ -156,10 +161,16 @@ public class ChallengeGroupController {
                             .thenComparing (SiteUser::getUserId, Comparator.nullsLast (Comparator.naturalOrder ())))
                     .collect (Collectors.toList ());
 
-            // 해당 그룹의 출석 기록 조회
+            // 모든 출석 기록을 포함할 리스트 초기화
+            List<Attendance> allAttendances = new ArrayList<>();
 
-            List<Attendance> attendances = attendanceRepository.findByChallengeGroupId (groupId);
-            Map<Long, Long> totalTimeByMember = attendances.stream()
+            // 각 멤버별 출석 기록 조회 및 추가
+            for (SiteUser siteUser : sortedMembers) {
+                List<Attendance> attendances = attendanceRepository.findBySiteUserId(siteUser.getId());
+                allAttendances.addAll(attendances); // 조회된 출석 기록을 전체 리스트에 추가
+            }
+
+            Map<Long, Long> totalTimeByMember = allAttendances.stream()
                     .collect(Collectors.groupingBy(
                             attendance -> attendance.getSiteUser().getId(),
                             Collectors.summingLong(Attendance::getTotalTime)
@@ -202,10 +213,11 @@ public class ChallengeGroupController {
         return "chat/groupchat";
     }
 
+    @Transactional
     @PostMapping("/delete/{groupId}")
     public String challengeGroupDelete(@PathVariable Long groupId) {
         ChallengeGroup challengeGroup = groupService.getGroup (groupId);
-        groupService.deleteGroup (challengeGroup);
+        groupService.deleteGroup (challengeGroup.getId ());
         return "redirect:/groupChallenge/list";
     }
 

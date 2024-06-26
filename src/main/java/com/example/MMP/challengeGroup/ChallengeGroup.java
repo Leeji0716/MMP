@@ -41,7 +41,7 @@ public class ChallengeGroup {
 
     @ManyToMany
     @JoinTable(
-            name = "group_user",
+            name = "site_user_challenge_groups",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )

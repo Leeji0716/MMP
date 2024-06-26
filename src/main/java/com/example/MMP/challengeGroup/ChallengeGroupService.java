@@ -11,6 +11,7 @@ import com.example.MMP.siteuser.SiteUserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
@@ -83,6 +84,7 @@ public class ChallengeGroupService {
     }
 
     // 그룹 탈퇴 기능
+    @Transactional
     public void removeGroup(Long groupId, Long userId) {
         Optional<ChallengeGroup> groupOpt = groupRepository.findById (groupId);
         Optional<SiteUser> userOpt = userRepository.findById (userId);
@@ -91,7 +93,10 @@ public class ChallengeGroupService {
             ChallengeGroup group = groupOpt.get ();
             SiteUser user = userOpt.get ();
             group.getMembers ().remove (user);
+            user.getChallengeGroups ().remove (group);
+
             groupRepository.save (group);
+            userRepository.save (user);
 
 
             ChatRoom chatRoom = chatRoomService.findById(group.getChatRoom().getId());
@@ -139,56 +144,76 @@ public class ChallengeGroupService {
     // 모든 그룹의 총 운동 시간을 계산하고 순위를 매김
     public List<ChallengeGroup> getGroupRanks() {
         List<ChallengeGroup> challengeGroups = groupRepository.findAll();
+        Map<ChallengeGroup, Long> groupTotalTimes = new HashMap<>();
 
-        // 그룹별 총 운동 시간을 저장할 리스트
-        List<Long> groupTotalTimes = new ArrayList<>();
-
-        // 각 그룹의 총 운동 시간을 계산하여 리스트에 저장
         for (ChallengeGroup group : challengeGroups) {
-            List<Attendance> attendances = attendanceRepository.findByChallengeGroupId(group.getId());
             long groupTotalTime = 0;
-
-            for (Attendance attendance : attendances) {
-                groupTotalTime += attendance.getTotalTime();
+            for (SiteUser siteUser : group.getMembers()) {
+                List<Attendance> attendances = attendanceRepository.findBySiteUserId(siteUser.getId());
+                for (Attendance attendance : attendances) {
+                    groupTotalTime += attendance.getTotalTime();
+                }
             }
-//            Long calGroupTotalTime = groupTotalTime/(group.getMembers ().size ());
-            Long calGroupTotalTime = groupTotalTime;
-            groupTotalTimes.add(calGroupTotalTime);
+            groupTotalTimes.put(group, groupTotalTime);
         }
 
-        // 그룹과 총 운동 시간을 기준으로 그룹을 내림차순으로 정렬
+        // 그룹을 총 운동 시간 기준으로 내림차순 정렬
         List<ChallengeGroup> sortedGroups = new ArrayList<>(challengeGroups);
-        sortedGroups.sort((g1, g2) -> Long.compare(
-                groupTotalTimes.get(challengeGroups.indexOf(g2)),
-                groupTotalTimes.get(challengeGroups.indexOf(g1))
-        ));
+        sortedGroups.sort((g1, g2) -> Long.compare(groupTotalTimes.get(g2), groupTotalTimes.get(g1)));
 
-        // 동일한 토탈 시간에 동일 순위 부여
+        // 순위 매기기
         int rank = 1;
-        long previousTime = -1;  // 이전 그룹의 총 운동 시간
-        int sameRankCount = 0;  // 동일한 순위를 가진 그룹의 수
+        long previousTime = -1;
+        int sameRankCount = 0; // 이전 그룹과 동일 순위를 가진 그룹의 수를 추적
 
         for (int i = 0; i < sortedGroups.size(); i++) {
             ChallengeGroup group = sortedGroups.get(i);
-            long currentTime = groupTotalTimes.get(challengeGroups.indexOf(group));
+            long currentTime = groupTotalTimes.get(group);
 
-            if (currentTime == previousTime) {
-                group.setRank(rank);
-                sameRankCount++;
-            } else {
-                rank += sameRankCount;
-                sameRankCount = 1;
-                group.setRank(rank);
+            if (currentTime != previousTime) { // 이전 그룹과 총 운동 시간이 다른 경우
+                rank += sameRankCount; // 동일 순위 그룹 수만큼 순위 증가
+                group.setRank(rank); // 현재 그룹에 새 순위 부여
+                previousTime = currentTime; // 이전 시간 업데이트
+                sameRankCount = 1; // 동일 순위 그룹 수 재설정
+            } else { // 이전 그룹과 총 운동 시간이 같은 경우
+                group.setRank(rank); // 이전 그룹과 동일한 순위 부여
+                sameRankCount++; // 동일 순위 그룹 수 증가
             }
-            previousTime = currentTime;
         }
 
-        // 정렬된 그룹 리스트를 반환하거나 필요한 경우 저장
-        return sortedGroups; // 순위 매긴 그룹의 수를 반환 (필요시)
+        if (sameRankCount > 1) { // 마지막 그룹이 동일 순위를 가진 경우
+            rank += sameRankCount - 1;
+        }
+
+        return sortedGroups; // 순위 매긴 그룹 리스트 반환
     }
 
-    public void deleteGroup(ChallengeGroup challengeGroup) {
-        groupRepository.delete (challengeGroup);
+    public void deleteGroup(Long groupId) {
+        ChallengeGroup group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalStateException("해당 그룹을 찾을 수 없습니다."));
+
+        List<SiteUser> groupMembers = userRepository.findAllByChallengeGroupId(groupId);
+        // 그룹에 속한 모든 멤버를 제거
+
+
+        for (SiteUser member : group.getMembers()) {
+            member.getChallengeGroups().remove(group);
+//            userRepository.save(member); // 멤버 업데이트
+        }
+
+        group.getMembers().clear(); // 그룹의 멤버 목록 클리어
+
+        // 그룹과 연결된 채팅방에서도 모든 사용자 제거
+        ChatRoom chatRoom = group.getChatRoom();
+        if (chatRoom != null) {
+            chatRoom.getUserList().clear(); // 채팅방의 모든 사용자 제거
+            chatRoomService.save(chatRoom); // 채팅방 저장
+        }
+//
+//        groupRepository.save(group); // 변경 사항을 데이터베이스에 반영
+
+        // 그룹 삭제
+        groupRepository.delete(group);
     }
 
     public ChallengeGroup findByName(String cName) {

@@ -120,7 +120,7 @@ public class SiteUser {
 
     private LocalDate createDate;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "members")
     @JsonManagedReference
     private Set<ChallengeGroup> challengeGroups = new LinkedHashSet<>();
 
