@@ -27,8 +27,8 @@
                     <td th:text="${pass.sendUser.name}"></td>
                     <td th:text="${pass.acceptUser.name}"></td>
                     <td>
-                        <a th:href="@{|/totalPass/admin/agree/${pass.id}|}" class="btn">수락</a>
-                        <a th:href="@{|/totalPass/admin/reject/${pass.id}|}" class="btn">거절</a>
+                        <a th:href="@{|/totalPass/admin/agree/${pass.id}|}" class="btn btn-primary">수락</a>
+                        <a th:href="@{|/totalPass/admin/reject/${pass.id}|}" class="btn btn-error">거절</a>
                     </td>
                 </tr>
             </tbody>

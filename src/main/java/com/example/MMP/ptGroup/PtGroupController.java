@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 
@@ -27,29 +28,38 @@ public class PtGroupController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-
-    @GetMapping("/join")
-    public String joinUser(@AuthenticationPrincipal UserDetail userDetail){
-        boolean isTrainer = userDetail.getAuthorities().stream()
-                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TRAINER"));
-        if(!isTrainer)
-            return "redirect:/";
-
-        return "ptGroup/ptgroupjoin";
-    }
-
     @PostMapping("/join")
-    public String joinUser(@AuthenticationPrincipal UserDetail userDetail, @RequestParam("number")String number, Model model){
+    public String joinUser(@AuthenticationPrincipal UserDetail userDetail, @RequestParam("number") String number, RedirectAttributes redirectAttributes) {
         boolean isTrainer = userDetail.getAuthorities().stream()
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_TRAINER"));
-        if(!isTrainer)
-            return "redirect:/";
 
-        SiteUser siteUser = siteUserService.getUser(userDetail.getUsername());
-        SiteUser member = siteUserService.getUser(number);
+        if (!isTrainer) {
+            redirectAttributes.addFlashAttribute("error", "트레이너가 아닙니다.");
+            return "redirect:/user/userList";
+        }
 
-        PtGroup ptGroup1 = ptGroupService.ifJoin(siteUser,member);
-        if(ptGroup1 == null){
+        if (number == null || number.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "회원번호를 입력해주세요.");
+            return "redirect:/user/userList";
+        }
+
+        SiteUser siteUser;
+        SiteUser member;
+        try {
+            siteUser = siteUserService.getUser(userDetail.getUsername());
+            member = siteUserService.getUser(number);
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "유효하지 않은 회원번호입니다.");
+            return "redirect:/user/userList";
+        }
+
+        if (member == null) {
+            redirectAttributes.addFlashAttribute("error", "존재하지 않는 회원번호입니다.");
+            return "redirect:/user/userList";
+        }
+
+        PtGroup ptGroup1 = ptGroupService.ifJoin(siteUser, member);
+        if (ptGroup1 == null) {
             PtGroup ptGroup = ptGroupService.findByTrainer(siteUser);
             ptGroup.getMembers().add(member);
             ptGroupService.save(ptGroup);
@@ -64,14 +74,13 @@ public class PtGroupController {
             siteUser.getChatRoomList().add(chatRoom);
             member.getChatRoomList().add(chatRoom);
 
-            chatMessageService.firstChatMessage(siteUser,chatRoom);
+            chatMessageService.firstChatMessage(siteUser, chatRoom);
 
             siteUserService.save(member);
             return "redirect:/";
-        }else{
-
-            model.addAttribute("error","이미 등록된 회원입니다.");
-            return "ptGroup/ptgroupjoin";
+        } else {
+            redirectAttributes.addFlashAttribute("error", "이미 등록된 회원입니다.");
+            return "redirect:/user/userList";
         }
     }
 }

@@ -1,20 +1,7 @@
 <html layout:decorate="~{layout}">
-
-<style>
-    .flex-row {
-       display: flex;
-       justify-content: flex-end; /* 요소들을 컨테이너의 오른쪽 끝으로 밀어냅니다. */
-       width: 100%; /* 이를 통해 flex 컨테이너가 부모의 전체 너비를 사용하게 합니다. */
-   }
-       .justify-end {
-           display: flex;
-           justify-content: flex-end; /* 요소들을 컨테이너의 오른쪽 끝으로 밀어냅니다. */
-           width: 100%; /* 이를 통해 이 div도 부모의 전체 너비를 사용하게 합니다. */
-       }
-</style>
 <div layout:fragment="content" class="w-full text-white">
     <title th:text="${group.name} + ' 그룹'">그룹 디테일</title>
-    <main class="container mt-10 mx-auto p-4 text-white" style="border: 1px solid #ccc;">
+    <main class="container mt-10 mx-auto p-4 text-white border border-gray-300">
         <div class="mb-10">
             <div class="flex w-full justify-center">
 
@@ -24,31 +11,27 @@
 
                 <div class="divider divider-horizontal"></div>
 
-                <div class="flex flex-row w-full" style="justify-content: flex-end;">
+                <div class="flex justify-end w-full">
                     <a href="/groupChallenge/list">
-                        <img src="https://i.imgur.com/sbW4NR5.png"
-                             style="width: 30px; height: 30px; margin-bottom: 5px; margin-right: 5px"/>
+                        <img src="https://i.imgur.com/sbW4NR5.png" class="w-[30px] h-[30px] mr-1" />
                     </a>
                     <a th:if="${isLeader}" th:href="@{/groupChallenge/edit/{groupId}(groupId=${group.id})}">
-                        <img src="https://i.imgur.com/0NUoX8j.png"
-                             style="width: 30px; height: 30px; margin-bottom: 5px; margin-right: 5px"/>
+                        <img src="https://i.imgur.com/0NUoX8j.png" class="w-[30px] h-[30px] mr-1" />
                     </a>
                     <form th:if="${isLeader}" th:action="@{/groupChallenge/delete/{GroupId}(groupId=${group.id})}"
-                          method="post">
-                        <button type="submit" style="padding: 0; margin: 0; border: none; background: none;">
-                            <img src="https://i.imgur.com/nEquWgy.png" style="width: 30px; margin-bottom: 5px; height: 30px;"/>
+                        method="post">
+                        <button type="submit">
+                            <img src="https://i.imgur.com/nEquWgy.png" class="w-[30px] h-[30px] mr-1" />
                         </button>
                     </form>
                     <a th:href="@{|/groupChallenge/groupTalk/${group.id}|}">
-                        <img src="https://i.imgur.com/teeQHnJ.png"
-                             style="width: 30px; height: 30px; margin-bottom: 5px; margin-right: 5px"/>
+                        <img src="https://i.imgur.com/teeQHnJ.png" class="w-[30px] h-[30px] mr-1" />
                     </a>
                 </div>
 
             </div>
             <hr>
         </div>
-
 
         <div class="flex w-full">
             <div class="flex flex-col w-full">
@@ -68,7 +51,7 @@
                         </div>
                         <div class="stat-title font-semibold mb-2">그룹 시작일</div>
                         <div class="stat-value" id="dDay"></div>
-                        <div class="stat-desc" th:text="${group.createDate}">↗︎ 400 (22%)</div>
+                        <div class="stat-desc" th:text="${#temporals.format(group.createDate, 'yyyy-MM-dd a HH:mm')}"></div>
                     </div>
                     <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
                         <div class="stat-figure text-secondary">
@@ -84,11 +67,12 @@
                 </br>
                 </br>
                 <h2 class="text-2xl font-semibold mb-2">태그 목록</h2>
-                <ul class="list-none pl-5 flex flex-row flex-wrap">
+                <ul class="list-none pl-5 flex justify-end w-full flex-wrap">
                     <li th:each="groupTag : ${group.groupTagList}" class="mr-4 mb-2">
                         <span class="badge badge-ghost badge-lm">#<span th:text="${groupTag.tag.name}"></span></span>
-                        <form th:action="@{/groupChallenge/{groupId}/tags/{groupTagId}/delete(groupId=${group.id}, groupTagId=${groupTag.id})}"
-                              method="post" class="inline">
+                        <form
+                            th:action="@{/groupChallenge/{groupId}/tags/{groupTagId}/delete(groupId=${group.id}, groupTagId=${groupTag.id})}"
+                            method="post" class="inline">
                             <button type="submit" class="btn btn-error btn-xs">삭제</button>
                         </form>
                     </li>
@@ -96,13 +80,12 @@
                 <a href="#my_modal_8" class="btn">태그추가</a>
 
                 <!-- Put this part before </body> tag -->
-                <div class="modal" role="dialog" id="my_modal_8" style="overflow: hidden;">
+                <div class="modal overflow-hidden" role="dialog" id="my_modal_8">
                     <div class="modal-box">
                         <h3 class="font-bold text-lg text-black">태그 추가</h3>
                         <form th:action="@{/groupChallenge/{groupId}/tags/create(groupId=${group.id})}" method="post">
                             <input type="text" id="tagInput" name="name"
-                                   class="input text-black input-bordered w-full mb-2"
-                                   placeholder="태그 이름">
+                                class="input text-black input-bordered w-full mb-2" placeholder="태그 이름">
                             <button type="submit" class="btn btn-primary w-full text-black">태그 추가</button>
                         </form>
                         <h3 class="font-bold text-lg mt-4 text-black">태그 목록</h3>
@@ -124,33 +107,35 @@
                 <h2 class="text-2xl font-semibold mb-2">멤버 구성</h2>
                 <table class="table w-full">
                     <thead>
-                    <tr>
-                        <th class="text-white">역할</th>
-                        <th class="text-white">멤버 이름</th>
-                        <th class="text-white">멤버 가입일</th>
-                        <th class="text-white">오늘의 운동 시간</th>
-                        <!-- 조건부로 리더 권한 위임 칼럼을 추가 -->
-                        <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
-                    </tr>
+                        <tr>
+                            <th class="text-white">역할</th>
+                            <th class="text-white">멤버 이름</th>
+                            <th class="text-white">멤버 가입일</th>
+                            <th class="text-white">오늘의 운동 시간</th>
+                            <!-- 조건부로 리더 권한 위임 칼럼을 추가 -->
+                            <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="member : ${sortedMembers}">
-                        <td>
-                            <img th:if="${member.id == group.leader.id}" src="https://i.imgur.com/MFN5KfE.png" style="width: 30px; height: 30px;"/>
-                            <img th:unless="${member.id == group.leader.id}" src="https://i.imgur.com/psxIWLS.png" style="width: 30px; height: 30px;"/>
-                        </td>
-                        <td th:text="${member.name}">Name Placeholder</td>
-                        <td th:text="${member.createDate}">Date Placeholder</td>
-                        <td th:text="${totalTimeByMember[member.id]}">Attendance Placeholder</td>
-                        <td th:if="${isLeader}">
-                            <form th:action="@{/groupChallenge/changeLeader}" method="post">
-                                <input type="hidden" name="groupId" th:value="${group.id}"/>
-                                <input type="hidden" name="newLeaderId" th:value="${member.id}"/>
-                                <button type="submit" class="btn btn-neutral">권한 위임</button>
-                            </form>
-                        </td>
-                    </tr>
-                    </tr>
+                        <tr th:each="member : ${sortedMembers}">
+                            <td>
+                                <img th:if="${member.id == group.leader.id}" src="https://i.imgur.com/MFN5KfE.png"
+                                    class="w-[30px] h-[30px]" />
+                                <img th:unless="${member.id == group.leader.id}" src="https://i.imgur.com/psxIWLS.png"
+                                    class="w-[30px] h-[30px]" />
+                            </td>
+                            <td th:text="${member.name}">Name Placeholder</td>
+                            <td th:text="${member.createDate}">Date Placeholder</td>
+                            <td th:text="${totalTimeByMember[member.id]}">Attendance Placeholder</td>
+                            <td th:if="${isLeader}">
+                                <form th:action="@{/groupChallenge/changeLeader}" method="post">
+                                    <input type="hidden" name="groupId" th:value="${group.id}" />
+                                    <input type="hidden" name="newLeaderId" th:value="${member.id}" />
+                                    <button type="submit" class="btn btn-neutral">권한 위임</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -158,18 +143,18 @@
     </main>
     </br>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-             function calculateDday(createDate) {
-                 const currentDate = new Date();
-                 const groupCreateDate = new Date(createDate);
-                 const timeDiff = groupCreateDate - currentDate;
-                 const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                 return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff)+1}`;
-             }
+        document.addEventListener('DOMContentLoaded', function () {
+            function calculateDday(createDate) {
+                const currentDate = new Date();
+                const groupCreateDate = new Date(createDate);
+                const timeDiff = groupCreateDate - currentDate;
+                const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                return dayDiff > 0 ? `D-${dayDiff}` : `D+${Math.abs(dayDiff) + 1}`;
+            }
 
-             const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]'; // Thymeleaf 문법으로 서버 데이터를 삽입합니다.
-             document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
-         });
+            const groupCreateDate = /*[[${group.createDate}]]*/ '[[${group.createDate}]]'; // Thymeleaf 문법으로 서버 데이터를 삽입합니다.
+            document.getElementById('dDay').innerText = calculateDday(groupCreateDate);
+        });
     </script>
 
     <script th:inline="javascript">
@@ -177,14 +162,15 @@
             document.getElementById('tagInput').value = tagName;
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.badge[data-tag-name]').forEach(function(element) {
-                element.addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.badge[data-tag-name]').forEach(function (element) {
+                element.addEventListener('click', function () {
                     setTagName(this.getAttribute('data-tag-name'));
                 });
             });
         });
     </script>
-    </body>
+
 </div>
+
 </html>

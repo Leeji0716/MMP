@@ -7,10 +7,11 @@
     <style>
         :root {
             --custom-scale: 0.70;
+            --custom-translate: -10%;
         }
 
         .custom-scale {
-            transform: scale(var(--custom-scale));
+            transform: scale(var(--custom-scale)) translateY(var(--custom-translate));
         }
 
         .scroll-button {
@@ -57,79 +58,57 @@
             right: -40px;
         }
 
-        .card-container {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            overflow: hidden;
-            margin-right: 10px;
-            /* 변경된 값 */
-        }
-
         .card {
             width: 500px;
             flex: 0 0 auto;
             margin-right: 20px;
         }
 
-        .card-container2 {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            overflow: hidden;
-            margin-right: 10px;
-            /* 변경된 값 */
-        }
     </style>
 </head>
-
-<body>
-    <nav th:replace="~{navbar :: navbarFragment}"></nav>
-    <div layout:fragment="content" class="w-full mx-auto h-screen relative overflow-hidden">
-
-        <div class="custom-scale">
-            <!-- PT Pass Section -->
-            <div th:if="${#lists.size(ptPassList) != 0}">
-                <button class="scroll-button text-4xl" id="ptScrollLeftButton">&#8249;</button>
-                <button class="scroll-button text-4xl" id="ptScrollRightButton">&#8250;</button>
-                <div class="card-container">
-                    <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
-                        <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
-                        <div class="card-body">
-                            <h2 class="card-title" th:text="${pt.passName}"></h2>
-                            <p th:text="${pt.passTitle}"></p>
-                            <p th:text="'횟수 : '+${pt.passCount}"></p>
-                            <p th:text="'가격 : '+${pt.passPrice}"></p>
-                            <div class="card-actions justify-end">
-                                <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
-                                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-                                    <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
-                                    <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
-                                </div>
+<div layout:fragment="content" class="w-full h-[780px]">
+    <div class="custom-scale">
+        <!-- PT Pass Section -->
+        <div th:if="${#lists.size(ptPassList) != 0}">
+            <button class="scroll-button text-4xl" id="ptScrollLeftButton">&#8249;</button>
+            <button class="scroll-button text-4xl" id="ptScrollRightButton">&#8250;</button>
+            <div class="card-container">
+                <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="pt:${ptPassList}">
+                    <figure><img src="https://i.imgur.com/kW3S5se.png" alt="PT" /></figure>
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${pt.passName}"></h2>
+                        <p th:text="${pt.passTitle}"></p>
+                        <p th:text="'횟수 : '+${pt.passCount}"></p>
+                        <p th:text="'가격 : '+${pt.passPrice}"></p>
+                        <div class="card-actions justify-end">
+                            <a th:href="@{|/checkout/${pt.passName}|}" class="btn btn-primary">Buy Now</a>
+                            <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                                <a th:href="@{|/pt/update/${pt.passId}|}" class="btn">수정</a>
+                                <a th:href="@{|/pt/delete/${pt.passId}|}" class="btn">삭제</a>
                             </div>
                         </div>
-                        
                     </div>
+                    
                 </div>
             </div>
-            <!-- Day Pass Section -->
-            <div th:if="${#lists.size(dayPassList) != 0}">
-                <button class="scroll-button2 text-4xl" id="dayScrollLeftButton">&#8249;</button>
-                <button class="scroll-button2 text-4xl" id="dayScrollRightButton">&#8250;</button>
-                <div class="card-container2">
-                    <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
-                        <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
-                        <div class="card-body">
-                            <h2 class="card-title" th:text="${day.passName}"></h2>
-                            <p th:text="${day.passTitle}"></p>
-                            <p th:text="${day.passDays}+'일'"></p>
-                            <p th:text="'가격 : '+${day.passPrice}"></p>
-                            <div class="card-actions justify-end">
-                                <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">Buy Now</a>
-                                <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
-                                    <a th:href="@{|/day/update/${day.passId}|}" class="btn">수정</a>
-                                    <a th:href="@{|/day/delete/${day.passId}|}" class="btn">삭제</a>
-                                </div>
+        </div>
+        <!-- Day Pass Section -->
+        <div th:if="${#lists.size(dayPassList) != 0}">
+            <button class="scroll-button2 text-4xl" id="dayScrollLeftButton">&#8249;</button>
+            <button class="scroll-button2 text-4xl" id="dayScrollRightButton">&#8250;</button>
+            <div class="card-container2">
+                <div class="card bg-base-100 shadow-xl m-2 pt-2.5 text-black" th:each="day:${dayPassList}">
+                    <figure><img src="https://i.imgur.com/VFPjR6P.png" alt="Day" /></figure>
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${day.passName}"></h2>
+                        <p th:text="${day.passTitle}"></p>
+                        <p th:text="${day.passDays}+'일'"></p>
+                        <p th:text="'가격 : '+${day.passPrice}"></p>
+                        <div class="card-actions justify-end">
+                            <a th:href="@{|/checkout/${day.passName}|}" class="btn btn-primary">Buy Now</a>
+                            <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}">
+                                <a th:href="@{|/day/update/${day.passId}|}" class="btn">수정</a>
+                                <a th:href="@{|/day/delete/${day.passId}|}" class="btn">삭제</a>
                             </div>
                         </div>
                     </div>
@@ -137,44 +116,49 @@
             </div>
         </div>
     </div>
+    <script>
+        // PT Pass 스크롤링 함수
+        function ptScrollLeft() {
+            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        }
+        function ptScrollRight() {
+            document.querySelector('.card-container:nth-of-type(1)').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }
+        // Day Pass 스크롤링 함수
+        function dayScrollLeft() {
+            document.querySelector('.card-container2').scrollBy({
+                left: -200,
+                behavior: 'smooth'
+            });
+        }
+        function dayScrollRight() {
+            document.querySelector('.card-container2').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }
 
-    <!-- 추가 스크립트 -->
-    <div layout:fragment="script">
-        <script>
-            // PT Pass 스크롤링 함수
-            function ptScrollLeft() {
-                document.querySelector('.card-container:nth-of-type(1)').scrollBy({
-                    left: -200,
-                    behavior: 'smooth'
-                });
-            }
-            function ptScrollRight() {
-                document.querySelector('.card-container:nth-of-type(1)').scrollBy({
-                    left: 200,
-                    behavior: 'smooth'
-                });
-            }
-            // Day Pass 스크롤링 함수
-            function dayScrollLeft() {
-                document.querySelector('.card-container2').scrollBy({
-                    left: -200,
-                    behavior: 'smooth'
-                });
-            }
-            function dayScrollRight() {
-                document.querySelector('.card-container2').scrollBy({
-                    left: 200,
-                    behavior: 'smooth'
-                });
-            }
+        // 이벤트 리스너 추가
+        document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
+        document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
+        document.getElementById('dayScrollLeftButton').addEventListener('click', dayScrollLeft);
+        document.getElementById('dayScrollRightButton').addEventListener('click', dayScrollRight);
+    </script>
+</div>
 
-            // 이벤트 리스너 추가
-            document.getElementById('ptScrollLeftButton').addEventListener('click', ptScrollLeft);
-            document.getElementById('ptScrollRightButton').addEventListener('click', ptScrollRight);
-            document.getElementById('dayScrollLeftButton').addEventListener('click', dayScrollLeft);
-            document.getElementById('dayScrollRightButton').addEventListener('click', dayScrollRight);
-        </script>
-    </div>
-</body>
+<!-- 추가 스크립트 -->
+<!-- <div layout:fragment="script">
+    
+</div>
+<body>
+    <nav th:replace="~{navbar :: navbarFragment}"></nav>
+    
+</body> -->
 
 </html>

@@ -60,10 +60,9 @@
 </head>
 
 <body>
-    <div layout:fragment="content" class="content">
+    <div layout:fragment="content" class="content w-full">
         <div class="flex justify-center w-full">
-            <div style="width: 60%;" class="flex flex-col">
-
+            <div class="flex flex-col w-[60%]">
                 <div class="flex justify-center w-full">
                     <p
                         style="font-size: 1.5rem; color: white; font-weight: bold; text-align: center; margin: 10px 0; margin-bottom:0px">
@@ -111,14 +110,14 @@
             <a class="btn btn-error text-white justify-start" href="/user/commandcenter">관리자 페이지</a>
             <a class="btn btn-error text-white justify-start" href="/user/adminSignup">관리자 회원가입</a>
         </div>
-        <div class="main-content w-[100%]">
+        <div class="main-content w-full">
             <div style="display: inline-block; vertical-align: top;" class="w-[40%]">
                 <div id='calendar' class="mt-5 h-[700px] w-[700px]"></div>
             </div>
             <div class="sidebar">
                 <a href="#" class="btn w-[20%]" id="myScheduleButton">My Schedule</a>
                 <div class="divider"></div>
-                <div id="lessonListContainer" class="mt-5 h-[600px] w-[900px]"></div>
+                <div id="lessonListContainer" class="mt-5 h-[600px] w-[850px]"></div>
             </div>
         </div>
 
@@ -296,7 +295,7 @@
                     lessonDiv.appendChild(trainerDiv);
 
                     const lessonInfoDiv = document.createElement('div');
-                    lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[80%]', 'flex', 'text-black', 'font-bold', 'items-center', 'mx-2');
+                    lessonInfoDiv.classList.add('h-full', 'bg-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[75%]', 'flex', 'text-black', 'font-bold', 'items-center', 'mx-2');
 
                     // Lesson 이름
                     const lessonNameDivWrapper = document.createElement('div');
@@ -335,7 +334,7 @@
                     lessonDiv.appendChild(lessonInfoDiv);
 
                     const attendanceDiv = document.createElement('div');
-                    attendanceDiv.classList.add('h-full', 'bg-white', 'text-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center');
+                    attendanceDiv.classList.add('h-full', 'bg-white', 'text-white', 'rounded-lg', 'border', 'border-gray-300', 'w-[15%]', 'flex', 'justify-center', 'items-center');
                     const attendanceButton = document.createElement('button');
                     attendanceButton.classList.add('btn', 'w-full', 'h-full');
                     attendanceButton.textContent = `${lesson.attendanceList.length}/${lesson.headCount}`;

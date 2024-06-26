@@ -1,39 +1,43 @@
+<!--사용 안하는 폼인 것 같음..-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Create Exercise Time Challenge</title>
 </head>
+
 <body>
-<h1>Create Exercise Time Challenge</h1>
-<form th:action="@{/challenge/create/exerciseTime}" th:object="${challengeForm}" method="post">
-    <div>
-        <label for="name">Name:</label>
-        <input type="text" id="name" th:field="*{name}" required>
-    </div>
-    <div>
-        <label for="description">Description:</label>
-        <textarea id="description" th:field="*{description}" required></textarea>
-    </div>
-    <div>
-        <label for="openDate">Open Date:</label>
-        <input type="datetime-local" id="openDate" th:field="*{openDate}" required>
-    </div>
-    <div>
-        <label for="closeDate">Close Date:</label>
-        <input type="datetime-local" id="closeDate" th:field="*{closeDate}" required>
-    </div>
-    <div>
-        <label for="requiredPoint">Required Points:</label>
-        <input type="number" id="requiredPoint" th:field="*{requiredPoint}" required>
-    </div>
-    <div>
-        <label for="targetExerciseMinutes">Target Exercise Minutes:</label>
-        <input type="number" id="targetExerciseMinutes" th:field="*{targetExerciseMinutes}" required>
-    </div>
-    <div>
-        <button type="submit">Create Challenge</button>
-    </div>
-</form>
+    <h1>Create Exercise Time Challenge</h1>
+    <form th:action="@{/challenge/create/exerciseTime}" th:object="${challengeForm}" method="post">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" th:field="*{name}" required>
+        </div>
+        <div>
+            <label for="description">Description:</label>
+            <textarea id="description" th:field="*{description}" required></textarea>
+        </div>
+        <div>
+            <label for="openDate">Open Date:</label>
+            <input type="datetime-local" id="openDate" th:field="*{openDate}" required>
+        </div>
+        <div>
+            <label for="closeDate">Close Date:</label>
+            <input type="datetime-local" id="closeDate" th:field="*{closeDate}" required>
+        </div>
+        <div>
+            <label for="requiredPoint">Required Points:</label>
+            <input type="number" id="requiredPoint" th:field="*{requiredPoint}" required>
+        </div>
+        <div>
+            <label for="targetExerciseMinutes">Target Exercise Minutes:</label>
+            <input type="number" id="targetExerciseMinutes" th:field="*{targetExerciseMinutes}" required>
+        </div>
+        <div>
+            <button type="submit">Create Challenge</button>
+        </div>
+    </form>
 </body>
+
 </html>

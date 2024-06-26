@@ -48,11 +48,10 @@ public class ChatRoomService {
 
     @Transactional
     public Map<String, List<ChatRoomDto>> findChat(SiteUser siteUser) {
-        List<ChatRoom> chatRoomList = siteUser.getChatRoomList();
+        List<ChatRoom> chatRoomList = siteUser.getChatRoomList();//지멋대론데 순서는 고정이야.
         List<ChatRoomDto> chatRoomOneList = new ArrayList<>();
         List<ChatRoomDto> chatRoomManyList = new ArrayList<>();
         Map<String, List<ChatRoomDto>> chatMap = new HashMap<>();
-        int groupCnt = 0;
         for (ChatRoom chatRoom : chatRoomList) {
             int cnt = 0;
             ChatRoomDto chatRoomDto = new ChatRoomDto();
@@ -63,10 +62,14 @@ public class ChatRoomService {
 
 
             if (chatMessage.getSort().equals("many")) {
-                List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());
-                chatRoomDto.setYou(challengeGroupList.get(groupCnt).getName());
-                chatRoomDto.setYouId(challengeGroupList.get(groupCnt).getId());
-                chatRoomDto.setSort(chatMessage.getSort());
+                List<ChallengeGroup> challengeGroupList = new ArrayList<>(siteUser.getChallengeGroups());//지멋대론데 순서도 계속 바뀌어.
+                for(ChallengeGroup challengeGroup : challengeGroupList) {
+                    if(Objects.equals(challengeGroup.getChatRoom().getId(), chatMessage.getChatRoom().getId())) {
+                        chatRoomDto.setYou(challengeGroup.getName());
+                        chatRoomDto.setYouId(challengeGroup.getId());
+                        chatRoomDto.setSort(chatMessage.getSort());
+                    }
+                }
             } else {
                 if (chatRoom.getUserList().size() > 1) {
                     for (SiteUser siteUser1 : chatRoom.getUserList()) {
@@ -90,7 +93,6 @@ public class ChatRoomService {
             chatRoomDto.setAlarmCnt(cnt);
             if (chatRoomDto.getYou() != null && chatRoomDto.getYouId() != null)
                 if(chatRoomDto.getSort().equals("many")) {
-                    groupCnt++;
                     chatRoomManyList.add(chatRoomDto);
                 }else{
                     chatRoomOneList.add(chatRoomDto);

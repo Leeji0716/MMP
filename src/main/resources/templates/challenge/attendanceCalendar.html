@@ -1,168 +1,70 @@
-<!DOCTYPE html>
 <html layout:decorate="~{layout}">
-<div layout:fragment="content">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<div layout:fragment="content" class="w-full h-[880px] overflow-y-auto">
     <title>출석 이벤트</title>
-    <style>
-        .calendar-container {
-            display: flex;
-            justify-content: center;
-        }
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-             border-right: 1px solid white; /* 오른쪽 테두리 추가 */
-            border-bottom: 1px solid white; /* 아래쪽 테두리 추가 */
-        }
-        .day, .weekday {
-            text-align: center;
-            position: relative;
-            width: 90px;
-            height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-left: 1px solid white;
-            border-right: 1px solid white; /* 오른쪽 테두리 추가 */
-            border-bottom: 1px solid white; /* 아래쪽 테두리 추가 */
-        }
-        .weekday {
-            background-color: white;
-            color: black;
-            font-weight: bold;
-            padding: 5px 0; /* 위아래 패딩 줄이기 */
-            margin: 0; /* 여백 없애기 */
-        }
-        .stamp {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 24px;
-        }
-        .attendance-button, .enter-button, .exit-button {
-            display: block;
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: white;
-            color: black;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-
-}
-        }
-        .flex {
-            display: flex;
-            justify-content: center; /* 가운데 정렬 */
-            gap: 10px; /* 버튼 사이의 간격 */
-        }
-        .image-container {
-            display: flex; /* Flexbox를 사용하여 가운데 정렬 */
-            justify-content: center; /* 가운데 정렬 */
-            margin-top: 20px;
-        }
-        .image-container img {
-            max-width: 100%;
-            height: auto;
-        }
-        .scrollable-content {
-            max-height: 100vh; /* 최대 높이를 뷰포트 높이의 80%로 설정 */
-            overflow-y: auto; /* 세로 스크롤 활성화 */
-            padding: 20px;
-        }
-          .dropdown {
-        position: relative;
-        display: inline-block;
-    }
-
-    .dropdown-toggle {
-        cursor: pointer;
-    }
-
-    .dropdown-menu {
-        display: none;
-        position: absolute;
-        background-color: white;
-        color:black;
-        min-width: 300px;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-    }
-
-    .dropdown:hover .dropdown-menu {
-        display: block;
-    }
-    </style>
-    <div class="scrollable-content">
-        <div class="image-container">
-            <img src="https://i.imgur.com/p0VMwSS.png" alt="출석 이벤트 이미지">
-        </div>
-        <br>
-        <br>
-        <div class="flex w-full justify-center">
-            <div class="flex flex-col">
-                <div class="calendar-container">
-                    <div id="calendar" class="calendar"></div>
-                </div>
-            </div>
-            <div class="divider divider-horizontal"></div>
-            <div class="mockup-window border border-base-300">
-                <div class="flex flex-col justify-center px-4 py-16 border-t border-base-300">
-                    <div>
-                        <img src="https://i.imgur.com/SgKEhXW.png">
-                    </div>
-                    <br>
-                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
-                        <p>출석한 횟수 : <span id="distinctAttendanceCount" th:text="${distinctAttendanceCount}"></span>회</p>
-                    </div>
-                    <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
-                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
-                        <p>총 운동 시간 : <span id="totalExerciseTime" th:text="${totalExerciseTime}"></span>분</p>
-                    </div>
-                    <div class="flex justify-center">
-                        <button id="attendanceButton" class="attendance-button">출석하기</button>
-                        <button id="enterExitButton" class="enter-button">입실하기</button>
-                    </div>
-
-                    <br>
-                    <div style="text-align: center; font-weight: bold; font-size: 20px;">
-                        <p>운동 기록</p>
-                    </div>
-                    <div class="times-container" id="timesContainer">
-                        <ul>
-                            <li th:each="attendance, stat : ${attendanceList}">
-                                <!-- 날짜가 변경될 때만 출력 -->
-                                <div th:if="${stat.index == 0} or ${attendanceList[stat.index - 1].date} != ${attendance.date}"
-                                     class="dropdown">
-                                    <p class="text-black font-bold inline bg-white px-2 dropdown-toggle"><span
-                                            th:text="${#temporals.format(attendance.date, 'yyyy-MM-dd')}"></span></p>
-                                    <ul class="dropdown-menu">
-                                        <li th:each="item : ${attendanceList}">
-                                            <div th:if="${item.date} == ${attendance.date}">
-                                                <p>시작 시간 : <span
-                                                        th:text="${#temporals.format(item.startTime, 'HH : mm')}"></span>
-                                                    ~ 종료 시간 : <span
-                                                            th:text="${#temporals.format(item.endTime, 'HH : mm')}"></span>
-                                                </p>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
+    <div class="flex justify-center">
+        <img src="https://i.imgur.com/p0VMwSS.png" alt="출석 이벤트 이미지">
     </div>
+    <br>
+    <br>
+    <div class="flex gap-10 w-full justify-center">
+        <div class="flex flex-col gap-10 justify-center">
+            <div class="flex gap-10 justify-center">
+                <div id="calendar" class="grid grid-cols-7 border-r-2 border-white border-b-2"></div>
+            </div>
+        </div>
+        <div class="divider divider-horizontal"></div>
+        <div class="mockup-window border border-base-300">
+            <div class="flex flex-col gap-2 m-2 justify-center px-4 py-16 border-t border-base-300">
+                <div>
+                    <img src="https://i.imgur.com/SgKEhXW.png">
+                </div>
+                <br>
+                <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                    <p>출석한 횟수 : <span id="distinctAttendanceCount" th:text="${distinctAttendanceCount}"></span>회</p>
+                </div>
+                <p id="attendanceRate" style="text-align: center; font-weight: bold; font-size: 20px;"></p>
+                <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                    <p>총 운동 시간 : <span id="totalExerciseTime" th:text="${totalExerciseTime}"></span>분</p>
+                </div>
+                <div class="flex gap-2 m-2 justify-center">
+                    <button id="attendanceButton" class="btn">출석하기</button>
+                    <button id="enterExitButton" class="btn">입실하기</button>
+                </div>
+
+                <br>
+                <div style="text-align: center; font-weight: bold; font-size: 20px;">
+                    <p>운동 기록</p>
+                </div>
+                <div class="times-container" id="timesContainer">
+                    <ul>
+                        <li th:each="attendance, stat : ${attendanceList}">
+                            <!-- 날짜가 변경될 때만 출력 -->
+                            <div th:if="${stat.index == 0} or ${attendanceList[stat.index - 1].date} != ${attendance.date}"
+                                class="relative group inline-block">
+                                <p class="text-black font-bold inline bg-white px-2 cursor-pointer"><span
+                                        th:text="${#temporals.format(attendance.date, 'yyyy-MM-dd')}"></span></p>
+                                <ul
+                                    class="hidden group-hover:block absolute bg-white text-black w-[300px] shadow-lg h-[50px] overflow-y-auto">
+                                    <li th:each="item : ${attendanceList}">
+                                        <div th:if="${item.date} == ${attendance.date}">
+                                            <p>시작 시간 :<span
+                                                    th:text="${#temporals.format(item.startTime, 'HH : mm')}"></span>
+                                                ~ 종료 시간 :<span
+                                                    th:text="${#temporals.format(item.endTime, 'HH : mm')}"></span>
+                                            </p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="overflow-y-auto p-20 h-[80%]">
+
+    </div> -->
     <script>
         const today = new Date();
         const currentMonth = today.getMonth();
@@ -194,7 +96,7 @@
             const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             weekdays.forEach(day => {
                 const dayElement = document.createElement('div');
-                dayElement.className = 'weekday';
+                dayElement.className = 'weekday bg-white text-black font-bold py-2 px-0 m-0 w-24 h-24 flex items-center justify-center';
                 dayElement.textContent = day;
                 calendar.appendChild(dayElement);
             });
@@ -204,13 +106,13 @@
 
             for (let i = 0; i < firstDay; i++) {
                 const dayElement = document.createElement('div');
-                dayElement.className = 'day';
+                dayElement.className = 'day text-center relative w-24 h-24 flex items-center gap-10 justify-center border-l border-r border-b border-white';
                 calendar.appendChild(dayElement);
             }
 
             for (let date = 1; date <= lastDate; date++) {
                 const dayElement = document.createElement('div');
-                dayElement.className = 'day';
+                dayElement.className = 'day text-center relative w-24 h-24 flex items-center gap-10 justify-center border-l border-r border-b border-white';
                 dayElement.textContent = date;
 
                 const attendanceDate = new Date(year, month, date);
@@ -227,52 +129,51 @@
 
             if (!existingStamp) {
                 const stamp = document.createElement('div');
-                stamp.className = 'stamp';
+                stamp.className = 'stamp absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl';
 
                 const img = document.createElement('img');
                 img.src = 'https://i.imgur.com/JjFIfDd.png';
                 img.alt = 'Attendance Stamp';
-                img.style.width = '140px';
-                img.style.height = '60px';
+                img.className = 'w-36 h-16';
 
                 stamp.appendChild(img);
                 dayElement.appendChild(stamp);
             }
         }
 
-       function updateAttendanceRate(attendanceDates) {
-    const attendanceRateElement = document.getElementById('attendanceRate');
-    const totalWorkoutSessions = attendanceDates.length; // 운동한 횟수
-    const attendanceCount = parseInt(document.getElementById('distinctAttendanceCount').textContent, 10); // 출석한 횟수
-    const workoutCount = totalWorkoutSessions; // 
-    attendanceRateElement.textContent = `운동한 횟수 : ${workoutCount}회`;
-}
-
-async function updateExerciseAttendance() {
-    console.log('updateExerciseAttendance 함수가 호출되었습니다.');
-
-    try {
-        const response = await fetch('/attendance/updateExerciseAttendance', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ date: new Date().toISOString().split('T')[0] })
-        });
-
-        if (!response.ok) {
-            const text = await response.text();
-            throw new Error(text);
+        function updateAttendanceRate(attendanceDates) {
+            const attendanceRateElement = document.getElementById('attendanceRate');
+            const totalWorkoutSessions = attendanceDates.length; // 운동한 횟수
+            const attendanceCount = parseInt(document.getElementById('distinctAttendanceCount').textContent, 10); // 출석한 횟수
+            const workoutCount = totalWorkoutSessions; // 
+            attendanceRateElement.textContent = `운동한 횟수 : ${workoutCount}회`;
         }
 
-        const data = await response.json();
-        console.log('운동 출석 업데이트 성공:', data);
+        async function updateExerciseAttendance() {
+            console.log('updateExerciseAttendance 함수가 호출되었습니다.');
 
-        // 여기서 필요한 추가 작업 수행 (예: UI 업데이트)
-        document.getElementById('totalExerciseTime').textContent = data.totalExerciseTime + "분";
+            try {
+                const response = await fetch('/attendance/updateExerciseAttendance', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ date: new Date().toISOString().split('T')[0] })
+                });
 
-    } catch (error) {
-        console.error('운동 출석 업데이트 실패:', error);
-    }
-}
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(text);
+                }
+
+                const data = await response.json();
+                console.log('운동 출석 업데이트 성공:', data);
+
+                // 여기서 필요한 추가 작업 수행 (예: UI 업데이트)
+                document.getElementById('totalExerciseTime').textContent = data.totalExerciseTime + "분";
+
+            } catch (error) {
+                console.error('운동 출석 업데이트 실패:', error);
+            }
+        }
 
 
         document.getElementById('attendanceButton').addEventListener('click', async () => {
@@ -301,7 +202,7 @@ async function updateExerciseAttendance() {
                     updateAttendanceRate(attendanceDates.map(attendance => new Date(attendance.date)));
 
                     document.getElementById('enterExitButton').click();
-                     updateExerciseAttendance();
+                    updateExerciseAttendance();
                 } catch (error) {
                     console.error('출석 체크 실패:', error);
                 }
@@ -329,10 +230,10 @@ async function updateExerciseAttendance() {
 
                 if (action === 'enter') {
                     button.textContent = '퇴실하기';
-                    button.className = 'exit-button';
+                    button.className = 'btn';
                 } else {
                     button.textContent = '입실하기';
-                    button.className = 'enter-button';
+                    button.className = 'btn';
                 }
             } catch (error) {
                 console.error(`${action === 'enter' ? '입실' : '퇴실'} 실패:`, error);
@@ -351,10 +252,10 @@ async function updateExerciseAttendance() {
                 const button = document.getElementById('enterExitButton');
                 if (latestAttendance) {
                     button.textContent = '퇴실하기';
-                    button.className = 'exit-button';
+                    button.className = 'btn';
                 } else {
                     button.textContent = '입실하기';
-                    button.className = 'enter-button';
+                    button.className = 'btn';
                 }
             } catch (error) {
                 console.error('사용자 상태 확인 실패:', error);
@@ -367,4 +268,5 @@ async function updateExerciseAttendance() {
         });
     </script>
 </div>
+
 </html>

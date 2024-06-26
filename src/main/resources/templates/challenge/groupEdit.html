@@ -1,39 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title th:text="${group.name} + ' 그룹 편집'">그룹 편집</title>
-    <!-- Tailwind CSS 및 데이지UI 추가 -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.15.0/dist/full.css" rel="stylesheet">
-</head>
-<body class="bg-black min-h-screen flex items-center justify-center">
 
-<div class="max-w-4xl w-full bg-white p-6 rounded-lg shadow-lg">
-    <h1 class="text-2xl font-bold mb-4" th:text="${group.name} + ' 그룹 편집'">그룹 편집</h1>
 
-    <form th:action="@{/groupChallenge/edit/{id}(id=${group.id})}" method="post" class="space-y-4">
-        <div class="form-control">
-            <label for="name" class="label">
-                <span class="label-text">그룹 이름:</span>
-            </label>
-            <input type="text" id="name" name="name" th:value="${group.name}" required
-                   class="input input-bordered w-full">
-        </div>
-        <div class="form-control">
-            <label for="goal" class="label">
-                <span class="label-text">그룹 목표:</span>
-            </label>
-            <textarea id="goal" name="goal" required th:text="${group.goal}"
-                      class="textarea textarea-bordered w-full"></textarea>
-        </div>
-        <div class="form-control" style="display: flex; justify-content: center; width: 100%;">
-            <button type="submit" class="btn btn-primary w-32 h-12">저장</button>
-            <a class="btn btn-secondary w-32 h-12" th:href="@{/groupChallenge/detail/{id}(id=${group.id})}" style="display: flex; align-items: center; justify-content: center;">취소</a>
-        </div>
-    </form>
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="w-full h-[880px] my-3 flex justify-center text-black items-center">
+    <div class="w-[30%] bg-gray-800 p-6 rounded-lg max-w-lg mx-auto text-white">
+        <h1 class="text-2xl font-bold mb-4" th:text="${group.name} + ' 그룹 편집'">그룹 편집</h1>
+        <form th:action="@{/groupChallenge/edit/{id}(id=${group.id})}" method="post" class="space-y-4">
+            <div class="form-control">
+                <label for="name" class="label">
+                    <span class="label-text text-white">그룹 이름:</span>
+                </label>
+                <input type="text" id="name" name="name" th:value="${group.name}" required
+                    class="input input-bordered w-full text-black">
+            </div>
+            <div class="form-control">
+                <label for="goal" class="label">
+                    <span class="label-text text-white">그룹 목표:</span>
+                </label>
+                <textarea id="goal" name="goal" required th:text="${group.goal}"
+                    class="textarea textarea-bordered w-full text-black"></textarea>
+            </div>
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary m-1">저장</button>
+                <a class="btn btn-error m-1" th:href="@{/groupChallenge/detail/{id}(id=${group.id})}">취소</a>
+            </div>
+        </form>
+
+    </div>
 
 </div>
 
-</body>
 </html>
