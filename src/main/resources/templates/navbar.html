@@ -132,8 +132,9 @@
             gotalk.forEach((talk) => {
                 const maxLength = 5;
                 const sender = alarmDto.sender;
+                const sliceSender = truncateString(sender,maxLength);
                 const url = talk.querySelector(".talk-url").innerText;
-                if (url === sender) {
+                if (url === sliceSender) {
                     const sendTime = new Date(alarmDto.sendTime);
                     const formattedTime = formatTime(sendTime);
                     console.log(formattedTime);
