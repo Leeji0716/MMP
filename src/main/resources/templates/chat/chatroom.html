@@ -24,7 +24,7 @@
             <div id="messages" class="w-[100%] h-[85%] overflow-y-auto mb-4">
                 <div th:each="list :${chatRoom.chatMessageList}">
                     <div th:if="${list.sender != null}">
-                        <div th:if="${list.sender.name eq me.name}">
+                        <div th:if="${list.sender.id eq me.id}">
                             <div class="chat chat-end flex flex-col items-end">
                                 <div class="flex items-center">
                                     <div class="chat-header ml-2">
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div th:if="${list.sender.name ne me.name}">
+                        <div th:if="${list.sender.id ne me.id}">
                             <div class="chat chat-start flex flex-col items-start">
                                 <div class="flex">
                                     <div class="chat-header ml-2">
