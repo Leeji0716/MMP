@@ -8,7 +8,8 @@
         </div>
         <form action="/ptGroup/join" method="post">
             <p th:if="${error}" th:text="${error}" class="text-red-500 text-sm mt-4"></p>
-            <input type="text" id="userNumber" class="input input-bordered text-black w-[10%]" placeholder="회원번호" name="number">
+            <input type="text" id="userNumber" class="input input-bordered text-black w-[10%]" placeholder="회원번호"
+                name="number">
             <input type="submit" class="btn btn-error" value="회원 추가하기">
         </form>
         <div class="overflow-x-auto">

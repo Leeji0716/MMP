@@ -11,66 +11,66 @@
 </head>
 
 <body>
-<div class="box_section" style="width: 600px">
-  <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
-  <h2>결제를 완료했어요</h2>
+  <div class="box_section" style="width: 600px">
+    <img width="100px" src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png" />
+    <h2>결제를 완료했어요</h2>
 
-  <div class="p-grid typography--p" style="margin-top: 50px">
-    <div class="p-grid-col text--left"><b>결제금액</b></div>
-    <div class="p-grid-col text--right" id="amount"></div>
+    <div class="p-grid typography--p" style="margin-top: 50px">
+      <div class="p-grid-col text--left"><b>결제금액</b></div>
+      <div class="p-grid-col text--right" id="amount"></div>
+    </div>
+    <div class="p-grid typography--p" style="margin-top: 10px">
+      <div class="p-grid-col text--left"><b>주문번호</b></div>
+      <div class="p-grid-col text--right" id="orderId"></div>
+    </div>
+    <div class="p-grid typography--p" style="margin-top: 10px">
+      <div class="p-grid-col text--left"><b>paymentKey</b></div>
+      <div class="p-grid-col text--right" id="paymentKey" style="white-space: initial; width: 250px"></div>
+    </div>
+    <div class="p-grid" style="margin-top: 30px">
+      <a href="/" class="button p-grid-col5">홈으로</a>
+    </div>
   </div>
-  <div class="p-grid typography--p" style="margin-top: 10px">
-    <div class="p-grid-col text--left"><b>주문번호</b></div>
-    <div class="p-grid-col text--right" id="orderId"></div>
-  </div>
-  <div class="p-grid typography--p" style="margin-top: 10px">
-    <div class="p-grid-col text--left"><b>paymentKey</b></div>
-    <div class="p-grid-col text--right" id="paymentKey" style="white-space: initial; width: 250px"></div>
-  </div>
-  <div class="p-grid" style="margin-top: 30px">
-    <a href="/" class="button p-grid-col5">홈으로</a>
-  </div>
-</div>
 
-<script>
-  const urlParams = new URLSearchParams(window.location.search);
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
 
-  async function confirm() {
-    var requestData = {
-      paymentKey: urlParams.get("paymentKey"),
-      orderId: urlParams.get("orderId"),
-      amount: urlParams.get("amount"),
-    };
+    async function confirm() {
+      var requestData = {
+        paymentKey: urlParams.get("paymentKey"),
+        orderId: urlParams.get("orderId"),
+        amount: urlParams.get("amount"),
+      };
 
-    const response = await fetch("/confirm", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestData),
+      const response = await fetch("/confirm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        console.log(json);
+        window.location.href = `/fail?message=${json.message}&code=${json.code}`;
+      }
+
+      return json;
+    }
+    confirm().then(function (data) {
+      document.getElementById("response").innerHTML = `<pre>${JSON.stringify(data, null, 4)}</pre>`;
     });
 
-    const json = await response.json();
+    const paymentKeyElement = document.getElementById("paymentKey");
+    const orderIdElement = document.getElementById("orderId");
+    const amountElement = document.getElementById("amount");
 
-    if (!response.ok) {
-      console.log(json);
-      window.location.href = `/fail?message=${json.message}&code=${json.code}`;
-    }
-
-    return json;
-  }
-  confirm().then(function (data) {
-    document.getElementById("response").innerHTML = `<pre>${JSON.stringify(data, null, 4)}</pre>`;
-  });
-
-  const paymentKeyElement = document.getElementById("paymentKey");
-  const orderIdElement = document.getElementById("orderId");
-  const amountElement = document.getElementById("amount");
-
-  orderIdElement.textContent = urlParams.get("orderId");
-  amountElement.textContent = urlParams.get("amount") + "원";
-  paymentKeyElement.textContent = urlParams.get("paymentKey");
-</script>
+    orderIdElement.textContent = urlParams.get("orderId");
+    amountElement.textContent = urlParams.get("amount") + "원";
+    paymentKeyElement.textContent = urlParams.get("paymentKey");
+  </script>
 </body>
 
 </html>

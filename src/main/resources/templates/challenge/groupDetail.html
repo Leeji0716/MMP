@@ -79,7 +79,8 @@
                             method="post" class="inline">
                             <button type="submit" class="btn btn-error btn-xs">삭제</button>
                         </form> -->
-                        <a th:href="@{|/groupChallenge/${group.id}/tags/${groupTag.id}/delete|}" class="btn btn-error btn-xs">삭제</a>
+                        <a th:href="@{|/groupChallenge/${group.id}/tags/${groupTag.id}/delete|}"
+                            class="btn btn-error btn-xs">삭제</a>
                     </li>
                 </ul>
                 <a href="#my_modal_8" class="btn">태그추가</a>
@@ -96,7 +97,8 @@
                         <h3 class="font-bold text-lg mt-4 text-black">태그 목록</h3>
                         <div class="flex gap-2 w-full h-[100px] overflow-y-auto border-4 rounded-lg">
                             <div th:each="tag : ${tags}">
-                                <a href="#" class="btn btn-xs giveTag" th:text="'#'+ ${tag.name}" th:data-id="${tag.id}"></a>
+                                <a href="#" class="btn btn-xs giveTag" th:text="'#'+ ${tag.name}"
+                                    th:data-id="${tag.id}"></a>
                             </div>
                         </div>
                         <div class="modal-action">

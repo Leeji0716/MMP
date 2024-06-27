@@ -1,14 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <link rel="stylesheet" href="/art.css"/>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
     <title>로그인</title>
 </head>
+<style>
+    .btn {
+        display: inline-block;
+        background: transparent;
+        text-transform: uppercase;
+        font-weight: 500;
+        font-style: normal;
+        font-size: 0.625rem;
+        letter-spacing: 0.3em;
+        color: rgba(255, 0, 0, 0.7);
+        /* Red color with 70% opacity */
+        border-radius: 0;
+        padding: 18px 150px 20px;
+        transition: all 0.7s ease-out;
+        background: linear-gradient(270deg, rgba(255, 0, 0, 0.8), rgba(146, 0, 0, 0.8), rgba(34, 34, 34, 0), rgba(34, 34, 34, 0));
+        /* Adjusted linear gradient */
+        background-position: 1% 50%;
+        background-size: 300% 300%;
+        text-decoration: none;
+        margin: 0.625rem;
+        border: 1px solid rgba(255, 0, 0, 0.3);
+        /* Red color border with 30% opacity */
+    }
 
-<div class="hero min-h-screen" style="background-color: black;">
+    .btn:hover {
+        color: #fff;
+        /* White text color on hover */
+        border: 1px solid rgba(255, 0, 0, 0);
+        /* Transparent border on hover */
+        background-position: 99% 50%;
+    }
+
+    body {
+        background: #231f20;
+        color: #fff;
+        font-family: "Helvetica Neue", Helvetica, Arials, sans;
+    }
+
+    article {
+        height: 100vh;
+    }
+
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+</style>
+<div class="hero min-h-screen bg-black">
     <div class="hero-overlay bg-opacity-60"></div>
     <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
@@ -23,9 +70,9 @@
                     <div class="mb-3" th:if="${param.error}">
                         <div role="alert" class="alert alert-error">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
-                                 viewBox="0 0 24 24">
+                                viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <span>사용자ID 또는 비밀번호를 확인해 주세요.</span>
                         </div>
@@ -34,36 +81,33 @@
                     <!--                    https://i.imgur.com/AExwF0p.png-->
                     <div class="mb-3">
                         <label class="input input-bordered flex items-center gap-2" for="username">
-                            <img src="https://i.imgur.com/69aigpw.png" alt="ID Icon"
-                                 style="width: 24px; height: 24px;"/>
+                            <img src="https://i.imgur.com/69aigpw.png" alt="ID Icon" class="w-6 h-6" />
                             <input type="text" class="grow text-gray-500" name="username" id="username"
-                                   placeholder="ID를 입력하세요"/>
+                                placeholder="ID를 입력하세요" />
                         </label>
                     </div>
                     <div class="mb-3">
-                        <label class="input input-bordered flex items-center gap-2" for="password">
-                            <img src="https://i.imgur.com/5erUMCn.png" alt="ID Icon"
-                                 style="width: 24px; height: 24px;"/>
-                            <input type="password" class="grow text-gray-500" name="password" id="password"
-                                   placeholder="비밀번호를 입력하세요"/>
+                        <label class="input input-bordered flex items-center gap-2">
+                            <img src="https://i.imgur.com/5erUMCn.png" alt="ID Icon" class="w-6 h-6" />
+                            <input type="password" class="input grow text-gray-500" name="password" id="password"
+                                placeholder="비밀번호를 입력하세요" />
                         </label>
                     </div>
                     <div class="flex w-full">
                         <div class="form-control grid h-5 flex justify-start">
                             <label class="cursor-pointer label">
                                 <input type="checkbox" id="remember-me" name="remember-me"
-                                       class="checkbox checkbox-error"/>
-                                <span class="label-text-white" style="margin-left:15px;">간편 로그인 저장</span>
+                                    class="checkbox checkbox-error" />
+                                <span class="text-white ml-3">간편 로그인 저장</span>
                             </label>
                         </div>
                         <div class="form-control grid h-5 flex-grow place-items-center">
                         </div>
                     </div>
                     <br>
-                    <br>
-                    <br>
-                    <a class="btn2 justify-start" th:href="@{/wod/create}">add</a>
-                    <button type="submit" class="btn1 justify-start w-full" style="border-radius: 15px;">로그인</button>
+                    <!--                    <button type="submit" class="btn1">로그인</button>-->
+                    <button type="submit" class="btn">login</button>
+                    <!--                    <a href="#" class="btn">brokers</a>-->
                     <br>
                     <br>
                     <a href="/user/resetPassword">비밀번호를 잊어버리셨나요?</a>
@@ -76,4 +120,5 @@
         </div>
     </div>
 </div>
+
 </html>

@@ -2,7 +2,6 @@
     <div class="container mx-auto flex flex-wrap items-center justify-between">
         <a href="/" class="text-white text-xl">
             <img src="https://i.imgur.com/Af3T5qw.png" alt="로고" class="h-8 w-auto inline">
-            <!--            <img src="https://i.imgur.com/XtzS14O.png" alt="로고" class="h-8 w-auto inline">-->
         </a>
         <div>
             <a class="dropbtn bg-black text-white text-lg" th:href="@{/notice/list}">공지사항</a>
@@ -180,7 +179,6 @@
             );
         }
 
-
         function truncateString(str, maxLength) {
             if (str.length > maxLength) {
                 return str.substring(0, maxLength) + "...";
@@ -197,7 +195,6 @@
             // 페이지 로드 시 로그인 여부를 확인하고 웹소켓에 연결
             connectIfLoggedIn();
         });
-
 
         function formatTime(date) {
             const hours = date.getHours();
