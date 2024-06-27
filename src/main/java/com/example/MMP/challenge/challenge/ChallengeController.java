@@ -98,6 +98,8 @@ public class ChallengeController {
         List<ChallengeUser> challengeUsers = new ArrayList<>();
         Map<Long, Double> challengeAchievementRates = new HashMap<> ();
 
+
+
         if (principal != null) {
             String userId = principal.getName();
             Optional<SiteUser> siteUserOptional = siteUserRepository.findByUserId(userId);

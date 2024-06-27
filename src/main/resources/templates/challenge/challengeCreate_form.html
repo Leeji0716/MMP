@@ -2,43 +2,46 @@
 <div layout:fragment="content" class="w-full h-[880px] flex justify-center my-3 overflow-y-auto">
     <div class="w-[40%]">
         <form th:action="@{/challenge/create}" th:object="${challengeForm}" method="post"
-            class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
-            <h2 class="text-2xl font-bold mb-2">챌린지 생성</h1>
+              class="bg-gray-800 p-6 rounded-lg max-w-lg mx-auto">
+            <h2 class="text-2xl font-bold mb-2">챌린지 생성</h2>
                 <!-- 챌린지 이름 입력 -->
                 <div class="form-group mb-4">
                     <label for="name" class="block text-lg mb-2">챌린지 이름</label>
-                    <input type="text" id="name" th:field="*{name}" class="input input-bordered w-full text-black" />
+                    <input type="text" id="name" th:field="*{name}" class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-red-500"></div>
                 </div>
                 <!-- 챌린지 설명 입력 -->
                 <div class="form-group mb-4">
                     <label for="description" class="block text-lg mb-2">챌린지 설명</label>
                     <textarea id="description" th:field="*{description}"
-                        class="textarea textarea-bordered w-full text-black"></textarea>
-                    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-red-500">
-                    </div>
+                              class="textarea textarea-bordered w-full text-black"></textarea>
+                    <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+                         class="text-red-500"></div>
+                </div>
+                <div th:if="${description != null}">
+                    <p th:utext="${#strings.replace(description, '\n', '<br>')}"></p>
                 </div>
                 <!-- 챌린지 시작 날짜 입력 -->
                 <div class="form-group mb-4">
                     <label for="openDate" class="block text-lg mb-2">챌린지 시작 날짜</label>
                     <input type="datetime-local" id="openDate" th:field="*{openDate}"
-                        class="input input-bordered w-full text-black" />
+                           class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('openDate')}" th:errors="*{openDate}" class="text-red-500"></div>
                 </div>
                 <!-- 챌린지 종료 날짜 입력 -->
                 <div class="form-group mb-4">
                     <label for="closeDate" class="block text-lg mb-2">챌린지 종료 날짜</label>
                     <input type="datetime-local" id="closeDate" th:field="*{closeDate}"
-                        class="input input-bordered w-full text-black" />
+                           class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('closeDate')}" th:errors="*{closeDate}" class="text-red-500"></div>
                 </div>
                 <!-- 챌린지 보상 포인트 입력 -->
                 <div class="form-group mb-4">
                     <label for="requiredPoint" class="block text-lg mb-2">챌린지 보상 포인트</label>
                     <input type="number" id="requiredPoint" th:field="*{requiredPoint}"
-                        class="input input-bordered w-full text-black" />
+                           class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('requiredPoint')}" th:errors="*{requiredPoint}"
-                        class="text-red-500">
+                         class="text-red-500">
                     </div>
                 </div>
 
@@ -47,17 +50,17 @@
                     <label class="block text-lg mb-2">분류</label>
                     <div class="flex items-center mb-2">
                         <input type="radio" id="weight" name="type" value="weight" th:field="*{type}"
-                            class="radio radio-primary mr-2" onchange="toggleFields()" />
+                               class="radio radio-primary mr-2" onchange="toggleFields()"/>
                         <label for="weight" class="mr-4">몸무게 챌린지</label>
                     </div>
                     <div class="flex items-center mb-2">
                         <input type="radio" id="exerciseTime" name="type" value="exerciseTime" th:field="*{type}"
-                            class="radio radio-primary mr-2" onchange="toggleFields()" />
+                               class="radio radio-primary mr-2" onchange="toggleFields()"/>
                         <label for="exerciseTime" class="mr-4">운동시간 챌린지</label>
                     </div>
                     <div class="flex items-center mb-2">
                         <input type="radio" id="attendance" name="type" value="attendance" th:field="*{type}"
-                            class="radio radio-primary mr-2" onchange="toggleFields()" />
+                               class="radio radio-primary mr-2" onchange="toggleFields()"/>
                         <label for="attendance">출석체크 챌린지</label>
                     </div>
                     <div th:if="${#fields.hasErrors('type')}" th:errors="*{type}" class="text-red-500"></div>
@@ -67,9 +70,9 @@
                 <div id="weightFields" class="form-group mb-4 hidden">
                     <label for="targetWeightLoss" class="block text-lg mb-2">목표 몸무게 감소(kg)</label>
                     <input type="number" step="0.1" id="targetWeightLoss" th:field="*{targetWeightLoss}"
-                        class="input input-bordered w-full text-black" />
+                           class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('targetWeightLoss')}" th:errors="*{targetWeightLoss}"
-                        class="text-red-500">
+                         class="text-red-500">
                     </div>
                 </div>
 
@@ -77,9 +80,9 @@
                 <div id="exerciseTimeFields" class="form-group mb-4 hidden">
                     <label for="targetExerciseMinutes" class="block text-lg mb-2">목표 운동 시간(분)</label>
                     <input type="number" id="targetExerciseMinutes" th:field="*{targetExerciseMinutes}"
-                        class="input input-bordered w-full text-black" />
+                           class="input input-bordered w-full text-black"/>
                     <div th:if="${#fields.hasErrors('targetExerciseMinutes')}" th:errors="*{targetExerciseMinutes}"
-                        class="text-red-500"></div>
+                         class="text-red-500"></div>
                 </div>
 
                 <!-- 챌린지 생성 버튼 -->

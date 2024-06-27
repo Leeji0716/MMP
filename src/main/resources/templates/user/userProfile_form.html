@@ -187,7 +187,7 @@
                         <h4 class="text-xl text-white font-bold">내가 참여한 챌린지 목록</h4>
                         <div class="relative px-4">
                             <br>
-                            <h1 class="text-white font-bold inline bg-yellow-300 px-2">진행 중인 챌린지</h1>
+                            <h1 class="text-black font-bold inline bg-white px-2" style="border-radius: 15px;">진행 중인 챌린지</h1>
                             <br>
                             <div class="relative px-4" style="max-height: 100px; overflow-y: auto;">
                                 <div th:each="challenge : ${ongoingChallenges}"
@@ -204,7 +204,8 @@
                                 </div>
                             </div>
                             <br>
-                            <h1 class="text-white font-bold inline bg-yellow-300 px-2">성공한 챌린지</h1>
+                            <br>
+                            <h1 class="text-black font-bold inline bg-white px-2" style="border-radius: 15px;">성공한 챌린지</h1>
                             <div class="relative px-4" style="max-height: 600px; overflow: auto;">
                                 <div class="flex space-x-4">
                                     <div th:each="challenge : ${successfulChallenges}"
