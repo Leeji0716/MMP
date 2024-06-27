@@ -63,7 +63,7 @@
                                 </svg>
                                 <span>Message</span>
                             </summary>
-                            <ul class="p-2 shadow menu dropdown-content z-50 bg-base-100 rounded-box w-60 text-black">
+                            <ul class="p-2 shadow menu dropdown-content z-50 bg-base-100 rounded-box w-60 text-black max-h-52 overflow-y-auto">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
                                         class="gotalk hover:bg-gray-300 cursor-pointer">
