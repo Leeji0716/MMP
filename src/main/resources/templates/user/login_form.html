@@ -1,47 +1,68 @@
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
 <script src="https://cdn.tailwindcss.com"></script>
 <title>로그인</title>
-<div class="hero min-h-screen"
-    style="background-image: url(https://img.daisyui.com/images/stock/photo-1507358522600-9f71e620c44e.jpg);">
+<div class="hero min-h-screen" style="background-color: black;">
     <div class="hero-overlay bg-opacity-60"></div>
     <div class="hero-content text-center text-neutral-content">
         <div class="max-w-md">
-            <h1 class="mb-5 text-5xl font-bold">로그인</h1>
+            <div class="flex justify-center">
+                <img src="https://i.imgur.com/gQhrXOO.png" width="350" alt="Image">
+            </div>
+            <br>
+            <br>
+            <h1>반갑습니다. 오늘도 당신의 득근을 응원합니다! </h1>
             <div layout:fragment="content" class="w-full my-3">
                 <form th:action="@{/user/login}" method="post" class="w-[400px]">
                     <div class="mb-3" th:if="${param.error}">
                         <div role="alert" class="alert alert-error">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none"
-                                viewBox="0 0 24 24">
+                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span>사용자ID 또는 비밀번호를 확인해 주세요.</span>
                         </div>
                     </div>
+                    <!--                    https://i.imgur.com/ylpA1wV.png-->
+                    <!--                    https://i.imgur.com/AExwF0p.png-->
                     <div class="mb-3">
-                        <label class="input input-bordered flex items-center gap-2" for="username">ID
+                        <label class="input input-bordered flex items-center gap-2" for="username">
+                            <img src="https://i.imgur.com/69aigpw.png" alt="ID Icon"
+                                 style="width: 24px; height: 24px;"/>
                             <input type="text" class="grow text-gray-500" name="username" id="username"
-                                placeholder="ID를 입력하세요" />
+                                   placeholder="ID를 입력하세요"/>
                         </label>
                     </div>
                     <div class="mb-3">
-                        <label class="input input-bordered flex items-center gap-2" for="password">PW
+                        <label class="input input-bordered flex items-center gap-2" for="password">
+                            <img src="https://i.imgur.com/5erUMCn.png" alt="ID Icon"
+                                 style="width: 24px; height: 24px;"/>
                             <input type="password" class="grow text-gray-500" name="password" id="password"
-                                placeholder="비밀번호를 입력하세요" />
+                                   placeholder="비밀번호를 입력하세요"/>
                         </label>
                     </div>
-                    <div>
-                        <input type="checkbox" id="remember-me" name="remember-me" />
-                        <label for="remember-me">Remember me</label>
+                    <div class="flex w-full">
+                        <div class="form-control grid h-5 flex justify-start">
+                            <label class="cursor-pointer label">
+                                <input type="checkbox" id="remember-me" name="remember-me"
+                                       class="checkbox checkbox-error"/>
+                                <span class="label-text-white" style="margin-left:15px;">간편 로그인 저장</span>
+                            </label>
+                        </div>
+                        <div class="form-control grid h-5 flex-grow place-items-center">
+                        </div>
                     </div>
                     <br>
-                    <a href="/user/findId">아이디 찾기</a>
-                    <text>|</text>
-                    <a href="/user/resetPassword">비밀번호 찾기</a>
                     <br>
                     <br>
-                    <button type="submit" class="btn glass">로그인</button>
+                    <button type="submit" class="btn w-full" style="border-radius: 15px;">로그인</button>
+                    <br>
+                    <br>
+                    <a href="/user/resetPassword">비밀번호를 잊어버리셨나요?</a>
+<!--                    <a href="/user/findId">아이디 찾기</a>-->
+<!--                    <text>|</text>-->
+<!--                    <a href="/user/resetPassword">비밀번호 찾기</a>-->
+                    <br>
                 </form>
             </div>
         </div>
