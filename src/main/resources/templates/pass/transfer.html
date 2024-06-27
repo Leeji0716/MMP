@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout}">
 <div layout:fragment="content" class="w-full my-3 h-[880px] flex text-black justify-center items-center">
-    <div class="w-[50%] h-full flex justify-center border-r border-white">
-        <form action="/totalPass/transfer/success" class="w-[300px] flex flex-col justify-center">
+    <div class="w-[50%] h-full flex justify-center border-r border-white gap-4">
+        <form action="/totalPass/transfer/success" class="w-[300px] flex flex-col justify-center gap-2">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="hidden" id="userId" th:value="${#authentication.principal.id}" />
             <p th:if="${error != null}" th:text="${error}" class="text-red-500"></p>
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text" class="grow text-black" placeholder="Number" name="number" />
             </label>
-            <label class="input input-bordered flex items-center gap-2 hidden" id="labelInput">
-            </label>
-            <select id="passSelect" class="select text-black select-error w-full max-w-xs text-black" name="pass">
+            <select id="passSelect" class="select select-error text-black w-full max-w-xs text-black" name="pass">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
                 <option th:each="pt : ${user.userPtPassList}" th:if="${pt != null}" th:value="${pt.id}"
                     th:text="${pt.passName}" class="Pt"></option>
