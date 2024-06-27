@@ -56,6 +56,25 @@ public class TotalPassController {
         if (siteUser != _siteUser) {
             return "/";
         }
+
+        List<TransPass> MySendPass = transPassService.MySendPass (siteUser);
+        if (MySendPass.isEmpty ()) {
+            model.addAttribute ("MySendPass", null);
+        }
+        model.addAttribute ("MySendPass", MySendPass);
+
+        List<TransPass> MyAcceptPass = transPassService.MyAcceptPass (siteUser);
+        if (MyAcceptPass.isEmpty ()) {
+            model.addAttribute ("MyAcceptPass", null);
+        }
+        model.addAttribute ("MyAcceptPass", MyAcceptPass);
+
+//        List<TransPass> MyStandPass = transPassService.MyStandPass (siteUser);
+//        if (MyStandPass.isEmpty ()) {
+//            model.addAttribute ("MyStandPass", null);
+//        }
+//        model.addAttribute ("MyStandPass", MyStandPass);
+
         model.addAttribute("user", siteUser);
         return "pass/transfer";
     }

@@ -66,7 +66,7 @@
                             <ul class="p-2 shadow menu dropdown-content z-50 bg-base-100 rounded-box w-60 text-black">
                                 <div th:if="${#authorization.expression('hasRole(''TRAINER'')')}" class="eertert">
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
-                                        class="gotalk">
+                                        class="gotalk hover:bg-gray-300 cursor-pointer">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
@@ -81,7 +81,7 @@
                                         </div>
                                     </div>
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
-                                        class="gotalk">
+                                        class="gotalk hover:bg-gray-300 cursor-pointer">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}"
                                                 th:text="${chatroom.you}" class="talk-url font-bold justify-start"></a>
@@ -98,7 +98,7 @@
                                 </div>
                                 <div th:if="${#authorization.expression('hasRole(''USER'')')}">
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['one']}"
-                                        class="gotalk">
+                                        class="gotalk hover:bg-gray-300 cursor-pointer">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/user/chat/${chatroom.youId}|}" th:text="${chatroom.you}"
                                                 class="talk-url font-bold justify-start"></a>
@@ -114,7 +114,7 @@
                                         </div>
                                     </div>
                                     <div th:if="${chatDto != null}" th:each="chatroom : ${chatDto['many']}"
-                                        class="gotalk">
+                                        class="gotalk hover:bg-gray-300 cursor-pointer">
                                         <div class="flex gap-10">
                                             <a th:href="@{|/groupChallenge/groupTalk/${chatroom.youId}|}"
                                                 th:text="${chatroom.you}" class="talk-url font-bold justify-start"></a>
@@ -254,48 +254,43 @@
             <div class="my-4 flex flex-col 2xl:flex-row space-y-4 2xl:space-y-0 2xl:space-x-4 h-[450px] text-white">
                 <div class="w-full flex flex-col 2xl:w-1/3">
                     <div class="flex-1 bg-gray-800 rounded-lg shadow-xl p-8">
-                        <h2 class="text-white">양도 List</h2>
-                        <form action="/user/profile">
-                            <input type="submit" value="양도 신청 리스트" name="passFilter" class="btn">
-                            <input type="submit" value="양도 머기 리스트" name="passFilter" class="btn">
-                            <input type="submit" value="관리자 승인" name="passFilter" class="btn">
-                        </form>
-                        <div th:if="${!#lists.isEmpty(MySendPass)}" th:each="send : ${MySendPass}" class="flex">
-                            <div th:if="${send.userPtPass != null}">
-                                <span th:text="'양도할 이용권 : '+${send.userPtPass.passName}"></span>
-                                <br>
-                                <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
-                            </div>
-                            <div th:if="${send.userDayPass != null}">
-                                <span th:text="'양도할 이용권 : '+${send.userDayPass.passName}"></span>
-                                <br>
-                                <span th:text="'양도받을 유저 : '+${send.acceptUser.name}"></span>
-                            </div>
-                        </div>
-                        <div th:if="${!#lists.isEmpty(MyAcceptPass)}" th:each="accept : ${MyAcceptPass}"
-                            class="text-white flex">
-                            <div th:if="${accept.userPtPass != null}">
-                                <span th:text="'양도받을 이용권 : '+${accept.userPtPass.passName}"></span>
-                                <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
-                                    <input type="submit" value="accept" name="change" class="btn">
-                                    <input type="submit" value="reject" name="change" class="btn">
-                                </form>
-                            </div>
-                            <div th:if="${accept.userDayPass != null}" th:each="accept : ${MyAcceptPass}">
-                                <span th:text="'양도받을 이용권 : '+${accept.userDayPass.passName}"></span>
-                                <form th:action="@{|/totalPass/change/${accept.id}|}" method="post">
-                                    <input type="submit" value="accept" name="change" class="btn">
-                                    <input type="submit" value="reject" name="change" class="btn">
-                                </form>
-                            </div>
-                        </div>
-                        <div th:if="${!#lists.isEmpty(MyStandPass)}" th:each="stand : ${MyStandPass}"
-                            class="text-white">
-                            <span th:if="${stand.userPtPass != null}"
-                                th:text="'대기중인 이용권 :'+${stand.userPtPass.passName}"></span>
-                            <span th:if="${stand.userDayPass != null}"
-                                th:text="'대기중인 이용권 :'+${stand.userDayPass.passName}"></span>
-                        </div>
+                        <h4 class="text-xl text-white font-bold mb-10">관리자 양도 승인 대기</h4>
+                        <table class="table text-center">
+                            <thead>
+                                <tr>
+                                    <th class="text-white">이용권 분류</th>
+                                    <th class="text-white">이용권</th>
+                                    <th class="text-white">상태</th>
+                                </tr>
+                            </thead>
+                            <!-- Table Body -->
+                            <tbody class="text-white">
+                                <tr th:each="stand : ${MyStandPass}">
+                                    <div th:if="${stand.userPtPass != null}">
+                                        <td>
+                                            <span>PT권</span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${stand.userPtPass.passName}"></span>
+                                        </td>
+                                        <td>
+                                            <span class="text-green-500">관리자 승인 대기중 ..</span>
+                                        </td>
+                                    </div>
+                                    <div th:if="${stand.userDayPass != null}">
+                                        <td>
+                                            <span>요일권</span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${stand.userDayPass.passName}"></span>
+                                        </td>
+                                        <td>
+                                            <span class="text-green-500">관리자 승인 대기중 ..</span>
+                                        </td>
+                                    </div>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class="flex flex-col w-full 2xl:w-2/3">
