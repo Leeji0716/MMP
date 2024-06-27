@@ -66,6 +66,7 @@
         <!--        <div id="images">이미지들</div>-->
         <!--    </div>-->
         <script th:inline="javascript">
+            let targetUsers = null;
             function connect() {
                 var socket = new SockJS("http://43.202.255.109:8088/ws-stomp");
                 stompClient = Stomp.over(socket);
@@ -81,6 +82,14 @@
 
                     stompClient.subscribe('/sub/alarm/' + number, function (alarmDto) {
                     });
+                    stompClient.subscribe('/sub/user/join/' + aa, function (users) {
+                        console.log("세선정보");
+                        console.log(users);
+                        targetUsers = JSON.parse(users.body);
+                    });
+                    stompClient.send("/pub/user/join/" + aa, {}, JSON.stringify({
+                        'name': menunmber
+                    }));
                 });
             }
 
@@ -91,6 +100,7 @@
                 const sender = [[${ me.number }]];
                 const name = [[${ me.name }]];
                 const number = [[${ you.number }]];
+                const members = [[${ members }]];
 
                 var currentDate = new Date();
                 currentDate.setTime(currentDate.getTime() + (9 * 60 * 60 * 1000));
@@ -106,16 +116,24 @@
                             'sort': "one"
                         }));
 
-                    stompClient.send("/pub/alarm/" + number, {},
-                        JSON.stringify({
-                            'sender': sender,
-                            'acceptUser': number,
-                            'message': $("#message").val(),
-                            'sendTime': formattedDate,
-                            'chatroomId': aa,
-                            'alarmCnt': '0',
-                            'sort': "one"
-                        }));
+                    let sendMembers = members;
+                    sendMembers = members.filter(user => !targetUsers.includes(user));
+                    if (sendMembers !== null) {
+                        sendMembers.forEach((user) => {
+                            if (user !== number) {
+                                stompClient.send("/pub/alarm/" + number, {},
+                                    JSON.stringify({
+                                        'sender': sender,
+                                        'acceptUser': number,
+                                        'message': $("#message").val(),
+                                        'sendTime': formattedDate,
+                                        'chatroomId': aa,
+                                        'alarmCnt': '0',
+                                        'sort': "one"
+                                    }));
+                            }
+                        })
+                    }
                 }
                 $("#message").val('');
             }
@@ -178,6 +196,12 @@
 
                 return `${ampm} ${formattedHours}:${formattedMinutes}`;
             }
+
+            window.addEventListener('beforeunload', function (event) {
+                stompClient.send("/pub/user/join/" + aa, {}, JSON.stringify({
+                    'name': menunmber
+                }));
+            });
         </script>
     </div>
 </body>
