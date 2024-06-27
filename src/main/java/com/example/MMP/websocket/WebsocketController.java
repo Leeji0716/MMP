@@ -90,6 +90,7 @@ public class WebsocketController {
             for (String name : subscriberIds) {
                 if (name.equals(sessionDto.getName())) {
                     subscriberIds.remove(sessionDto.getName());
+                    break;
                 }
             }
             return subscriberIds;
