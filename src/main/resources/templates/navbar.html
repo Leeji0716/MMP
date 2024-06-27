@@ -150,7 +150,21 @@
                     let alarmCnt = alarm.querySelector(".alarmCnt");
                     if (alarmCnt === null) {
                         alarmCnt = document.createElement('p');
-                        alarmCnt.classList.add('alarmCnt', 'notification-badge');
+                        alarmCnt.classList.add(
+                            'alarmCnt',
+                            'inline-flex',
+                            'items-center',
+                            'justify-center',
+                            'min-w-[20px]',
+                            'p-[5px]',
+                            'h-[20px]',
+                            'text-xs',
+                            'font-bold',
+                            'text-white',
+                            'text-center',
+                            'rounded-full',
+                            'bg-red-500'
+                        );
                         alarmCnt.innerText = alarmDto.alarmCnt;
                         alarm.appendChild(alarmCnt);
                     } else {
