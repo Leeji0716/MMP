@@ -12,7 +12,7 @@
     </div>
 
     <div class="flex flex-wrap w-full h-[100%] justify-center">
-        <div class="inline card w-96 bg-base-100 shadow-xl m-4 block h-[350px] w-[300px]" th:each="wod:${wodList}">
+        <div class="inline card w-96 bg-base-100 shadow-xl m-4 block h-[300px] w-[250px]" th:each="wod:${wodList}">
             <div th:replace="~{wod/wodCard :: wodCard(${wod})}"></div>
         </div>
     </div>

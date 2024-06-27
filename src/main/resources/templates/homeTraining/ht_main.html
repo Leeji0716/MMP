@@ -6,7 +6,7 @@
             th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a th:href="@{|/category/create|}" class="btn btn-primary">카테고리 추가</a>
         </div>
-        <div class="w-[95%] flex justify-center">
+        <div class="w-full flex justify-center">
             <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home|}">전체</a>
             <div th:each="category : ${categoryList}">
                 <a class="btn btn-ghost text-xs" th:href="@{|/homeTraining/home?categoryId=${category.id}|}"
@@ -20,7 +20,7 @@
             th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a class="btn btn-error text-white justify-start" th:href="@{/homeTraining/create}">홈트영상 추가</a>
         </div>
-        <div class="w-[95%] flex justify-center">
+        <div class="w-full flex justify-center">
             <form th:action="@{/homeTraining/home}" method="get">
                 <input type="text" id="search_kw" name="kw" class="input" th:value="${kw}" placeholder="검색어를 입력하세요.">
                 <input class="btn btn-error" type="submit" id="btn_search" value="찾기">

@@ -18,7 +18,9 @@
                 <div class="divider divider-horizontal"></div>
 
                 <div class="flex justify-end w-full">
-
+                    <a href="/groupChallenge/list">
+                        <img src="https://i.imgur.com/sbW4NR5.png" class="w-[30px] h-[30px] mr-1" />
+                    </a>
                     <a th:if="${isLeader}" th:href="@{/groupChallenge/edit/{groupId}(groupId=${group.id})}">
                         <img src="https://i.imgur.com/0NUoX8j.png" class="w-[30px] h-[30px] mr-1" />
                     </a>
@@ -55,8 +57,7 @@
                         </div>
                         <div class="stat-title font-semibold mb-2">그룹 시작일</div>
                         <div class="stat-value" id="dDay"></div>
-                        <div class="stat-desc" th:text="${#temporals.format(group.createDate, 'yyyy-MM-dd a HH:mm')}">
-                        </div>
+                        <div class="stat-desc" th:text="${#temporals.format(group.createDate, 'yyyy-MM-dd a HH:mm')}"></div>
                     </div>
                     <div class="stat border-r border-gray-300 flex flex-col items-center text-center">
                         <div class="stat-figure text-secondary">
@@ -116,6 +117,7 @@
                             <th class="text-white">멤버 이름</th>
                             <th class="text-white">멤버 가입일</th>
                             <th class="text-white">오늘의 운동 시간</th>
+                            <!-- 조건부로 리더 권한 위임 칼럼을 추가 -->
                             <th th:if="${isLeader}" class="text-white">리더 권한 위임</th>
                         </tr>
                     </thead>
@@ -135,7 +137,6 @@
                                 <button type="submit" class="btn btn-neutral">권한 위임</button>
                             </form>
                         </td>
-                    </tr>
                     </tr>
                     </tbody>
                 </table>
@@ -197,7 +198,6 @@
             });
         });
     </script>
-
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const timeCells = document.querySelectorAll('.time-cell');
@@ -214,8 +214,6 @@
             });
         });
     </script>
-
-
 </div>
 
 </html>

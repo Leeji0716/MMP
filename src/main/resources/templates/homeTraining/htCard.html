@@ -1,4 +1,4 @@
-<div th:fragment="htCard(${homeTraining})">
+<div th:fragment="htCard(${homeTraining})" class="w-full h-full">
     <div class="text-black">
         <div th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_TRAINER'}">
             <a href="javascript:void(0);" th:data-uri="@{|/homeTraining/delete/${homeTraining.id}|}"
@@ -14,9 +14,9 @@
             <i class="fa-regular fa-bookmark"></i>
             <div class="hidden" th:data-ht-id="${homeTraining.id}"></div>
         </a>
-        <span class="btn w-[90%] text-black" th:text="${homeTraining.content}"></span>
+        <span class="btn w-[85%] text-black" th:text="${homeTraining.content}"></span>
     </div>
-    <div class="d-flex justify-content-end w-[100%] h-[20%]">
+    <div class="flex justify-content-end w-[100%] h-[20%]">
         <div class="badge bg-light text-dark p-2 text-start text-sm">
             <div class="mb-2">
                 <span th:if="${homeTraining.writer != null}" th:text="${homeTraining.writer.name}"></span>
