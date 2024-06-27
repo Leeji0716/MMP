@@ -29,7 +29,8 @@
                                 <div class="flex items-center">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -41,7 +42,8 @@
                                 <div class="flex">
                                     <div class="chat-header">
                                         [[${list.sender.name}]]
-                                        <time class="text-xs opacity-50" th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
+                                        <time class="text-xs opacity-50"
+                                            th:text="${#temporals.format(list.sendTime, 'yyyy-MM-dd').equals(#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')) ? #temporals.format(list.sendTime, 'a HH:mm') : #temporals.format(list.sendTime, 'yyyy-MM-dd')}"></time>
                                     </div>
                                 </div>
                                 <div class="chat-bubble mr-2" th:if="${list.message != null}" th:text="${list.message}">
@@ -64,8 +66,11 @@
         <!--        <div id="images">이미지들</div>-->
         <!--    </div>-->
         <script th:inline="javascript">
+
+            let targetUsers = null;
+
             function connect() {
-                var socket = new SockJS("http://43.202.255.109:8088/ws-stomp");
+                var socket = new SockJS("http://localhost:8088/ws-stomp");
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function (frame) {
                     console.log('웹소켓 연결 성공:', frame);
@@ -89,7 +94,14 @@
                         }
 
                     });
-
+                    stompClient.subscribe('/sub/user/join/' + aa, function (users) {
+                        console.log("세선정보");
+                        console.log(users);
+                        targetUsers = JSON.parse(users.body);
+                    });
+                    stompClient.send("/pub/user/join/" + aa, {}, JSON.stringify({
+                        'name': menunmber
+                    }));
                 });
             }
 
@@ -114,21 +126,21 @@
                             'sendTime': formattedDate,
                             'sort': "many"
                         }));
-                    members.forEach((member) => {
-                        if (member !== sender) {
-                            stompClient.send("/pub/groupAlarm/" + member, {},
-                                JSON.stringify({
-                                    'sender': groupName,
-                                    'acceptUser': member,
-                                    'message': $("#message").val(),
-                                    'sendTime': formattedDate,
-                                    'chatroomId': aa,
-                                    'alarmCnt': '0',
-                                    'sort': "many"
-                                }))
-                        }
+                    let sendMembers = members;
+                    sendMembers =  members.filter(user => !targetUsers.includes(user));
+                    console.log('qweqwe'+sendMembers);
+                    sendMembers.forEach((member) => {
+                        stompClient.send("/pub/groupAlarm/" + member, {},
+                            JSON.stringify({
+                                'sender': groupName,
+                                'acceptUser': member,
+                                'message': $("#message").val(),
+                                'sendTime': formattedDate,
+                                'chatroomId': aa,
+                                'alarmCnt': '0',
+                                'sort': "many"
+                            }));
                     })
-
                 }
                 $("#message").val('');
             }
@@ -165,10 +177,6 @@
 
             // 페이지 로드 후 실행되는 부분
             document.addEventListener('DOMContentLoaded', function () {
-                const previousSocket = new SockJS("http://localhost:8088/ws-stomp");
-                previousSocket.close();
-                console.log("이전 연결은 끊어용가리어카");
-
                 connect();
 
                 // 채팅창의 div 요소를 가져옵니다.
@@ -197,7 +205,7 @@
                 return `${ampm} ${formattedHours}:${formattedMinutes}`;
             }
 
-        
+
 
         </script>
     </div>

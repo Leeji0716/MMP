@@ -7,10 +7,19 @@ import com.example.MMP.chat.*;
 import com.example.MMP.siteuser.SiteUser;
 import com.example.MMP.siteuser.SiteUserService;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.user.SimpSession;
+import org.springframework.messaging.simp.user.SimpSubscription;
+import org.springframework.messaging.simp.user.SimpUser;
+import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.stereotype.Controller;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +28,7 @@ public class WebsocketController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
     private final AlarmService alarmService;
+    private final SimpUserRegistry simpUserRegistry;
 
     @MessageMapping("/talk/{id}")
     @SendTo("/sub/talk/{id}")
@@ -58,5 +68,23 @@ public class WebsocketController {
         alarmDto.setAlarmCnt(chatRoomDto.getAlarmCnt() -1 + 1);
 
         return alarmDto;
+    }
+
+    @MessageMapping("/user/join/{id}")
+    @SendTo("/sub/user/join/{id}")
+    public List<String> getUserJoin(@DestinationVariable("id")Long id,SessionDto sessionDto){
+        Set<SimpUser> users = simpUserRegistry.getUsers();
+        List<String> subscriberIds = new ArrayList<>();
+
+        for (SimpUser user : users) {
+            for (SimpSession session : user.getSessions()) {
+                for (SimpSubscription subscription : session.getSubscriptions()) {
+                    if (subscription.getDestination().equals("/sub/talk/"+id)) {
+                        subscriberIds.add(user.getName());
+                    }
+                }
+            }
+        }
+        return subscriberIds;
     }
 }
