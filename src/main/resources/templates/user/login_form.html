@@ -1,6 +1,13 @@
-<link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
-<script src="https://cdn.tailwindcss.com"></script>
-<title>로그인</title>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/art.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>로그인</title>
+</head>
+
 <div class="hero min-h-screen" style="background-color: black;">
     <div class="hero-overlay bg-opacity-60"></div>
     <div class="hero-content text-center text-neutral-content">
@@ -55,16 +62,18 @@
                     <br>
                     <br>
                     <br>
-                    <button type="submit" class="btn w-full" style="border-radius: 15px;">로그인</button>
+                    <a class="btn2 justify-start" th:href="@{/wod/create}">add</a>
+                    <button type="submit" class="btn1 justify-start w-full" style="border-radius: 15px;">로그인</button>
                     <br>
                     <br>
                     <a href="/user/resetPassword">비밀번호를 잊어버리셨나요?</a>
-<!--                    <a href="/user/findId">아이디 찾기</a>-->
-<!--                    <text>|</text>-->
-<!--                    <a href="/user/resetPassword">비밀번호 찾기</a>-->
+                    <!--                    <a href="/user/findId">아이디 찾기</a>-->
+                    <!--                    <text>|</text>-->
+                    <!--                    <a href="/user/resetPassword">비밀번호 찾기</a>-->
                     <br>
                 </form>
             </div>
         </div>
     </div>
 </div>
+</html>

@@ -1,0 +1,72 @@
+.btn1 {
+  display: inline-block;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  color: rgba(223,190,106,0.7) !important;
+  border-radius: 0 !important;
+  padding: 18px 80px 20px;
+  transition: all 0.7s ease-out;
+  background: linear-gradient(270deg, rgba(255, 0, 0, 1), rgba(255, 100, 100, 1), rgba(150, 0, 0, 1), rgba(150, 0, 0, 1));
+  background-position: 1% 50%;
+  background-size: 300% 300%;
+  text-decoration: none;
+  margin: 0.625rem;
+  border: none;
+  border: 1px solid rgba(223,190,106,0.3);
+}
+
+.btn2 {
+  display: inline-block;
+  background: transparent;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-style: normal;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  color: rgba(223,190,106,0.7) !important;
+  border-radius: 0 !important;
+  padding: 18px 80px 20px;
+  transition: all 0.7s ease-out;
+  background: linear-gradient(270deg, rgba(0, 0, 255, 1), rgba(100, 100, 255, 1), rgba(0, 0, 150, 1), rgba(0, 0, 150, 1));
+  background-position: 1% 50%;
+  background-size: 300% 300%;
+  text-decoration: none;
+  margin: 0.625rem;
+  border: none;
+  border: 1px solid rgba(223,190,106,0.3);
+}
+
+.btn1:hover {
+  color: #fff;
+  border: 1px solid rgba(223,190,106,0);
+  color: $white;
+  background-position: 99% 50%;
+}
+
+.btn2:hover {
+  color: #fff;
+  border: 1px solid rgba(223,190,106,0);
+  color: $white;
+  background-position: 99% 50%;
+}
+
+body1 {
+  background: #231f20;
+  color: #FF0000;
+  font-family: "Helvetica Neue", Helvetica, Arials, sans;
+}
+
+article1 {
+  height: 100vh;
+}
+
+body1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
