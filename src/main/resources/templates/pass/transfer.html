@@ -9,12 +9,14 @@
             <label class="input input-bordered flex items-center gap-2">
                 <input type="text" class="grow text-black" placeholder="Number" name="number" />
             </label>
+            <label class="input input-bordered flex items-center gap-2 hidden" id="labelInput">
+            </label>
             <select id="passSelect" class="select select-error text-black w-full max-w-xs text-black" name="pass">
                 <option disabled selected>양도할 이용권을 선택해주세요.</option>
                 <option th:each="pt : ${user.userPtPassList}" th:if="${pt != null}" th:value="${pt.id}"
-                    th:text="${pt.passName}" class="Pt"></option>
+                        th:text="${pt.passName}" class="Pt"></option>
                 <option th:each="day : ${user.userDayPassList}" th:if="${day != null}" th:value="${day.id}"
-                    th:text="${day.passName}" class="Day"></option>
+                        th:text="${day.passName}" class="Day"></option>
             </select>
             <input type="submit" class="btn" value="양도하기">
             <div class="card-container" id="cardContainer">

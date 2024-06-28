@@ -193,7 +193,7 @@
                                 <div th:each="challenge : ${ongoingChallenges}"
                                     class="flex items-center w-full my-6 -ml-1.5">
                                     <div class="w-11/12">
-                                        <a th:href="@{|/challenge/detail/${challenge.id}|}"
+                                        <a
                                             class="text-sm text-white font-bold hover:underline"
                                             th:text="${challenge.name}"></a>
                                         <p class="text-sm text-gray-500" th:text="${challenge.description}"></p>
@@ -210,7 +210,7 @@
                                 <div class="flex space-x-4">
                                     <div th:each="challenge : ${successfulChallenges}"
                                         class="flex-shrink-0 my-6 -ml-1.5">
-                                        <a th:href="@{|/challenge/detail/${challenge.id}|}"
+                                        <a
                                             class="relative block w-24 h-24">
                                             <span
                                                 class="absolute inset-0 flex flex-col items-center justify-center border-4 border-red-500 text-red-500 rounded-full"
