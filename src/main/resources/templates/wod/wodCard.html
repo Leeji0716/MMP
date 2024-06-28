@@ -9,7 +9,7 @@
             <span class="badge bg-error" th:id="likeCountSpan- + ${wod.id}" th:text="${wod.likeCount}"></span>
             <div class="hidden" th:data-wod-id="${wod.id}"></div>
             <a th:href="@{|/wod/detail/${wod.id}|}"
-                class="w-[80%] flex text-black justify-center font-bold items-center" th:text="${wod.content}"></a>
+                class="w-[80%] flex text-black justify-center font-bold items-center wod-content" th:text="${#strings.length(wod.content) > 10 ? #strings.substring(wod.content, 0, 10) + '...' : wod.content}"></a>
         </a>
     </div>
 </div>

@@ -1,9 +1,29 @@
-<html layout:decorate="~{layout}">
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layout}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .no-tailwind {
+          all: unset; /* 모든 Tailwind 스타일을 초기화 */
+          display: block; /* 요소를 블록 요소로 설정 */
+          white-space: pre-line; /* Markdown의 줄바꿈을 유지 */
+        }
+        .no-tailwind * {
+          all: unset; /* 하위 요소에도 모든 Tailwind 스타일을 초기화 */
+          display: revert; /* 원래의 display 스타일을 되돌림 */
+        }
+    </style>
+    <title>Partial Tailwind</title>
+</head>
+<body>
 <div layout:fragment="content" class="container mx-auto px-4 py-6">
-    <h2 class="border-b-2 border-white py-2 text-white" th:text="${notice.title}"></h2>
+    <a th:if="${#authentication.principal.authorities.iterator().next().authority == 'ROLE_ADMIN'}" th:href="@{|/notice/update/${notice.id}|}" class="btn btn-error">수정</a>
+    <h2 class="border-b-2 border-white py-2 text-white" th:utext="${@commonUtil.markdown(notice.title)}"></h2>
     <div class="bg-gray-700 my-3 rounded-lg">
         <div class="p-6">
-            <div class="whitespace-pre-line card-text" th:utext="${htmlContent}"></div>
+            <div class="no-tailwind" th:utext="${@commonUtil.markdown(htmlContent)}"></div>
             <div class="flex justify-end">
                 <div class="bg-gray-600 py-2 px-4 text-white">
                     <div th:text="${#temporals.format(notice.notificationDate, 'yyyy-MM-dd HH:mm')}"></div>
@@ -12,5 +32,5 @@
         </div>
     </div>
 </div>
-
+</body>
 </html>

@@ -46,15 +46,16 @@ public class NoticeController {
     }
 
     @GetMapping("/create")
-    public String create(NoticeForm noticeForm){
+    public String create(NoticeForm noticeForm) {
         return "notice/noticeCreate_form";
     }
 
     @PostMapping("/create")
     public String create(@Valid NoticeForm noticeForm,
-                         BindingResult bindingResult){
+                         BindingResult bindingResult) {
+        
 
-        noticeService.create (noticeForm.title,noticeForm.content);
+        noticeService.create(noticeForm.title, noticeForm.content);
         return "redirect:/notice/list";
     }
 
@@ -128,5 +129,26 @@ public class NoticeController {
             response.put("message", "파일 업로드 실패: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/update/{id}")
+    public String update(@PathVariable("id") Integer id,NoticeForm noticeForm,Model model){
+        Notice notice = noticeService.getNotice(id);
+        noticeForm.setTitle(notice.getTitle());
+        noticeForm.setContent(notice.getContent());
+
+        return "notice/noticeCreate_form";
+
+    }
+
+    @PostMapping("/update/{id}")
+    public String update(@PathVariable("id") Integer id,@Valid NoticeForm noticeForm,BindingResult bindingResult){
+        Notice notice = noticeService.getNotice(id);
+        notice.setContent(noticeForm.getContent());
+        notice.setTitle(noticeForm.getTitle());
+        noticeService.saveNotice(notice);
+
+        return "redirect:/notice/list";
+
     }
 }

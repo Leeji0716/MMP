@@ -17,6 +17,7 @@ public class Notice {
 
     private String title;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String content;
 
     private int hit;
