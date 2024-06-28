@@ -71,6 +71,7 @@
                         <span th:text="${presentCount}" style="font-size: 2rem; color: red;"></span> 명입니다
                     </a>
                 </p>
+<<<<<<< HEAD
             </div>
 
             <!-- 조건에 따른 메시지 표시 -->
@@ -86,6 +87,23 @@
                 </div>
             </div>
 
+=======
+            </div>
+
+            <!-- 조건에 따른 메시지 표시 -->
+            <div class="flex justify-center w-full">
+                <div th:if="${presentCount} >= 0 and ${presentCount} <= 30">
+                    <img src="https://i.imgur.com/AxP2Y2P.png" alt="쾌적 상태 이미지">
+                </div>
+                <div th:if="${presentCount} > 30 and ${presentCount} <= 70">
+                    <img src="https://i.imgur.com/x9fF2NP.png" alt="양호 상태 이미지">
+                </div>
+                <div th:if="${presentCount} > 70 and ${presentCount} <= 100">
+                    <img src="https://i.imgur.com/7fXhguJ.png" alt="양호 상태 이미지">
+                </div>
+            </div>
+
+>>>>>>> 5fac75725d472ccf72f6ab5e19b73230f50e8ebd
             <!--        <div class="flex flex-col items-center space-y-4 mt-4">-->
             <!--            <input type="range" min="0" max="50" th:value="${presentCount}" class="range range-error" step="1" />-->
             <!--            <div class="w-full flex justify-between text-xs px-2">-->
@@ -326,12 +344,7 @@
                 const trainerDiv = document.createElement('div');
                 trainerDiv.classList.add('h-full', 'bg-white', 'text-black', 'rounded-lg', 'border', 'border-gray-300', 'w-[10%]', 'flex', 'justify-center', 'items-center', 'font-bold');
                 const trainerName = document.createElement('div');
-                if(currentUser === 'trainer'){
-                    trainerName.textContent = `내 레슨`;
-                }else{
-                    trainerName.textContent = `${lesson.trainer.name}`;
-                }
-
+                trainerName.textContent = `${lesson.trainer.name}`;
                 trainerDiv.appendChild(trainerName);
                 lessonDiv.appendChild(trainerDiv);
 
@@ -450,7 +463,7 @@
                         try {
                             const responseData = JSON.parse(xhr.responseText);
                             console.log(responseData);
-                            renderLessons(responseData, 'trainer');
+                            renderLessons(responseData, document.getElementById('currentUser').value);
                         } catch (error) {
                             console.error('Error parsing JSON:', error);
                         }
