@@ -37,31 +37,31 @@
                                 <div th:each="challengeUser : ${challengeUsers}"
                                     th:if="${challengeUser.challenge.id == challenge.id}">
                                     <img th:if="${challengeUser.achievementRate <= 0}"
-                                        th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/bhYNnEB.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}"
-                                        th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/Zk82V5o.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 25}"
-                                        th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/Zp18gVC.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate < 50}"
-                                        th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/yFuC7Yi.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 50}"
-                                        th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/8avwIYc.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}"
-                                        th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/a5AaUBT.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 75}"
-                                        th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/mhq8oWP.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}"
-                                        th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/n7UrcV3.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate >= 100}"
-                                        th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/22eIdWr.png" alt="Achievement Image"
                                         class="achievement-image">
                                 </div>
                             </div>
@@ -141,38 +141,35 @@
                             </div>
                             <!-- 달성률에 따른 이미지 표시 -->
                             <div class="achievement-image-container">
-                                <!--                        &lt;!&ndash; 기본 이미지 &ndash;&gt;-->
-                                <!--                        <img th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"-->
-                                <!--                            class="achievement-image">-->
                                 <!-- 참여자가 있는 경우 대체 이미지 표시 -->
                                 <div th:each="challengeUser : ${challengeUsers}"
                                     th:if="${challengeUser.challenge.id == challenge.id}">
                                     <img th:if="${challengeUser.achievementRate <= 0}"
-                                        th:src="@{'/images/imagesachievement_0.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/bhYNnEB.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 0 and challengeUser.achievementRate < 25}"
-                                        th:src="@{'/images/imagesachievement_t25.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/Zk82V5o.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 25}"
-                                        th:src="@{'/images/imagesachievement_25.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/Zp18gVC.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 25 and challengeUser.achievementRate < 50}"
-                                        th:src="@{'/images/imagesachievement_t50.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/yFuC7Yi.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 50}"
-                                        th:src="@{'/images/imagesachievement_50.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/8avwIYc.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 50 and challengeUser.achievementRate <= 75}"
-                                        th:src="@{'/images/imagesachievement_t75.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/a5AaUBT.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate == 75}"
-                                        th:src="@{'/images/imagesachievement_75.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/mhq8oWP.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate > 75 and challengeUser.achievementRate <= 100}"
-                                        th:src="@{'/images/imagesachievement_t100.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/n7UrcV3.png" alt="Achievement Image"
                                         class="achievement-image">
                                     <img th:if="${challengeUser.achievementRate >= 100}"
-                                        th:src="@{'/images/imagesachievement_100.png'}" alt="Achievement Image"
+                                        src="https://i.imgur.com/22eIdWr.png" alt="Achievement Image"
                                         class="achievement-image">
                                 </div>
                             </div>
