@@ -131,15 +131,13 @@
 ![](https://i.imgur.com/DjXK4bW.png)
 
 메인 페이지
-![](https://i.imgur.com/SSjBGKM.png)
+![](https://i.imgur.com/F7nhBzh.png)
 
 관리자 페이지
 ![](https://i.imgur.com/CZG6sLT.png)
 
-공지사항 페이지
-![](https://i.imgur.com/Y13F230.png)
-
 유저 프로필
+
 ![](https://i.imgur.com/xsKlmO6.png)
 
 
